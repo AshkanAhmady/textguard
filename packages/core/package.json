@@ -34,5 +34,8 @@
     "persian",
     "farsi",
     "text-filter"
-  ]
+  ],
+  "devDependencies": {
+    "vitest": "^4.1.8"
+  }
 }

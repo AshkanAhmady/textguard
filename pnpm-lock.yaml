@@ -30,7 +30,11 @@ importers:
         specifier: ^4.1.8
         version: 4.1.8(@types/node@22.19.21)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.27.7))
 
-  packages/core: {}
+  packages/core:
+    devDependencies:
+      vitest:
+        specifier: ^4.1.8
+        version: 4.1.8(@types/node@22.19.21)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.27.7))
 
   packages/en: {}
 
