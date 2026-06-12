@@ -1,1 +1,4 @@
-export * from "./dictionary";
+export { faProfanity } from "./profanity";
+export { faInsults } from "./insults";
+export { faSpam } from "./spam";
+export { faPatterns } from "./patterns";

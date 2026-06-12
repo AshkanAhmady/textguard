@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@textguard/core": ["packages/core/src/index.ts"],
+      "@textguard/fa": ["packages/fa/src/index.ts"]
+    }
+  }
+}

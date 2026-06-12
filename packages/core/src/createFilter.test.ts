@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { createFilter } from "./createFilter";
 import { Dictionary } from "./types";
-import { faInsults, faPatterns, faProfanity } from "@textguard/dictionaries";
+import { faInsults, faPatterns, faProfanity } from "@textguard/fa";
 
 // اضافه کردن یک کلمه دارای «ک» برای تست دقیق حروف مشابه
 const mockDictionary: Dictionary = {
