@@ -1,6 +1,6 @@
 {
   "name": "@textguard/en",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Official English language pack, Leetspeak rules and patterns for TextGuard",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
