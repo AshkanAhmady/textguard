@@ -32,48 +32,104 @@ function buildWordRegex(word: string): RegExp {
 }
 
 export function createFilter(options: FilterOptions): TextGuardInstance {
-    const { dictionaries, whitelist = [], mask = "*" } = options;
+    // استخراج کلمات و الگوهای سفارشی کاربر (customWords) در کنار دیکشنری‌های اصلی
+    const { dictionaries = [], customWords = [], whitelist = [], mask = "*" } = options;
 
     // پیدا کردن تمام کلمات نامناسب همراه با جزئیات و موقعیت آن‌ها
     function findBadWords(text: string): Match[] {
         if (!text) return [];
         const matches: Match[] = [];
 
-        // سورتیگ کلمات دیکشنری براساس طول (نزولی) برای اولویت دادن به عبارات طولانی‌تر
-        const sortedWords = [...dictionaries]
-            .flatMap((dict) => dict.words)
-            .sort((a, b) => b.word.length - a.word.length);
+        // ۱. تبدیل تمام کلمات دیکشنری‌ها به یک لیست فلت
+        const dictionaryEntries = dictionaries.flatMap((dict) => dict.words);
 
-        for (const entry of sortedWords) {
-            const regex = buildWordRegex(entry.word);
+        // ۲. تبدیل کلمات سفارشی کاربر (customWords) به فرمت استاندارد Entry
+        const customEntries = customWords.map((word) => ({
+            word,
+            severity: "high" as const,
+            category: "custom"
+        }));
+
+        // ادغام هر دو لیست دیتابیس ما و کلمات سفارشی کاربر
+        const allEntries = [...dictionaryEntries, ...customEntries];
+
+        // سورتیگ کلمات براساس طول (نزولی) برای اولویت دادن به عبارات طولانی‌تر
+        // برای ریجکس‌ها طول سورس متنی آن را ملاک قرار می‌دهیم
+        const sortedEntries = allEntries.sort((a, b) => {
+            const lenA = a.word instanceof RegExp ? a.word.source.length : a.word.length;
+            const lenB = b.word instanceof RegExp ? b.word.source.length : b.word.length;
+            return lenB - lenA;
+        });
+
+        for (const entry of sortedEntries) {
             let match;
 
-            regex.lastIndex = 0;
-            while ((match = regex.exec(text)) !== null) {
-                const matchedText = match[0];
-                const start = match.index;
-                const end = start + matchedText.length;
+            // ─── لایه اول: مدیریت هوشمند الگوهای منظم (RegExp) ───
+            if (entry.word instanceof RegExp) {
+                // مطمئن می‌شویم که فلگ global (g) فعال است تا همه تکرارهای الگو را در متن پیدا کند
+                const flags = entry.word.flags.includes("g") ? entry.word.flags : entry.word.flags + "g";
+                const regex = new RegExp(entry.word.source, flags);
 
-                // بررسی لیست سفید (وایت‌لیست)
-                const isWhitelisted = whitelist.some(
-                    (w) => w.toLowerCase() === matchedText.toLowerCase() ||
-                        w.toLowerCase() === text.substring(start, end).toLowerCase()
-                );
+                regex.lastIndex = 0;
+                while ((match = regex.exec(text)) !== null) {
+                    const matchedText = match[0];
+                    if (!matchedText) break; // جلوگیری از حلقه‌های بی‌نهایت در ریجکس‌های خاص با طول صفر
 
-                if (isWhitelisted) continue;
+                    const start = match.index;
+                    const end = start + matchedText.length;
 
-                // جلوگیری از تداخل یا هم‌پوشانی (Overlapping) با کلماتی که قبلاً بزرگ‌تر بوده‌اند و دیتکت شده‌اند
-                const isOverlapped = matches.some(
-                    (m) => (start >= m.start && start < m.end) || (end > m.start && end <= m.end)
-                );
+                    // بررسی لیست سفید (وایت‌لیست) برای ریجکس
+                    const isWhitelisted = whitelist.some(
+                        (w) => w.toLowerCase() === matchedText.toLowerCase() ||
+                            w.toLowerCase() === text.substring(start, end).toLowerCase()
+                    );
+                    if (isWhitelisted) continue;
 
-                if (!isOverlapped) {
-                    matches.push({
-                        word: entry.word,
-                        matchedText,
-                        start,
-                        end,
-                    });
+                    // جلوگیری از تداخل با کلماتی که قبلاً بزرگ‌تر بوده‌اند و دیتکت شده‌اند
+                    const isOverlapped = matches.some(
+                        (m) => (start >= m.start && start < m.end) || (end > m.start && end <= m.end)
+                    );
+
+                    if (!isOverlapped) {
+                        matches.push({
+                            word: entry.word.source, // ذخیره سورس ریجکس به عنوان مرجع کلمه
+                            matchedText,
+                            start,
+                            end,
+                        });
+                    }
+                }
+            }
+            // ─── لایه دوم: همان منطق رشته‌های معمولی و خنثی‌سازی ۶ حالته شما ───
+            else {
+                const regex = buildWordRegex(entry.word);
+                regex.lastIndex = 0;
+
+                while ((match = regex.exec(text)) !== null) {
+                    const matchedText = match[0];
+                    const start = match.index;
+                    const end = start + matchedText.length;
+
+                    // بررسی لیست سفید (وایت‌لیست)
+                    const isWhitelisted = whitelist.some(
+                        (w) => w.toLowerCase() === matchedText.toLowerCase() ||
+                            w.toLowerCase() === text.substring(start, end).toLowerCase()
+                    );
+                    if (isWhitelisted) continue;
+
+                    // جلوگیری از تداخل یا هم‌پوشانی (Overlapping)
+                    const isOverlapped = matches.some(
+                        (m) => (start >= m.start && start < m.end) || (end > m.start && end <= m.end)
+                    );
+
+                    if (!isOverlapped) {
+                        matches.push({
+                            word: entry.word,
+                            matchedText,
+                            start,
+                            end,
+                        });
+                    }
                 }
             }
         }

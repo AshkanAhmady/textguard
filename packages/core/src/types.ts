@@ -1,7 +1,7 @@
 export interface DictionaryEntry {
-  word: string;
-  severity?: "low" | "medium" | "high";
-  category?: string;
+  word: string | RegExp;
+  severity: "low" | "medium" | "high";
+  category?: "profanity" | "insults" | "spam" | "custom" | string;
 }
 
 export interface Dictionary {
@@ -12,7 +12,8 @@ export interface Dictionary {
 }
 
 export interface FilterOptions {
-  dictionaries: Dictionary[];
+  dictionaries?: Dictionary[];
+  customWords?: (string | RegExp)[];
   whitelist?: string[];
   mask?: string; // مثلاً "***" یا "###" یا "🌟"
 }

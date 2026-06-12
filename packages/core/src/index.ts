@@ -1,3 +1,9 @@
-export const version = "0.0.1";
-export * from "./types";
-export * from "./createFilter";
+export { createFilter } from "./createFilter";
+export type {
+    FilterOptions,
+    FilterResult,
+    Match,
+    TextGuardInstance,
+    Dictionary,
+    DictionaryEntry
+} from "./types";

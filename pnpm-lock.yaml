@@ -32,9 +32,30 @@ importers:
 
   packages/core:
     devDependencies:
+      '@textguard/dictionaries':
+        specifier: workspace:*
+        version: link:../dictionaries
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.2)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.2
       vitest:
         specifier: ^4.1.8
         version: 4.1.8(@types/node@22.19.21)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.27.7))
+
+  packages/dictionaries:
+    devDependencies:
+      '@textguard/core':
+        specifier: workspace:*
+        version: link:../core
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.2)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.2
 
   packages/en: {}
 

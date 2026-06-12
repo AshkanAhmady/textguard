@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { createFilter } from "./createFilter";
 import { Dictionary } from "./types";
+import { faInsults, faPatterns, faProfanity } from "@textguard/dictionaries";
 
 // اضافه کردن یک کلمه دارای «ک» برای تست دقیق حروف مشابه
 const mockDictionary: Dictionary = {
@@ -59,5 +60,37 @@ describe("TextGuard Regex Engine - Obfuscation Detection", () => {
         expect(result.filteredText).toBe("تو یک ******* هستی!");
         expect(result.matches).toHaveLength(1);
         expect(result.matches[0].word).toBe("احمق");
+    });
+
+    it("تست یکپارچگی: فیلتر کردن متن با استفاده از دیکشنری واقعی پکیج dictionaries", () => {
+        const productionGuard = createFilter({
+            dictionaries: [faProfanity, faInsults]
+        });
+
+        // کلمه «ابله» در faProfanity وجود دارد
+        expect(productionGuard.hasBadWord("این یک متن ابلهانه است")).toBe(true);
+
+        const result = productionGuard.filter("عجب آدم ابلهی!");
+        expect(result.filteredText).toContain("***");
+    });
+
+    it("تست نهایی: فیلتر هوشمند ریجکس، کلمات سفارشی و وایت‌لیست", () => {
+        const filterInstance = createFilter({
+            dictionaries: [faPatterns],
+            customWords: ["تست‌کلمه"],
+            whitelist: ["09121111111"] // شماره موبایلی که می‌خواهیم استثنا باشد و سانسور نشود
+        });
+
+        // ۱. تست فیلتر شدن شماره موبایل عادی توسط ریجکس پترن
+        const res1 = filterInstance.filter("شماره من 09123456789 است");
+        expect(res1.filteredText).toContain("***********");
+
+        // ۲. تست وایت‌لیست (شماره استثنا نباید فیلتر شود)
+        const res2 = filterInstance.filter("شماره پشتیبانی 09121111111 است");
+        expect(res2.filteredText).toContain("09121111111");
+
+        // ۳. تست کلمه سفارشی کاربر
+        const res3 = filterInstance.filter("این یک تست‌کلمه است");
+        expect(res3.filteredText).toContain("********");
     });
 });
