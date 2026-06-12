@@ -32,12 +32,6 @@ importers:
 
   packages/core:
     devDependencies:
-      '@textguard/en':
-        specifier: workspace:*
-        version: link:../en
-      '@textguard/fa':
-        specifier: workspace:*
-        version: link:../fa
       tsup:
         specifier: ^8.0.2
         version: 8.5.1(postcss@8.5.15)(typescript@5.9.2)
@@ -49,6 +43,10 @@ importers:
         version: 4.1.8(@types/node@22.19.21)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.27.7))
 
   packages/en:
+    dependencies:
+      '@textguard/core':
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       tsup:
         specifier: ^8.3.5
@@ -94,6 +92,10 @@ importers:
         version: 8.61.0(eslint@9.39.4)(typescript@5.9.2)
 
   packages/fa:
+    dependencies:
+      '@textguard/core':
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       tsup:
         specifier: ^8.3.5
@@ -659,6 +661,9 @@ packages:
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
+
+  '@textguard/core@1.0.0':
+    resolution: {integrity: sha512-FBw2P6hY+8c2ug5yPNtunI0ZyBtOm+y6XeTHFj72KYck543nBWMQ3/cnxPN7CqjPFjt3gmb8hkWniS3jdz/DWw==}
 
   '@turbo/darwin-64@2.9.18':
     resolution: {integrity: sha512-9f27peFu16ur8c0v9nUFUEyBnbKuuFsUTjHFWfmwGfzySBXbHwzU44QhZon6Mznz0cHsIr3984NQj/bVrnGSRw==}
@@ -2732,6 +2737,8 @@ snapshots:
     optional: true
 
   '@standard-schema/spec@1.1.0': {}
+
+  '@textguard/core@1.0.0': {}
 
   '@turbo/darwin-64@2.9.18':
     optional: true

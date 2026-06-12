@@ -1,13 +1,4 @@
-interface Dictionary {
-    name: string;
-    language: string;
-    version: string;
-    words: Array<{
-        word: string | RegExp;
-        severity: "high" | "medium" | "low";
-        category?: string;
-    }>;
-}
+import type { Dictionary } from "@textguard/core";
 
 export const faSpam: Dictionary = {
     name: "fa-spam",
