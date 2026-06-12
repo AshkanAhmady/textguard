@@ -7,6 +7,9 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -36,8 +39,6 @@
     "text-filter"
   ],
   "devDependencies": {
-    "@textguard/fa": "workspace:*",
-    "@textguard/en": "workspace:*",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3",
     "vitest": "^4.1.8"
