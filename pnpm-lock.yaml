@@ -49,10 +49,6 @@ importers:
         version: 4.1.8(@types/node@22.19.21)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.27.7))
 
   packages/en:
-    dependencies:
-      '@textguard/core':
-        specifier: workspace:*
-        version: link:../core
     devDependencies:
       tsup:
         specifier: ^8.3.5
@@ -98,10 +94,6 @@ importers:
         version: 8.61.0(eslint@9.39.4)(typescript@5.9.2)
 
   packages/fa:
-    dependencies:
-      '@textguard/core':
-        specifier: workspace:*
-        version: link:../core
     devDependencies:
       tsup:
         specifier: ^8.3.5

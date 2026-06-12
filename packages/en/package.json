@@ -15,9 +15,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --clean"
   },
-  "dependencies": {
-    "@textguard/core": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "tsup": "^8.3.5",
     "typescript": "^5.7.3"
