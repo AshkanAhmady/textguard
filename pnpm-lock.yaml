@@ -32,6 +32,9 @@ importers:
 
   packages/core:
     devDependencies:
+      '@textguard/en':
+        specifier: workspace:*
+        version: link:../en
       '@textguard/fa':
         specifier: workspace:*
         version: link:../fa

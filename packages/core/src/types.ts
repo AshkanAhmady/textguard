@@ -16,6 +16,8 @@ export interface FilterOptions {
   customWords?: (string | RegExp)[];
   whitelist?: string[];
   mask?: string; // مثلاً "***" یا "###" یا "🌟"
+  leetspeakMapping?: Record<string, string[]>;
+  faLookalikesMapping?: Record<string, string>;
 }
 
 export interface Match {

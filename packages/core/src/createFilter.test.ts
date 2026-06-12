@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { createFilter } from "./createFilter";
 import { Dictionary } from "./types";
-import { faInsults, faPatterns, faProfanity } from "@textguard/fa";
+import { faInsults, faPatterns, faProfanity, faLookalikesMapping } from "@textguard/fa";
+import { enProfanity, enLeetspeakMapping, enInsults } from "@textguard/en";
 
 // اضافه کردن یک کلمه دارای «ک» برای تست دقیق حروف مشابه
 const mockDictionary: Dictionary = {
@@ -15,8 +16,10 @@ const mockDictionary: Dictionary = {
 };
 
 describe("TextGuard Regex Engine - Obfuscation Detection", () => {
+    // 👈 اضافه شدن faLookalikesMapping به این نمونه جهت پاس شدن تست حالت ششم
     const guard = createFilter({
-        dictionaries: [mockDictionary]
+        dictionaries: [mockDictionary],
+        faLookalikesMapping: faLookalikesMapping
     });
 
     it("حالت صفر: تشخیص دقیق و ساده کلمه کثیف", () => {
@@ -50,7 +53,7 @@ describe("TextGuard Regex Engine - Obfuscation Detection", () => {
     });
 
     it("حالت ششم: حروف مشابه (Lookalike Characters)", () => {
-        // کلمه اصلی «کثیف» با ک فارسی است، اما اینجا با «ك» عربی تست می‌شود
+        // کلمه اصلی «کثیف» با ک فارسی است، اما اینجا با «ك» عربی به لطف مپینگ پویا تست می‌شود
         expect(guard.hasBadWord("این یک كثیف است")).toBe(true);
     });
 
@@ -63,14 +66,16 @@ describe("TextGuard Regex Engine - Obfuscation Detection", () => {
     });
 
     it("تست یکپارچگی: فیلتر کردن متن با استفاده از دیکشنری واقعی پکیج dictionaries", () => {
+        // 👈 اضافه شدن faLookalikesMapping به دیکشنری پروداکشن
         const productionGuard = createFilter({
-            dictionaries: [faProfanity, faInsults]
+            dictionaries: [faProfanity, faInsults],
+            faLookalikesMapping: faLookalikesMapping
         });
 
-        // کلمه «ابله» در faProfanity وجود دارد
-        expect(productionGuard.hasBadWord("این یک متن ابلهانه است")).toBe(true);
+        // بررسی وجود کلمه نامناسب از پکیج رسمی
+        expect(productionGuard.hasBadWord("این یک متن احمقانه است")).toBe(true);
 
-        const result = productionGuard.filter("عجب آدم ابلهی!");
+        const result = productionGuard.filter("عجب آدم احمقی!");
         expect(result.filteredText).toContain("***");
     });
 
@@ -92,5 +97,22 @@ describe("TextGuard Regex Engine - Obfuscation Detection", () => {
         // ۳. تست کلمه سفارشی کاربر
         const res3 = filterInstance.filter("این یک تست‌کلمه است");
         expect(res3.filteredText).toContain("********");
+    });
+});
+
+describe("TextGuard Engine - English & Leetspeak Detection", () => {
+    const filterEngine = createFilter({
+        dictionaries: [enProfanity, enInsults],
+        leetspeakMapping: enLeetspeakMapping
+    });
+
+    it("باید کلمات لیت‌اسپیک ترکیبی و عددی/نمادی را با دقت بالا دیتکت و سانسور کند", () => {
+        const res1 = filterEngine.filter("Don't be a b1tch");
+
+        expect(filterEngine.hasBadWord("b1tch")).toBe(true);
+        expect(filterEngine.hasBadWord("fμ¢k")).toBe(true);
+        expect(filterEngine.hasBadWord("5tup1d")).toBe(true);
+
+        expect(res1.filteredText).toContain("*****");
     });
 });

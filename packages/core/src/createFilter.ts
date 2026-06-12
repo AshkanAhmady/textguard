@@ -1,40 +1,47 @@
 import { FilterOptions, FilterResult, Match, TextGuardInstance } from "./types";
 
-// مپینگ حروف مشابه برای خنثی‌سازی ترفند تشابه کاراکترها
-const LOOKALIKES: Record<string, string> = {
-    'ک': '[کك]', 'ك': '[کك]',
-    'ی': '[یی‌ي]', 'ي': '[یی‌ي]',
-    'ا': '[ااآأإ]', 'آ': '[ااآأإ]', 'أ': '[ااآأإ]', 'إ': '[ااآأإ]',
-    // حروف مشابه انگلیسی (اختیاری اما بسیار کاربردی)
-    'o': '[o0]', '0': '[o0]',
-    'i': '[i1l|]', 'l': '[i1l|]', '1': '[i1l|]',
-    'a': '[a@4]', 'e': '[e3]',
-    's': '[s5$]', 't': '[t7]',
-};
-
 // تابع کمکی برای Escape کردن کاراکترهای خاص در Regex
 function escapeRegExp(str: string): string {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// موتور ساخت Regex پویا برای هر کلمه
-function buildWordRegex(word: string): RegExp {
-    // جداکننده‌های مجاز: فاصله، نقطه، خط‌تیره، آندراسکور، ستاره، نیم‌فاصله (\u200c) و کشیدگی حروف (\u0640)
-    const separator = '[\\s\\._\\-*\\u200c\\u0640]*';
-
-    const parts = Array.from(word).map((char) => {
-        const lowerChar = char.toLowerCase();
-        const pattern = LOOKALIKES[lowerChar] || escapeRegExp(char);
-        return `${pattern}+`; // علامت + تکرار حروف (مثل احممممق) را پوشش می‌دهد
-    });
-
-    return new RegExp(parts.join(separator), 'gi');
-}
-
 export function createFilter(options: FilterOptions): TextGuardInstance {
     // استخراج کلمات و الگوهای سفارشی کاربر (customWords) در کنار دیکشنری‌های اصلی
-    const { dictionaries = [], customWords = [], whitelist = [], mask = "*" } = options;
+    const {
+        dictionaries = [],
+        customWords = [],
+        whitelist = [],
+        mask = "*",
+        leetspeakMapping = {},
+        faLookalikesMapping = {}
+    } = options;
 
+    function buildWordRegex(word: string): RegExp {
+        const separator = '[\\s\\._\\-*\\u200c\\u0640]*';
+
+        const parts = Array.from(word).map((char) => {
+            const lowerChar = char.toLowerCase();
+
+            // الف: بررسی و اعمال نگاشت کاراکترهای مشابه پویا (پکیج فارسی)
+            if (faLookalikesMapping[lowerChar]) {
+                return `${faLookalikesMapping[lowerChar]}+`;
+            }
+
+            // ب: بررسی و اعمال نگاشت لیت‌اسپیک غنی‌شده (پکیج انگلیسی)
+            if (leetspeakMapping[lowerChar]) {
+                const alternatives = [
+                    escapeRegExp(lowerChar),
+                    ...leetspeakMapping[lowerChar].map(escapeRegExp)
+                ];
+                return `(${alternatives.join('|')})+`;
+            }
+
+            // ج: کاراکترهای معمولی
+            return `${escapeRegExp(char)}+`;
+        });
+
+        return new RegExp(parts.join(separator), 'gi');
+    }
     // پیدا کردن تمام کلمات نامناسب همراه با جزئیات و موقعیت آن‌ها
     function findBadWords(text: string): Match[] {
         if (!text) return [];
