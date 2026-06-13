@@ -115,4 +115,34 @@ describe("TextGuard Engine - English & Leetspeak Detection", () => {
 
         expect(res1.filteredText).toContain("*****");
     });
+
+    it("should ignore overlapped matches", () => {
+        const dictionary: Dictionary = {
+            name: "test",
+            language: "fa",
+            version: "1.0.0",
+            words: [
+                {
+                    word: "احمق",
+                    severity: "high",
+                },
+                {
+                    word: "احمقانه",
+                    severity: "high",
+                },
+            ],
+        };
+
+        const guard = createFilter({
+            dictionaries: [dictionary],
+        });
+
+        const matches = guard.findBadWords(
+            "این رفتار احمقانه است"
+        );
+
+        expect(matches).toHaveLength(1);
+        expect(matches[0].matchedText)
+            .toBe("احمقانه");
+    });
 });

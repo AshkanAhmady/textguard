@@ -9,10 +9,13 @@
     "check-types": "turbo run check-types",
     "change": "changeset",
     "version-packages": "changeset version && pnpm install",
-    "release": "pnpm build && changeset publish"
+    "release": "pnpm build && changeset publish",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
+    "@vitest/coverage-v8": "^4.1.8",
     "eslint": "^9.39.1",
     "prettier": "^3.7.4",
     "tsup": "^8.5.1",

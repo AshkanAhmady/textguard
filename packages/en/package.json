@@ -1,6 +1,6 @@
 {
   "name": "@textguard/en",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official English language pack, Leetspeak rules and patterns for TextGuard",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -22,7 +22,7 @@
     "build": "tsup src/index.ts --format cjs,esm --dts --clean"
   },
   "dependencies": {
-    "@textguard/core": "^1.0.0"
+    "@textguard/core": "^1.0.1"
   },
   "devDependencies": {
     "tsup": "^8.3.5",
