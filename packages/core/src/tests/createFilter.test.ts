@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { createFilter } from "./createFilter";
-import { Dictionary } from "./types";
+import { createFilter } from "../createFilter";
+import { Dictionary } from "../types";
 import { faInsults, faPatterns, faProfanity, faLookalikesMapping } from "@textguard/fa";
 import { enProfanity, enLeetspeakMapping, enInsults } from "@textguard/en";
 
