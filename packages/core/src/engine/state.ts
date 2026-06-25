@@ -10,3 +10,14 @@ export interface EngineState {
     FilterOptions["faLookalikesMapping"]
   >;
 }
+
+export function createEngineState(options: FilterOptions): EngineState {
+  return {
+    dictionaries: options.dictionaries ?? [],
+    customWords: options.customWords ?? [],
+    whitelist: options.whitelist ?? [],
+    mask: options.mask ?? "*",
+    leetspeakMapping: options.leetspeakMapping ?? {},
+    faLookalikesMapping: options.faLookalikesMapping ?? {},
+  };
+}

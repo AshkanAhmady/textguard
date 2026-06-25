@@ -4,17 +4,10 @@ import { buildEntries } from "./buildEntries";
 import { buildWordRegex } from "./buildWordRegex";
 import { isOverlapped, isWhitelisted } from "./helpers";
 import { sortEntries } from "./sortEntries";
-import { EngineState } from "./state";
+import { createEngineState } from "./state";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
-  const state: EngineState = {
-    dictionaries: options.dictionaries ?? [],
-    customWords: options.customWords ?? [],
-    whitelist: options.whitelist ?? [],
-    mask: options.mask ?? "*",
-    leetspeakMapping: options.leetspeakMapping ?? {},
-    faLookalikesMapping: options.faLookalikesMapping ?? {},
-  };
+  const state = createEngineState(options);
 
   function findBadWords(text: string): Match[] {
     if (!text) return [];
