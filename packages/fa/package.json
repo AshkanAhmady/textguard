@@ -19,12 +19,14 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean"
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@textguard/core": "^1.0.1"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
     "tsup": "^8.3.5",
     "typescript": "^5.7.3"
   },

@@ -23,7 +23,8 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts",
     "check-types": "tsc --noEmit",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "text-filter"
   ],
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
     "@textguard/fa": "workspace:*",
     "@textguard/en": "workspace:*",
     "tsup": "^8.0.2",
