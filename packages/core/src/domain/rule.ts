@@ -1,5 +1,5 @@
+import { Match } from "./match";
 import type { PipelineContext } from "./pipeline";
-import type { Match } from "../types";
 
 export interface Rule {
   /**

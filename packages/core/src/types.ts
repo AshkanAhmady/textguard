@@ -1,3 +1,5 @@
+import { Match } from "./domain/match";
+
 export interface DictionaryEntry {
   word: string | RegExp;
   severity: "low" | "medium" | "high";
@@ -18,13 +20,6 @@ export interface FilterOptions {
   mask?: string; // مثلاً "***" یا "###" یا "🌟"
   leetspeakMapping?: Record<string, string[]>;
   faLookalikesMapping?: Record<string, string>;
-}
-
-export interface Match {
-  word: string;
-  matchedText: string;
-  start: number;
-  end: number;
 }
 
 export interface FilterResult {

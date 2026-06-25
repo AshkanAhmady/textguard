@@ -1,4 +1,5 @@
-import { FilterOptions, FilterResult, Match, TextGuardInstance } from "./types";
+import { Match } from "./domain/match";
+import { FilterOptions, FilterResult, TextGuardInstance } from "./types";
 import { escapeRegExp } from "./utils/escapeRegExp";
 
 export function createFilter(options: FilterOptions): TextGuardInstance {

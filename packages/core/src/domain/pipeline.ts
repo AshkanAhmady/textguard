@@ -1,4 +1,4 @@
-import type { Match } from "../types";
+import { Match } from "./match";
 
 export interface PipelineContext {
   /**
