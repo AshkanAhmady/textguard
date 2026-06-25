@@ -1,15 +1,12 @@
-import type { Dictionary } from "../domain/dictionary";
+import type { FilterOptions } from "../types";
 
 export interface EngineState {
-  dictionaries: readonly Dictionary[];
-
-  customWords: readonly (string | RegExp)[];
-
-  whitelist: readonly string[];
-
-  mask: string;
-
-  leetspeakMapping: Readonly<Record<string, readonly string[]>>;
-
-  faLookalikesMapping: Readonly<Record<string, string>>;
+  readonly dictionaries: NonNullable<FilterOptions["dictionaries"]>;
+  readonly customWords: NonNullable<FilterOptions["customWords"]>;
+  readonly whitelist: NonNullable<FilterOptions["whitelist"]>;
+  readonly mask: string;
+  readonly leetspeakMapping: NonNullable<FilterOptions["leetspeakMapping"]>;
+  readonly faLookalikesMapping: NonNullable<
+    FilterOptions["faLookalikesMapping"]
+  >;
 }

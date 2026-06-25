@@ -4,17 +4,24 @@ import { buildEntries } from "./buildEntries";
 import { buildWordRegex } from "./buildWordRegex";
 import { isOverlapped, isWhitelisted } from "./helpers";
 import { sortEntries } from "./sortEntries";
+import { EngineState } from "./state";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
+  const state: EngineState = {
+    dictionaries: options.dictionaries ?? [],
+    customWords: options.customWords ?? [],
+    whitelist: options.whitelist ?? [],
+    mask: options.mask ?? "*",
+    leetspeakMapping: options.leetspeakMapping ?? {},
+    faLookalikesMapping: options.faLookalikesMapping ?? {},
+  };
+
   function findBadWords(text: string): Match[] {
     if (!text) return [];
     const matches: Match[] = [];
 
     // ادغام هر دو لیست دیتابیس ما و کلمات سفارشی کاربر
-    const allEntries = buildEntries(
-      options.dictionaries ?? [],
-      options.customWords ?? [],
-    );
+    const allEntries = buildEntries(state.dictionaries, state.customWords);
 
     // سورتیگ کلمات براساس طول (نزولی) برای اولویت دادن به عبارات طولانی‌تر
     // برای ریجکس‌ها طول سورس متنی آن را ملاک قرار می‌دهیم
@@ -40,15 +47,7 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
           const end = start + matchedText.length;
 
           // بررسی لیست سفید (وایت‌لیست) برای ریجکس
-          if (
-            isWhitelisted(
-              options.whitelist ?? [],
-              matchedText,
-              text,
-              start,
-              end,
-            )
-          ) {
+          if (isWhitelisted(state.whitelist, matchedText, text, start, end)) {
             continue;
           }
 
@@ -65,8 +64,8 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
       // ─── لایه دوم: همان منطق رشته‌های معمولی و خنثی‌سازی ۶ حالته شما ───
       else {
         const regex = buildWordRegex(entry.word, {
-          leetspeakMapping: options.leetspeakMapping ?? {},
-          faLookalikesMapping: options.faLookalikesMapping ?? {},
+          leetspeakMapping: state.leetspeakMapping,
+          faLookalikesMapping: state.faLookalikesMapping,
         });
         regex.lastIndex = 0;
 
@@ -76,15 +75,7 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
           const end = start + matchedText.length;
 
           // بررسی لیست سفید (وایت‌لیست)
-          if (
-            isWhitelisted(
-              options.whitelist ?? [],
-              matchedText,
-              text,
-              start,
-              end,
-            )
-          ) {
+          if (isWhitelisted(state.whitelist, matchedText, text, start, end)) {
             continue;
           }
 
@@ -129,9 +120,9 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
 
     for (const match of sortedMatchesForReplacement) {
       const maskString =
-        (options.mask ?? "*").length === 1
-          ? (options.mask ?? "*").repeat(match.matchedText.length)
-          : (options.mask ?? "*");
+        state.mask.length === 1
+          ? state.mask.repeat(match.matchedText.length)
+          : state.mask;
 
       filteredText =
         filteredText.substring(0, match.start) +
