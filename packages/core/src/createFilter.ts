@@ -1,9 +1,5 @@
 import { FilterOptions, FilterResult, Match, TextGuardInstance } from "./types";
-
-// تابع کمکی برای Escape کردن کاراکترهای خاص در Regex
-function escapeRegExp(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
+import { escapeRegExp } from "./utils/escapeRegExp";
 
 export function createFilter(options: FilterOptions): TextGuardInstance {
   // استخراج کلمات و الگوهای سفارشی کاربر (customWords) در کنار دیکشنری‌های اصلی
