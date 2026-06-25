@@ -1,6 +1,7 @@
 import { Match } from "./domain/match";
 import { FilterOptions, FilterResult, TextGuardInstance } from "./types";
-import { escapeRegExp } from "./utils/escapeRegExp";
+import { buildWordRegex } from "./engine/buildWordRegex";
+import { buildEntries } from "./engine/buildEntries";
 
 export function createFilter(options: FilterOptions): TextGuardInstance {
   // استخراج کلمات و الگوهای سفارشی کاربر (customWords) در کنار دیکشنری‌های اصلی
@@ -13,49 +14,13 @@ export function createFilter(options: FilterOptions): TextGuardInstance {
     faLookalikesMapping = {},
   } = options;
 
-  function buildWordRegex(word: string): RegExp {
-    const separator = "[\\s\\._\\-*\\u200c\\u0640]*";
-
-    const parts = Array.from(word).map((char) => {
-      const lowerChar = char.toLowerCase();
-
-      // الف: بررسی و اعمال نگاشت کاراکترهای مشابه پویا (پکیج فارسی)
-      if (faLookalikesMapping[lowerChar]) {
-        return `${faLookalikesMapping[lowerChar]}+`;
-      }
-
-      // ب: بررسی و اعمال نگاشت لیت‌اسپیک غنی‌شده (پکیج انگلیسی)
-      if (leetspeakMapping[lowerChar]) {
-        const alternatives = [
-          escapeRegExp(lowerChar),
-          ...leetspeakMapping[lowerChar].map(escapeRegExp),
-        ];
-        return `(${alternatives.join("|")})+`;
-      }
-
-      // ج: کاراکترهای معمولی
-      return `${escapeRegExp(char)}+`;
-    });
-
-    return new RegExp(parts.join(separator), "gi");
-  }
   // پیدا کردن تمام کلمات نامناسب همراه با جزئیات و موقعیت آن‌ها
   function findBadWords(text: string): Match[] {
     if (!text) return [];
     const matches: Match[] = [];
 
-    // ۱. تبدیل تمام کلمات دیکشنری‌ها به یک لیست فلت
-    const dictionaryEntries = dictionaries.flatMap((dict) => dict.words);
-
-    // ۲. تبدیل کلمات سفارشی کاربر (customWords) به فرمت استاندارد Entry
-    const customEntries = customWords.map((word) => ({
-      word,
-      severity: "high" as const,
-      category: "custom",
-    }));
-
     // ادغام هر دو لیست دیتابیس ما و کلمات سفارشی کاربر
-    const allEntries = [...dictionaryEntries, ...customEntries];
+    const allEntries = buildEntries(dictionaries, customWords);
 
     // سورتیگ کلمات براساس طول (نزولی) برای اولویت دادن به عبارات طولانی‌تر
     // برای ریجکس‌ها طول سورس متنی آن را ملاک قرار می‌دهیم
@@ -113,7 +78,10 @@ export function createFilter(options: FilterOptions): TextGuardInstance {
       }
       // ─── لایه دوم: همان منطق رشته‌های معمولی و خنثی‌سازی ۶ حالته شما ───
       else {
-        const regex = buildWordRegex(entry.word);
+        const regex = buildWordRegex(entry.word, {
+          leetspeakMapping,
+          faLookalikesMapping,
+        });
         regex.lastIndex = 0;
 
         while ((match = regex.exec(text)) !== null) {

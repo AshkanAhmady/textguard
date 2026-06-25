@@ -1,5 +1,4 @@
 import { Match } from "./match";
-import type { PipelineContext } from "./pipeline";
 
 export interface Rule {
   /**
@@ -25,5 +24,5 @@ export interface Rule {
   /**
    * اجرای Rule
    */
-  match(context: PipelineContext): Match[];
+  match(text: string): Match[];
 }

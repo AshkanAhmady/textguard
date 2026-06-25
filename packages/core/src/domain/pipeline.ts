@@ -15,5 +15,5 @@ export interface PipelineContext {
   /**
    * Matchهای پیدا شده تا این لحظه.
    */
-  matches: Match[];
+  matches: readonly Match[];
 }
