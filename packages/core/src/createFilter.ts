@@ -2,6 +2,7 @@ import { Match } from "./domain/match";
 import { FilterOptions, FilterResult, TextGuardInstance } from "./types";
 import { buildWordRegex } from "./engine/buildWordRegex";
 import { buildEntries } from "./engine/buildEntries";
+import { sortEntries } from "./engine/sortEntries";
 
 export function createFilter(options: FilterOptions): TextGuardInstance {
   // استخراج کلمات و الگوهای سفارشی کاربر (customWords) در کنار دیکشنری‌های اصلی
@@ -24,13 +25,7 @@ export function createFilter(options: FilterOptions): TextGuardInstance {
 
     // سورتیگ کلمات براساس طول (نزولی) برای اولویت دادن به عبارات طولانی‌تر
     // برای ریجکس‌ها طول سورس متنی آن را ملاک قرار می‌دهیم
-    const sortedEntries = allEntries.sort((a, b) => {
-      const lenA =
-        a.word instanceof RegExp ? a.word.source.length : a.word.length;
-      const lenB =
-        b.word instanceof RegExp ? b.word.source.length : b.word.length;
-      return lenB - lenA;
-    });
+    const sortedEntries = sortEntries(allEntries);
 
     for (const entry of sortedEntries) {
       let match;
