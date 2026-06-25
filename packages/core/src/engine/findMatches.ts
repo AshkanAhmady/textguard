@@ -6,13 +6,13 @@ import type { Entry } from "./buildEntries";
 
 export function findMatches(
   text: string,
-  rules: readonly Entry[],
+  entries: readonly Entry[],
   state: EngineState,
 ): Match[] {
   if (!text) return [];
   const matches: Match[] = [];
 
-  for (const entry of rules) {
+  for (const entry of entries) {
     let match;
 
     // ─── لایه اول: مدیریت هوشمند الگوهای منظم (RegExp) ───
