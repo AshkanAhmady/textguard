@@ -12,5 +12,5 @@ export const enLeetspeakMapping: Record<string, string[]> = {
   l: ["1", "|", "£"],
   f: ["ph", "|= "],
   c: ["¢", "<", "(", "©"],
-  k: ["|<", "|("]
+  k: ["|<", "|("],
 };

@@ -13,21 +13,21 @@ export { enPatterns };
 export { enLeetspeakMapping };
 
 export const enPack = {
-    profanity: enProfanity,
-    insults: enInsults,
-    spam: enSpam,
-    patterns: enPatterns,
-    leetspeak: enLeetspeakMapping,
+  profanity: enProfanity,
+  insults: enInsults,
+  spam: enSpam,
+  patterns: enPatterns,
+  leetspeak: enLeetspeakMapping,
 };
 
 export const enDictionary: Dictionary = {
-    name: "en",
-    language: "en",
-    version: "1.0.0",
-    words: [
-        ...enProfanity.words,
-        ...enInsults.words,
-        ...enSpam.words,
-        ...enPatterns.words,
-    ],
+  name: "en",
+  language: "en",
+  version: "1.0.0",
+  words: [
+    ...enProfanity.words,
+    ...enInsults.words,
+    ...enSpam.words,
+    ...enPatterns.words,
+  ],
 };

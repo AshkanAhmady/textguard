@@ -11,7 +11,8 @@
     "version-packages": "changeset version && pnpm install",
     "release": "pnpm build && changeset publish",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
