@@ -8,19 +8,15 @@ import { createEngineState } from "./state";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
   const state = createEngineState(options);
+  const entries = sortEntries(
+    buildEntries(state.dictionaries, state.customWords),
+  );
 
   function findBadWords(text: string): Match[] {
     if (!text) return [];
     const matches: Match[] = [];
 
-    // ادغام هر دو لیست دیتابیس ما و کلمات سفارشی کاربر
-    const allEntries = buildEntries(state.dictionaries, state.customWords);
-
-    // سورتیگ کلمات براساس طول (نزولی) برای اولویت دادن به عبارات طولانی‌تر
-    // برای ریجکس‌ها طول سورس متنی آن را ملاک قرار می‌دهیم
-    const sortedEntries = sortEntries(allEntries);
-
-    for (const entry of sortedEntries) {
+    for (const entry of entries) {
       let match;
 
       // ─── لایه اول: مدیریت هوشمند الگوهای منظم (RegExp) ───
