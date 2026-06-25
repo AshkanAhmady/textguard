@@ -1,4 +1,6 @@
-import type { Dictionary } from "../types";
+import type { Dictionary, DictionaryEntry } from "../types";
+
+export type Entry = DictionaryEntry;
 
 export function buildEntries(
   dictionaries: Dictionary[],
