@@ -1,19 +1,14 @@
 import type { Match } from "../domain/match";
-import type { Rule } from "../domain/rule";
 import type { MatchContext } from "../domain/matchContext";
-import type { DictionaryEntry } from "../types";
+import type { Rule } from "../domain/rule";
 
 export class RegexRule implements Rule {
   readonly id = "regex";
   readonly name = "Regex Rule";
+  readonly category = "regex";
+  readonly severity = "high" as const;
 
-  readonly category: string;
-  readonly severity: "low" | "medium" | "high";
-
-  constructor(readonly entry: DictionaryEntry) {
-    this.category = entry.category ?? "regex";
-    this.severity = entry.severity;
-  }
+  constructor(private readonly pattern: RegExp) {}
 
   match(_context: MatchContext): Match[] {
     throw new Error("Not implemented");
