@@ -1,20 +1,20 @@
 import type { Match } from "../domain/match";
 import type { FilterOptions, FilterResult, TextGuardInstance } from "../types";
-import { buildEntries } from "./buildEntries";
+import { buildRules } from "./buildRules";
 import { findMatches } from "./findMatches";
-import { sortEntries } from "./sortEntries";
 import { createEngineState } from "./state";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
   const state = createEngineState(options);
-  const entries = sortEntries(
-    buildEntries(state.dictionaries, state.customWords),
-  );
+  const rules = buildRules(state);
 
   function findBadWords(text: string): Match[] {
     if (!text) return [];
 
-    return findMatches(text, entries, state);
+    return findMatches(rules, {
+      text,
+      state,
+    });
   }
 
   function hasBadWord(text: string): boolean {
