@@ -1,7 +1,7 @@
 import type { DictionaryEntry } from "../types";
 import type { Match } from "../domain/match";
-import type { Rule } from "../domain/rule";
-import { MatchContext } from "../domain/matchContext";
+import type { Rule } from "../future/rule";
+import { MatchContext } from "../future/matchContext";
 
 export class DictionaryRule implements Rule {
   readonly id = "dictionary";

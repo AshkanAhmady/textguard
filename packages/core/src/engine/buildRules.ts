@@ -1,5 +1,5 @@
 import { DictionaryRule } from "../rules/dictionaryRule";
-import type { Rule } from "../domain/rule";
+import type { Rule } from "../future/rule";
 import { buildEntries } from "./buildEntries";
 import { sortEntries } from "./sortEntries";
 import { EngineState } from "./state";
