@@ -6,7 +6,7 @@ export interface Rule {
   readonly name: string;
   readonly category: string;
   readonly severity: "low" | "medium" | "high";
-
+  readonly priority: number;
   supports(context: MatchContext): boolean;
 
   match(context: MatchContext): Match[];

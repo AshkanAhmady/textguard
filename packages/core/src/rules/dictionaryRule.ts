@@ -8,7 +8,7 @@ import { buildWordRegex } from "../engine/buildWordRegex";
 export class DictionaryRule implements Rule {
   readonly id = "dictionary";
   readonly name = "Dictionary Rule";
-
+  readonly priority = 100;
   readonly category: string;
   readonly severity: "low" | "medium" | "high";
   supports(): boolean {
