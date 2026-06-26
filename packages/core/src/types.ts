@@ -1,17 +1,5 @@
 import { Match } from "./domain/match";
-
-export interface DictionaryEntry {
-  word: string | RegExp;
-  severity: "low" | "medium" | "high";
-  category?: "profanity" | "insults" | "spam" | "custom" | string;
-}
-
-export interface Dictionary {
-  name: string;
-  language: string;
-  version: string;
-  words: DictionaryEntry[];
-}
+import type { Dictionary, DictionaryEntry } from "./domain/dictionary";
 
 export interface FilterOptions {
   dictionaries?: Dictionary[];
@@ -33,3 +21,5 @@ export interface TextGuardInstance {
   findBadWords(text: string): Match[];
   filter(text: string): FilterResult;
 }
+
+export type { Dictionary, DictionaryEntry };
