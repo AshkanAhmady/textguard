@@ -3,6 +3,7 @@ import type { Match } from "../domain/match";
 import { MatchContext } from "../domain/matchContext";
 import { Rule } from "../domain/rule";
 import { isOverlapped, isWhitelisted } from "../engine/helpers";
+import { buildWordRegex } from "../engine/buildWordRegex";
 
 export class DictionaryRule implements Rule {
   readonly id = "dictionary";
@@ -18,26 +19,50 @@ export class DictionaryRule implements Rule {
 
   match(context: MatchContext): Match[] {
     const { text, state } = context;
-
-    if (!(this.entry.word instanceof RegExp)) {
-      return [];
-    }
-
     const matches: Match[] = [];
 
-    const flags = this.entry.word.flags.includes("g")
-      ? this.entry.word.flags
-      : this.entry.word.flags + "g";
+    if (this.entry.word instanceof RegExp) {
+      const flags = this.entry.word.flags.includes("g")
+        ? this.entry.word.flags
+        : this.entry.word.flags + "g";
 
-    const regex = new RegExp(this.entry.word.source, flags);
+      const regex = new RegExp(this.entry.word.source, flags);
+
+      let match: RegExpExecArray | null;
+
+      while ((match = regex.exec(text)) !== null) {
+        const matchedText = match[0];
+        if (!matchedText) break;
+
+        const start = match.index;
+        const end = start + matchedText.length;
+
+        if (isWhitelisted(state.whitelist, matchedText, text, start, end)) {
+          continue;
+        }
+
+        if (!isOverlapped(matches, start, end)) {
+          matches.push({
+            word: this.entry.word.source,
+            matchedText,
+            start,
+            end,
+          });
+        }
+      }
+
+      return matches;
+    }
+
+    const regex = buildWordRegex(this.entry.word, {
+      leetspeakMapping: state.leetspeakMapping,
+      faLookalikesMapping: state.faLookalikesMapping,
+    });
 
     let match: RegExpExecArray | null;
 
     while ((match = regex.exec(text)) !== null) {
       const matchedText = match[0];
-
-      if (!matchedText) break;
-
       const start = match.index;
       const end = start + matchedText.length;
 
@@ -47,7 +72,7 @@ export class DictionaryRule implements Rule {
 
       if (!isOverlapped(matches, start, end)) {
         matches.push({
-          word: this.entry.word.source,
+          word: this.entry.word,
           matchedText,
           start,
           end,
