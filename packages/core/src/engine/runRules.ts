@@ -9,6 +9,8 @@ export function runRules(
   const matches: Match[] = [];
 
   for (const rule of rules) {
+    if (!rule.supports(context)) continue;
+
     matches.push(...rule.match(context));
   }
 

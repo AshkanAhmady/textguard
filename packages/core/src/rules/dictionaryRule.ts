@@ -11,6 +11,9 @@ export class DictionaryRule implements Rule {
 
   readonly category: string;
   readonly severity: "low" | "medium" | "high";
+  supports(): boolean {
+    return true;
+  }
 
   constructor(readonly entry: DictionaryEntry) {
     this.category = entry.category ?? "dictionary";

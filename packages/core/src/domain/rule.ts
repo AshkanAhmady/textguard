@@ -7,5 +7,7 @@ export interface Rule {
   readonly category: string;
   readonly severity: "low" | "medium" | "high";
 
+  supports(context: MatchContext): boolean;
+
   match(context: MatchContext): Match[];
 }
