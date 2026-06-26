@@ -7,8 +7,9 @@ export function runRules(
   context: MatchContext,
 ): Match[] {
   const matches: Match[] = [];
+  const sortedRules = [...rules].sort((a, b) => a.priority - b.priority);
 
-  for (const rule of rules) {
+  for (const rule of sortedRules) {
     if (!rule.supports(context)) continue;
 
     matches.push(...rule.match(context));
