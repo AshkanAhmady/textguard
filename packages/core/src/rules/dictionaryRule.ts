@@ -1,6 +1,7 @@
 import type { DictionaryEntry } from "../types";
 import type { Match } from "../domain/match";
 import type { Rule } from "../domain/rule";
+import { MatchContext } from "../domain/matchContext";
 
 export class DictionaryRule implements Rule {
   readonly id = "dictionary";
@@ -14,7 +15,7 @@ export class DictionaryRule implements Rule {
     this.severity = entry.severity;
   }
 
-  match(_text: string): Match[] {
+  match(_context: MatchContext): Match[] {
     throw new Error("Not implemented");
   }
 }

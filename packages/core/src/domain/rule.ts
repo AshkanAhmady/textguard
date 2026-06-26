@@ -1,4 +1,5 @@
 import { Match } from "./match";
+import { MatchContext } from "./matchContext";
 
 export interface Rule {
   /**
@@ -24,5 +25,5 @@ export interface Rule {
   /**
    * اجرای Rule
    */
-  match(text: string): Match[];
+  match(context: MatchContext): Match[];
 }
