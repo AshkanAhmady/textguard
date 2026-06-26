@@ -5,7 +5,11 @@ import { sortEntries } from "./sortEntries";
 import { EngineState } from "./state";
 
 export function buildRules(state: EngineState): readonly Rule[] {
-  return sortEntries(buildEntries(state.dictionaries, state.customWords)).map(
-    createRule,
+  const entries = sortEntries(
+    buildEntries(state.dictionaries, state.customWords),
   );
+
+  const rules = entries.map(createRule);
+
+  return rules;
 }
