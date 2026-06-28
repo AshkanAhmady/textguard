@@ -32,7 +32,9 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
     },
   };
   const pluginManager = new PluginManager(pluginContext);
-  pluginManager.register(new DictionaryPlugin(state.dictionaries));
+  pluginManager.register(
+    new DictionaryPlugin(state.dictionaries, state.customWords),
+  );
 
   function findBadWords(text: string): Match[] {
     if (!text) return [];
