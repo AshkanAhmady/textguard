@@ -7,22 +7,38 @@ import { NormalizationPipeline } from "./normalizationPipeline";
 import { UnicodeNormalizer } from "../normalizers/unicodeNormalizer";
 import { PersianNormalizer } from "../normalizers/persianNormalizer";
 import { ArabicNormalizer } from "../normalizers/arabicNormalizer";
+import { PluginContext } from "../domain/pluginContext";
+import { PluginManager } from "./pluginManager";
+import { RuleCollection } from "./ruleCollection";
+import { NormalizerCollection } from "./normalizerCollection";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
   const state = createEngineState(options);
-  const rules = buildRules(state);
-  const pipeline = new NormalizationPipeline([
+  const ruleCollection = new RuleCollection(buildRules(state));
+  const normalizerCollection = new NormalizerCollection([
     new UnicodeNormalizer(),
     new PersianNormalizer(),
     new ArabicNormalizer(),
   ]);
+
+  const pipeline = new NormalizationPipeline(normalizerCollection.getAll());
+  const pluginContext: PluginContext = {
+    addRule(rule) {
+      ruleCollection.add(rule);
+    },
+
+    addNormalizer(normalizer) {
+      normalizerCollection.add(normalizer);
+    },
+  };
+  const pluginManager = new PluginManager(pluginContext);
 
   function findBadWords(text: string): Match[] {
     if (!text) return [];
 
     const normalizedText = pipeline.run(text);
 
-    return findMatches(rules, {
+    return findMatches(ruleCollection.getAll(), {
       text: normalizedText,
       state,
     });
@@ -74,5 +90,8 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
     filter,
     hasBadWord,
     findBadWords,
+    use(plugin) {
+      pluginManager.register(plugin);
+    },
   };
 }

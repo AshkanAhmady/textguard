@@ -1,5 +1,6 @@
 import { Match } from "./domain/match";
 import type { Dictionary, DictionaryEntry } from "./domain/dictionary";
+import type { Plugin } from "./domain/plugin";
 
 export interface FilterOptions {
   dictionaries?: Dictionary[];
@@ -20,6 +21,7 @@ export interface TextGuardInstance {
   hasBadWord(text: string): boolean;
   findBadWords(text: string): Match[];
   filter(text: string): FilterResult;
+  use(plugin: Plugin): void;
 }
 
 export type { Dictionary, DictionaryEntry };
