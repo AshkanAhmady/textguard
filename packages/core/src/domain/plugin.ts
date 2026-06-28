@@ -1,5 +1,7 @@
+import { PluginContext } from "./pluginContext";
+
 export interface Plugin {
   readonly name: string;
 
-  setup(): void;
+  setup(context: PluginContext): void;
 }
