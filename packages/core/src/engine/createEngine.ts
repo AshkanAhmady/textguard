@@ -3,16 +3,27 @@ import type { FilterOptions, FilterResult, TextGuardInstance } from "../types";
 import { buildRules } from "./buildRules";
 import { findMatches } from "./findMatches";
 import { createEngineState } from "./state";
+import { NormalizationPipeline } from "./normalizationPipeline";
+import { UnicodeNormalizer } from "../normalizers/unicodeNormalizer";
+import { PersianNormalizer } from "../normalizers/persianNormalizer";
+import { ArabicNormalizer } from "../normalizers/arabicNormalizer";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
   const state = createEngineState(options);
   const rules = buildRules(state);
+  const pipeline = new NormalizationPipeline([
+    new UnicodeNormalizer(),
+    new PersianNormalizer(),
+    new ArabicNormalizer(),
+  ]);
 
   function findBadWords(text: string): Match[] {
     if (!text) return [];
 
+    const normalizedText = pipeline.run(text);
+
     return findMatches(rules, {
-      text,
+      text: normalizedText,
       state,
     });
   }
