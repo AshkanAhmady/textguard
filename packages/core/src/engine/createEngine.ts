@@ -1,6 +1,5 @@
 import type { Match } from "../domain/match";
 import type { FilterOptions, FilterResult, TextGuardInstance } from "../types";
-import { buildRules } from "./buildRules";
 import { findMatches } from "./findMatches";
 import { createEngineState } from "./state";
 import { NormalizationPipeline } from "./normalizationPipeline";
@@ -11,10 +10,11 @@ import { PluginContext } from "../domain/pluginContext";
 import { PluginManager } from "./pluginManager";
 import { RuleCollection } from "./ruleCollection";
 import { NormalizerCollection } from "./normalizerCollection";
+import { DictionaryPlugin } from "../plugins/dictionaryPlugin";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
   const state = createEngineState(options);
-  const ruleCollection = new RuleCollection(buildRules(state));
+  const ruleCollection = new RuleCollection();
   const normalizerCollection = new NormalizerCollection([
     new UnicodeNormalizer(),
     new PersianNormalizer(),
@@ -32,6 +32,7 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
     },
   };
   const pluginManager = new PluginManager(pluginContext);
+  pluginManager.register(new DictionaryPlugin(state.dictionaries));
 
   function findBadWords(text: string): Match[] {
     if (!text) return [];
