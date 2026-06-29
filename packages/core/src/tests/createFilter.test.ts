@@ -6,8 +6,12 @@ import {
   faPatterns,
   faProfanity,
   faLookalikesMapping,
-} from "@textguard/fa";
-import { enProfanity, enLeetspeakMapping, enInsults } from "@textguard/en";
+} from "@textguard/plugin-fa";
+import {
+  enProfanity,
+  enLeetspeakMapping,
+  enInsults,
+} from "@textguard/plugin-en";
 
 // اضافه کردن یک کلمه دارای «ک» برای تست دقیق حروف مشابه
 const mockDictionary: Dictionary = {

@@ -1,9 +1,9 @@
 import type { Dictionary } from "@textguard/core";
 
-import { faInsults } from "./insults";
+import { faInsults } from "./dictionaries/insults";
 import { faLookalikesMapping } from "./lookalikes";
-import { faPatterns } from "./patterns";
-import { faProfanity } from "./profanity";
+import { faPatterns } from "./dictionaries/patterns";
+import { faProfanity } from "./dictionaries/profanity";
 import { faSpam } from "./spam";
 
 export { faProfanity };

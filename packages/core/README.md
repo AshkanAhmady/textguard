@@ -26,8 +26,8 @@ The core engine revolves around the powerful createFilter method. You can instan
 
 TypeScript
 import { createFilter } from '@textguard/core';
-import { faRules } from '@textguard/fa';
-import { enRules } from '@textguard/en';
+import { faRules } from '@textguard/plugin-fa';
+import { enRules } from '@textguard/plugin-en';
 
 // Initialize the filter engine with selected language configurations
 const filter = createFilter({
@@ -45,9 +45,9 @@ console.log(cleanedText); // "این یک متن نمونه است ****!"
 🌐 The Roadmap (Multi-Language Ecosystem)
 TextGuard is built to scale globally. Currently, it fully supports:
 
-🟢 @textguard/fa (Official Persian Pack)
+🟢 @textguard/plugin-fa (Official Persian Pack)
 
-🟢 @textguard/en (Official English Pack)
+🟢 @textguard/plugin-en (Official English Pack)
 
 💡 More languages (such as Arabic, Spanish, and German) are actively under development and coming very soon!
 

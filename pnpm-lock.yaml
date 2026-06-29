@@ -43,12 +43,12 @@ importers:
       "@repo/eslint-config":
         specifier: workspace:*
         version: link:../eslint-config
-      "@textguard/en":
+      "@textguard/plugin-en":
         specifier: workspace:*
-        version: link:../en
-      "@textguard/fa":
+        version: link:../plugins/languages/en
+      "@textguard/plugin-fa":
         specifier: workspace:*
-        version: link:../fa
+        version: link:../plugins/languages/fa
       tsup:
         specifier: ^8.0.2
         version: 8.5.1(postcss@8.5.15)(typescript@5.9.2)(yaml@2.9.0)
@@ -58,22 +58,6 @@ importers:
       vitest:
         specifier: ^4.1.8
         version: 4.1.8(@types/node@22.19.21)(@vitest/coverage-v8@4.1.8)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.27.7)(yaml@2.9.0))
-
-  packages/en:
-    dependencies:
-      "@textguard/core":
-        specifier: ^1.0.1
-        version: 1.0.1
-    devDependencies:
-      "@repo/eslint-config":
-        specifier: workspace:*
-        version: link:../eslint-config
-      tsup:
-        specifier: ^8.3.5
-        version: 8.5.1(postcss@8.5.15)(typescript@5.9.2)(yaml@2.9.0)
-      typescript:
-        specifier: ^5.7.3
-        version: 5.9.2
 
   packages/eslint-config:
     devDependencies:
@@ -111,7 +95,7 @@ importers:
         specifier: ^8.50.0
         version: 8.61.0(eslint@9.39.4)(typescript@5.9.2)
 
-  packages/fa:
+  packages/plugins/languages/en:
     dependencies:
       "@textguard/core":
         specifier: ^1.0.1
@@ -119,7 +103,23 @@ importers:
     devDependencies:
       "@repo/eslint-config":
         specifier: workspace:*
-        version: link:../eslint-config
+        version: link:../../../eslint-config
+      tsup:
+        specifier: ^8.3.5
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.2)(yaml@2.9.0)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.2
+
+  packages/plugins/languages/fa:
+    dependencies:
+      "@textguard/core":
+        specifier: ^1.0.1
+        version: 1.0.1
+    devDependencies:
+      "@repo/eslint-config":
+        specifier: workspace:*
+        version: link:../../../eslint-config
       tsup:
         specifier: ^8.3.5
         version: 8.5.1(postcss@8.5.15)(typescript@5.9.2)(yaml@2.9.0)

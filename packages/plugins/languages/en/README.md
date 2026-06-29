@@ -1,5 +1,5 @@
 ````markdown
-# @textguard/en 🇺🇸🇬🇧
+# @textguard/plugin-en 🇺🇸🇬🇧
 
 > **Official English language pack, dictionary, and advanced Leetspeak rules for the `textguard` ecosystem.**
 
@@ -9,18 +9,18 @@ This extension package provides an optimized dictionary of profanities and sophi
 
 ### 🔥 Key Highlight: Advanced Leetspeak Detection
 
-Trolls and spammers love to bypass standard filters by replacing letters with numbers or symbols (e.g., writing `1di0t` instead of `idiot`). `@textguard/en` comes equipped with built-in **Leetspeak obfuscation patterns** that catch these bypass attempts automatically.
+Trolls and spammers love to bypass standard filters by replacing letters with numbers or symbols (e.g., writing `1di0t` instead of `idiot`). `@textguard/plugin-en` comes equipped with built-in **Leetspeak obfuscation patterns** that catch these bypass attempts automatically.
 
 ---
 
 ### 🚀 Installation
 
 ```bash
-pnpm add @textguard/core @textguard/en
+pnpm add @textguard/core @textguard/plugin-en
 💻 Usage & Filtering Variations
 TypeScript
 import { createFilter } from '@textguard/core';
-import { enRules } from '@textguard/en';
+import { enRules } from '@textguard/plugin-en';
 
 const filter = createFilter({
   languages: [enRules]

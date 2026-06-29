@@ -1,4 +1,4 @@
-# @textguard/en
+# @textguard/plugin-en
 
 ## 1.0.0
 

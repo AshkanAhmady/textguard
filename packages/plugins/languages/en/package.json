@@ -1,7 +1,7 @@
 {
-  "name": "@textguard/fa",
+  "name": "@textguard/plugin-en",
   "version": "1.0.1",
-  "description": "Official Persian language pack and patterns for TextGuard",
+  "description": "Official English language pack, Leetspeak rules and patterns for TextGuard",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -36,8 +36,7 @@
     "url": "git+https://github.com/AshkanAhmady/textguard.git"
   },
   "keywords": [
-    "persian",
-    "farsi",
+    "english",
     "profanity",
     "bad-words",
     "moderation",

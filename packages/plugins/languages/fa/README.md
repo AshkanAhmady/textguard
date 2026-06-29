@@ -1,5 +1,5 @@
 ````markdown
-# @textguard/fa 🇮🇷
+# @textguard/plugin-fa 🇮🇷
 
 > **پلاگین و دایره واژگان رسمی زبان فارسی برای سیستم فیلترینگ هوشمند و مدرن `textguard`.**
 
@@ -18,13 +18,13 @@
 ### 🚀 نصب
 
 ```bash
-pnpm add @textguard/core @textguard/fa
+pnpm add @textguard/core @textguard/plugin-fa
 💻 نحوه استفاده و مثال‌های واقعی
 به کمک پکیج اصلی و این واژه‌نامه فارسی، می‌توانید کامنت‌ها، چت‌ها و نام‌های کاربری سیستم خود را در سریع‌ترین زمان ممکن پایش کنید:
 
 TypeScript
 import { createFilter } from '@textguard/core';
-import { faRules } from '@textguard/fa';
+import { faRules } from '@textguard/plugin-fa';
 
 const filter = createFilter({
   languages: [faRules]

@@ -3,8 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "@textguard/core": ["packages/core/src/index.ts"],
-      "@textguard/fa": ["packages/fa/src/index.ts"],
-      "@textguard/en": ["packages/en/src/index.ts"]
+      "@textguard/plugin-fa": ["packages/plugins/languages/fa/src/index.ts"],
+      "@textguard/plugin-en": ["packages/plugins/languages/en/src/index.ts"]
     }
   }
 }

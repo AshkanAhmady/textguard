@@ -41,8 +41,8 @@
   ],
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@textguard/fa": "workspace:*",
-    "@textguard/en": "workspace:*",
+    "@textguard/plugin-fa": "workspace:*",
+    "@textguard/plugin-en": "workspace:*",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3",
     "vitest": "^4.1.8"
