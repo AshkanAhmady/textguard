@@ -43,6 +43,9 @@ importers:
       "@repo/eslint-config":
         specifier: workspace:*
         version: link:../eslint-config
+      "@textguard/plugin-email":
+        specifier: workspace:*
+        version: link:../plugins/detection/email
       "@textguard/plugin-en":
         specifier: workspace:*
         version: link:../plugins/languages/en

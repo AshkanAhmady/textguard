@@ -12,6 +12,7 @@ import {
   enLeetspeakMapping,
   enInsults,
 } from "@textguard/plugin-en";
+import { emailPlugin } from "@textguard/plugin-email";
 
 // اضافه کردن یک کلمه دارای «ک» برای تست دقیق حروف مشابه
 const mockDictionary: Dictionary = {
@@ -150,5 +151,17 @@ describe("TextGuard Engine - English & Leetspeak Detection", () => {
 
     expect(matches).toHaveLength(1);
     expect(matches[0].matchedText).toBe("احمقانه");
+  });
+
+  it("should detect email using plugin", () => {
+    const guard = createFilter();
+
+    guard.use(emailPlugin());
+
+    const result = guard.filter("Contact me at test@example.com");
+
+    expect(result.matches).toHaveLength(1);
+    expect(result.matches[0].matchedText).toBe("test@example.com");
+    expect(result.filteredText).toContain("***");
   });
 });

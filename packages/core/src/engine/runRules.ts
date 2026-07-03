@@ -12,7 +12,27 @@ export function runRules(
   for (const rule of sortedRules) {
     if (!rule.supports(context)) continue;
 
-    matches.push(...rule.match(context));
+    const ruleMatches = rule.match(context);
+
+    for (const match of ruleMatches) {
+      const overlappedIndex = matches.findIndex(
+        (existing) => match.start < existing.end && match.end > existing.start,
+      );
+
+      if (overlappedIndex === -1) {
+        matches.push(match);
+        continue;
+      }
+
+      const existing = matches[overlappedIndex];
+
+      const existingLength = existing.end - existing.start;
+      const currentLength = match.end - match.start;
+
+      if (currentLength > existingLength) {
+        matches[overlappedIndex] = match;
+      }
+    }
   }
 
   return matches.sort((a, b) => a.start - b.start);
