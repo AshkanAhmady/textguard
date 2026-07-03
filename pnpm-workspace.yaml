@@ -2,3 +2,4 @@ packages:
   - "packages/*"
   - "packages/plugins/*"
   - "packages/plugins/languages/*"
+  - "packages/plugins/detection/*"

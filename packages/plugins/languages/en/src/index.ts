@@ -31,3 +31,9 @@ export const enDictionary: Dictionary = {
     ...enPatterns.words,
   ],
 };
+
+export const language = {
+  code: "ar",
+  nativeName: "العربية",
+  englishName: "Arabic",
+};

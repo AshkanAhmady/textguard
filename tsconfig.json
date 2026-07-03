@@ -4,7 +4,8 @@
     "paths": {
       "@textguard/core": ["packages/core/src/index.ts"],
       "@textguard/plugin-fa": ["packages/plugins/languages/fa/src/index.ts"],
-      "@textguard/plugin-en": ["packages/plugins/languages/en/src/index.ts"]
+      "@textguard/plugin-en": ["packages/plugins/languages/en/src/index.ts"],
+      "@textguard/plugin-ar": ["packages/plugins/languages/ar/src/index.ts"]
     }
   }
 }

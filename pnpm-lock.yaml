@@ -95,6 +95,38 @@ importers:
         specifier: ^8.50.0
         version: 8.61.0(eslint@9.39.4)(typescript@5.9.2)
 
+  packages/plugins/detection/email:
+    dependencies:
+      "@textguard/core":
+        specifier: workspace:*
+        version: link:../../../core
+    devDependencies:
+      "@repo/eslint-config":
+        specifier: workspace:*
+        version: link:../../../eslint-config
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.2)(yaml@2.9.0)
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
+  packages/plugins/languages/ar:
+    dependencies:
+      "@textguard/core":
+        specifier: ^1.0.1
+        version: 1.0.1
+    devDependencies:
+      "@repo/eslint-config":
+        specifier: workspace:*
+        version: link:../../../eslint-config
+      tsup:
+        specifier: ^8.3.5
+        version: 8.5.1(postcss@8.5.15)(typescript@5.9.2)(yaml@2.9.0)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.2
+
   packages/plugins/languages/en:
     dependencies:
       "@textguard/core":

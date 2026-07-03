@@ -24,4 +24,10 @@ export interface TextGuardInstance {
   use(plugin: Plugin): void;
 }
 
+// export interface LanguageMetadata {
+//   code: string;
+//   nativeName: string;
+//   englishName: string;
+// }
+
 export type { Dictionary, DictionaryEntry };

@@ -1,0 +1,45 @@
+{
+  "name": "@textguard/plugin-ar",
+  "version": "1.0.1",
+  "description": "Official Arabic language pack and patterns for TextGuard",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@textguard/core": "^1.0.1"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3"
+  },
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AshkanAhmady/textguard.git"
+  },
+  "keywords": [
+    "arabic",
+    "profanity",
+    "bad-words",
+    "moderation",
+    "textguard"
+  ]
+}
