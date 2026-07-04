@@ -6,6 +6,6 @@ export class UrlPlugin implements Plugin {
   readonly name = "url";
 
   setup(context: PluginContext): void {
-    context.addRule(new UrlRule());
+    context.addRule(UrlRule);
   }
 }
