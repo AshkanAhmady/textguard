@@ -11,3 +11,5 @@ export type {
   Dictionary,
   DictionaryEntry,
 } from "./types";
+export { createRegexRule } from "./rules/createRegexRule";
+export type { RegexRuleOptions } from "./rules/createRegexRule";
