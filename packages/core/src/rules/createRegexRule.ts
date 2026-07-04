@@ -10,6 +10,7 @@ export interface RegexRuleOptions {
   priority: number;
   regex: RegExp;
   word: string;
+  validator?: (matchedText: string) => boolean;
 }
 
 export function createRegexRule(options: RegexRuleOptions): Rule {
@@ -37,6 +38,9 @@ export function createRegexRule(options: RegexRuleOptions): Rule {
       let match: RegExpExecArray | null;
 
       while ((match = regex.exec(context.text)) !== null) {
+        if (options.validator && !options.validator(match[0])) {
+          continue;
+        }
         matches.push({
           word: options.word,
           matchedText: match[0],

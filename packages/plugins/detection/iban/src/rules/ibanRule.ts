@@ -1,5 +1,7 @@
 import { createRegexRule } from "@textguard/core";
+
 import { IBAN_REGEX } from "../regex/ibanRegex";
+import { isValidIban } from "../utils/mod97";
 
 export const IbanRule = createRegexRule({
   id: "iban",
@@ -9,4 +11,5 @@ export const IbanRule = createRegexRule({
   priority: 200,
   regex: IBAN_REGEX,
   word: "iban",
+  validator: isValidIban,
 });
