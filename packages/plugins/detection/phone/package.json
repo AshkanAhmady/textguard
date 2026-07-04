@@ -1,7 +1,7 @@
 {
-  "name": "@textguard/plugin-url",
+  "name": "@textguard/plugin-phone",
   "version": "1.0.1",
-  "description": "Official Url Detection Plugin for TextGuard",
+  "description": "Official Phone Detection Plugin for TextGuard",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
