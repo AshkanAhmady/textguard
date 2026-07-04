@@ -58,4 +58,12 @@ describe("credit-card-plugin", () => {
 
     expect(filter.findBadWords("1234 5678 9012")).toHaveLength(0);
   });
+
+  it("should ignore cards that fail luhn validation", () => {
+    const filter = createFilter();
+
+    filter.use(creditCardPlugin());
+
+    expect(filter.findBadWords("4111 1111 1111 1112")).toHaveLength(0);
+  });
 });
