@@ -6,6 +6,6 @@ export class EmailPlugin implements Plugin {
   readonly name = "email";
 
   setup(context: PluginContext): void {
-    context.addRule(new EmailRule());
+    context.addRule(EmailRule);
   }
 }
