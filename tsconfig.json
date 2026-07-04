@@ -8,7 +8,8 @@
       "@textguard/plugin-ar": ["packages/plugins/languages/ar/src/index.ts"],
       "@textguard/plugin-email": [
         "packages/plugins/detection/email/src/index.ts"
-      ]
+      ],
+      "@textguard/plugin-url": ["packages/plugins/detection/url/src/index.ts"]
     }
   }
 }

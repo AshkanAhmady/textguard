@@ -1,4 +1,8 @@
-describe("TextGuard Regex Engine - Obfuscation Detection", () => {
+import { describe, it, expect } from "vitest";
+import { createFilter } from "@textguard/core";
+import { emailPlugin } from "../index";
+
+describe("email-plugin", () => {
   it("should detect email addresses", () => {
     const filter = createFilter();
 
@@ -17,5 +21,17 @@ describe("TextGuard Regex Engine - Obfuscation Detection", () => {
     filter.use(emailPlugin());
 
     expect(filter.findBadWords("Hello world")).toHaveLength(0);
+  });
+
+  it("should detect email using plugin", () => {
+    const guard = createFilter();
+
+    guard.use(emailPlugin());
+
+    const result = guard.filter("Contact me at test@example.com");
+
+    expect(result.matches).toHaveLength(1);
+    expect(result.matches[0].matchedText).toBe("test@example.com");
+    expect(result.filteredText).toContain("***");
   });
 });
