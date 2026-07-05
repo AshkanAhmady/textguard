@@ -1,0 +1,49 @@
+import { createFilter, Dictionary } from "@textguard/core";
+import { describe, it, expect } from "vitest";
+import { enProfanity } from "../profanity";
+import { enInsults } from "../insults";
+import { enLeetspeakMapping } from "../leetspeak";
+
+describe("TextGuard Engine - English & Leetspeak Detection", () => {
+  const filterEngine = createFilter({
+    dictionaries: [enProfanity, enInsults],
+    leetspeakMapping: enLeetspeakMapping,
+  });
+
+  it("باید کلمات لیت‌اسپیک ترکیبی و عددی/نمادی را با دقت بالا دیتکت و سانسور کند", () => {
+    const res1 = filterEngine.filter("Don't be a b1tch");
+
+    expect(filterEngine.hasBadWord("b1tch")).toBe(true);
+    expect(filterEngine.hasBadWord("fμ¢k")).toBe(true);
+    expect(filterEngine.hasBadWord("5tup1d")).toBe(true);
+
+    expect(res1.filteredText).toContain("*****");
+  });
+
+  it("should ignore overlapped matches", () => {
+    const dictionary: Dictionary = {
+      name: "test",
+      language: "fa",
+      version: "1.0.0",
+      words: [
+        {
+          word: "احمق",
+          severity: "high",
+        },
+        {
+          word: "احمقانه",
+          severity: "high",
+        },
+      ],
+    };
+
+    const guard = createFilter({
+      dictionaries: [dictionary],
+    });
+
+    const matches = guard.findBadWords("این رفتار احمقانه است");
+
+    expect(matches).toHaveLength(1);
+    expect(matches[0].matchedText).toBe("احمقانه");
+  });
+});
