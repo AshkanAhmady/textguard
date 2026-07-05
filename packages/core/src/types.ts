@@ -9,6 +9,7 @@ export interface FilterOptions {
   mask?: string; // مثلاً "***" یا "###" یا "🌟"
   leetspeakMapping?: Record<string, string[]>;
   faLookalikesMapping?: Record<string, string>;
+  plugins?: Plugin[];
 }
 
 export interface FilterResult {
@@ -23,11 +24,5 @@ export interface TextGuardInstance {
   filter(text: string): FilterResult;
   use(plugin: Plugin): void;
 }
-
-// export interface LanguageMetadata {
-//   code: string;
-//   nativeName: string;
-//   englishName: string;
-// }
 
 export type { Dictionary, DictionaryEntry };

@@ -1,0 +1,1 @@
+export { strictPreset } from "./strictPreset";

@@ -12,6 +12,7 @@ import {
   enLeetspeakMapping,
   enInsults,
 } from "@textguard/plugin-en";
+import type { Plugin } from "../domain/plugin";
 
 // اضافه کردن یک کلمه دارای «ک» برای تست دقیق حروف مشابه
 const mockDictionary: Dictionary = {
@@ -150,5 +151,25 @@ describe("TextGuard Engine - English & Leetspeak Detection", () => {
 
     expect(matches).toHaveLength(1);
     expect(matches[0].matchedText).toBe("احمقانه");
+  });
+});
+
+describe("TextGuard Engine - Plugin Registration", () => {
+  it("should register plugins passed to createFilter", () => {
+    let setupCalled = false;
+
+    const plugin: Plugin = {
+      name: "test-plugin",
+
+      setup() {
+        setupCalled = true;
+      },
+    };
+
+    createFilter({
+      plugins: [plugin],
+    });
+
+    expect(setupCalled).toBe(true);
   });
 });
