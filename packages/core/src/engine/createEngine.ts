@@ -30,9 +30,6 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
     addNormalizer(normalizer) {
       normalizerCollection.add(normalizer);
     },
-    addDictionary(dictionary) {
-      state.dictionaries.push(dictionary);
-    },
   };
   const pluginManager = new PluginManager(pluginContext);
   pluginManager.register(

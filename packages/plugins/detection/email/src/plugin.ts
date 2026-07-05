@@ -1,5 +1,4 @@
 import type { Plugin, PluginContext } from "@textguard/core";
-
 import { EmailRule } from "./rules/emailRule";
 
 export class EmailPlugin implements Plugin {
