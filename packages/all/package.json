@@ -20,7 +20,17 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@textguard/core": "workspace:*"
+    "@textguard/core": "workspace:*",
+    "@textguard/plugin-fa": "workspace:*",
+    "@textguard/plugin-en": "workspace:*",
+    "@textguard/plugin-ar": "workspace:*",
+    "@textguard/plugin-email": "workspace:*",
+    "@textguard/plugin-url": "workspace:*",
+    "@textguard/plugin-phone": "workspace:*",
+    "@textguard/plugin-ip": "workspace:*",
+    "@textguard/plugin-uuid": "workspace:*",
+    "@textguard/plugin-credit-card": "workspace:*",
+    "@textguard/plugin-iban": "workspace:*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
