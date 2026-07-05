@@ -31,3 +31,9 @@ export const faDictionary: Dictionary = {
     ...faPatterns.words,
   ],
 };
+
+export const faLanguage = {
+  code: "fa",
+  nativeName: "فارسی",
+  englishName: "Persian",
+};

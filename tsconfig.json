@@ -1,29 +1,3 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@textguard/core": ["packages/core/src/index.ts"],
-      "@textguard/plugin-fa": ["packages/plugins/languages/fa/src/index.ts"],
-      "@textguard/plugin-en": ["packages/plugins/languages/en/src/index.ts"],
-      "@textguard/plugin-ar": ["packages/plugins/languages/ar/src/index.ts"],
-      "@textguard/plugin-email": [
-        "packages/plugins/detection/email/src/index.ts"
-      ],
-      "@textguard/plugin-url": ["packages/plugins/detection/url/src/index.ts"],
-      "@textguard/plugin-phone": [
-        "packages/plugins/detection/phone/src/index.ts"
-      ],
-      "@textguard/plugin-ip": ["packages/plugins/detection/ip/src/index.ts"],
-      "@textguard/plugin-uuid": [
-        "packages/plugins/detection/uuid/src/index.ts"
-      ],
-      "@textguard/plugin-credit-card": [
-        "packages/plugins/detection/creditCard/src/index.ts"
-      ],
-      "@textguard/plugin-iban": [
-        "packages/plugins/detection/iban/src/index.ts"
-      ],
-      "@textguard/all": ["packages/all/src/index.ts"]
-    }
-  }
+  "extends": "./tsconfig.dev.json"
 }

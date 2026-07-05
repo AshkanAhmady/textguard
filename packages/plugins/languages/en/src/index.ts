@@ -32,8 +32,8 @@ export const enDictionary: Dictionary = {
   ],
 };
 
-export const language = {
-  code: "ar",
-  nativeName: "العربية",
-  englishName: "Arabic",
+export const enLanguage = {
+  code: "en",
+  nativeName: "english",
+  englishName: "English",
 };

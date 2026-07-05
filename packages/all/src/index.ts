@@ -1,3 +1,3 @@
 export * from "@textguard/core";
-export * from "./plugins/index";
-export * from "./presets/index";
+export * from "./plugins";
+export * from "./presets";
