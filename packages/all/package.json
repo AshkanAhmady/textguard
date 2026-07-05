@@ -2,22 +2,26 @@
   "name": "@textguard/all",
   "version": "1.0.1",
   "description": "Complete TextGuard bundle",
-  "type": "module",
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts",
-    "lint": "eslint ."
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "lint": "eslint .",
+    "test": "vitest"
   },
   "dependencies": {
     "@textguard/core": "workspace:*",
@@ -35,6 +39,8 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.2"
-  }
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.8"
+  },
+  "sideEffects": false
 }
