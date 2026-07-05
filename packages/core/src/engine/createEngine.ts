@@ -36,9 +36,7 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
     new DictionaryPlugin(state.dictionaries, state.customWords),
   );
 
-  for (const plugin of options.plugins ?? []) {
-    pluginManager.register(plugin);
-  }
+  pluginManager.registerAll(options.plugins ?? []);
 
   function findBadWords(text: string): Match[] {
     if (!text) return [];

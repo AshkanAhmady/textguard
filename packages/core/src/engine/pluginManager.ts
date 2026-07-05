@@ -12,6 +12,12 @@ export class PluginManager {
     this.plugins.push(plugin);
   }
 
+  registerAll(plugins: Plugin[]): void {
+    for (const plugin of plugins) {
+      this.register(plugin);
+    }
+  }
+
   getPlugins(): readonly Plugin[] {
     return this.plugins;
   }

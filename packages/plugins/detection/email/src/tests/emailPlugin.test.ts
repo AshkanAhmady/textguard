@@ -35,3 +35,15 @@ describe("email-plugin", () => {
     expect(result.filteredText).toContain("***");
   });
 });
+
+describe("Plugin Registration", () => {
+  it("should register plugins from createFilter options", () => {
+    const filter = createFilter({
+      plugins: [emailPlugin()],
+    });
+
+    const result = filter.findBadWords("hello@example.com");
+
+    expect(result).toHaveLength(1);
+  });
+});
