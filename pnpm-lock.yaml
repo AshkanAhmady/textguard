@@ -102,12 +102,6 @@ importers:
       "@repo/eslint-config":
         specifier: workspace:*
         version: link:../eslint-config
-      "@textguard/plugin-en":
-        specifier: workspace:*
-        version: link:../plugins/languages/en
-      "@textguard/plugin-fa":
-        specifier: workspace:*
-        version: link:../plugins/languages/fa
       tsup:
         specifier: ^8.0.2
         version: 8.5.1(postcss@8.5.15)(tsx@4.23.0)(typescript@5.9.2)(yaml@2.9.0)
@@ -290,50 +284,59 @@ importers:
   packages/plugins/languages/ar:
     dependencies:
       "@textguard/core":
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: workspace:*
+        version: link:../../../core
     devDependencies:
       "@repo/eslint-config":
         specifier: workspace:*
         version: link:../../../eslint-config
       tsup:
-        specifier: ^8.3.5
+        specifier: ^8.5.1
         version: 8.5.1(postcss@8.5.15)(tsx@4.23.0)(typescript@5.9.2)(yaml@2.9.0)
       typescript:
-        specifier: ^5.7.3
+        specifier: ^5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^4.1.8
+        version: 4.1.8(@types/node@22.19.21)(@vitest/coverage-v8@4.1.8)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(tsx@4.23.0)(yaml@2.9.0))
 
   packages/plugins/languages/en:
     dependencies:
       "@textguard/core":
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: workspace:*
+        version: link:../../../core
     devDependencies:
       "@repo/eslint-config":
         specifier: workspace:*
         version: link:../../../eslint-config
       tsup:
-        specifier: ^8.3.5
+        specifier: ^8.5.1
         version: 8.5.1(postcss@8.5.15)(tsx@4.23.0)(typescript@5.9.2)(yaml@2.9.0)
       typescript:
-        specifier: ^5.7.3
+        specifier: ^5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^4.1.8
+        version: 4.1.8(@types/node@22.19.21)(@vitest/coverage-v8@4.1.8)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(tsx@4.23.0)(yaml@2.9.0))
 
   packages/plugins/languages/fa:
     dependencies:
       "@textguard/core":
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: workspace:*
+        version: link:../../../core
     devDependencies:
       "@repo/eslint-config":
         specifier: workspace:*
         version: link:../../../eslint-config
       tsup:
-        specifier: ^8.3.5
+        specifier: ^8.5.1
         version: 8.5.1(postcss@8.5.15)(tsx@4.23.0)(typescript@5.9.2)(yaml@2.9.0)
       typescript:
-        specifier: ^5.7.3
+        specifier: ^5.9.2
         version: 5.9.2
+      vitest:
+        specifier: ^4.1.8
+        version: 4.1.8(@types/node@22.19.21)(@vitest/coverage-v8@4.1.8)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(tsx@4.23.0)(yaml@2.9.0))
 
   packages/typescript-config: {}
 
@@ -1511,12 +1514,6 @@ packages:
     resolution:
       {
         integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==,
-      }
-
-  "@textguard/core@1.0.1":
-    resolution:
-      {
-        integrity: sha512-vty+PGfPOOEYtgtD6vquTzvpu4ZEYskYm5Q5os65oUoZZu/xmQ01Am5Wdq6q8WpIAy/Eo4wAVWxXH1S0E2e4Sw==,
       }
 
   "@turbo/darwin-64@2.9.18":
@@ -5044,8 +5041,6 @@ snapshots:
     optional: true
 
   "@standard-schema/spec@1.1.0": {}
-
-  "@textguard/core@1.0.1": {}
 
   "@turbo/darwin-64@2.9.18":
     optional: true

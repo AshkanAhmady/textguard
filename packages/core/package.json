@@ -4,7 +4,7 @@
   "description": "Core package for TextGuard",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "publishConfig": {
@@ -13,8 +13,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
@@ -42,8 +42,6 @@
   ],
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@textguard/plugin-fa": "workspace:*",
-    "@textguard/plugin-en": "workspace:*",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3",
     "vitest": "^4.1.8"

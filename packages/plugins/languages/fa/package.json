@@ -1,35 +1,38 @@
 {
   "name": "@textguard/plugin-fa",
   "version": "1.0.1",
-  "description": "Official Persian language pack and patterns for TextGuard",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "description": "Official Persian Language Plugin with Dictionaries, Patterns and Lookalike Character Support for TextGuard",
+  "license": "MIT",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
   },
   "files": [
     "dist"
   ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
-  },
   "scripts": {
     "build": "tsup",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest"
   },
   "dependencies": {
-    "@textguard/core": "^1.0.1"
+    "@textguard/core": "workspace:*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "tsup": "^8.3.5",
-    "typescript": "^5.7.3"
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.8"
   },
   "sideEffects": false,
   "repository": {
