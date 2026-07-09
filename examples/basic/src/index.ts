@@ -1,17 +1,9 @@
-import { createFilter, strictPreset } from "@textguard/all";
+import { createFilter } from "@textguard/all";
 
-const filter = createFilter(strictPreset);
+const engine = createFilter({
+  plugins: [],
+});
 
-const result = filter.filter(`
-سلام
+const session = engine.debug("سلام دنیا");
 
-ایمیل من:
-hello@example.com
-
-شماره من:
-+989121234567
-
-تو احمقی!
-`);
-
-console.log(result);
+console.log(session.getEvents());

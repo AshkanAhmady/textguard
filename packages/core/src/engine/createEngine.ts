@@ -1,6 +1,5 @@
 import type { Match } from "../domain/match";
 import type { FilterOptions, FilterResult, TextGuardInstance } from "../types";
-import { findMatches } from "./findMatches";
 import { createEngineState } from "./state";
 import { NormalizationPipeline } from "./normalizationPipeline";
 import { UnicodeNormalizer } from "../normalizers/unicodeNormalizer";
@@ -11,7 +10,9 @@ import { PluginManager } from "./pluginManager";
 import { RuleCollection } from "./ruleCollection";
 import { NormalizerCollection } from "./normalizerCollection";
 import { DictionaryPlugin } from "../plugins/dictionaryPlugin";
+import { EnginePipeline } from "../core/EnginePipeline";
 import { DebugCollector } from "../debug";
+import type { DebugSession } from "../debug";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
   const state = createEngineState(options);
@@ -23,6 +24,7 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
   ]);
 
   const pipeline = new NormalizationPipeline(normalizerCollection.getAll());
+  const enginePipeline = new EnginePipeline(pipeline, ruleCollection, state);
   const pluginContext: PluginContext = {
     addRule(rule) {
       ruleCollection.add(rule);
@@ -32,6 +34,7 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
       normalizerCollection.add(normalizer);
     },
   };
+
   const pluginManager = new PluginManager(pluginContext);
   pluginManager.register(
     new DictionaryPlugin(state.dictionaries, state.customWords),
@@ -39,19 +42,8 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
 
   pluginManager.registerAll(options.plugins ?? []);
 
-  function executePipeline(text: string, collector?: DebugCollector): Match[] {
-    if (!text) return [];
-
-    const normalizedText = pipeline.run(text);
-
-    return findMatches(ruleCollection.getAll(), {
-      text: normalizedText,
-      state,
-    });
-  }
-
   function findBadWords(text: string): Match[] {
-    return executePipeline(text);
+    return enginePipeline.execute(text);
   }
 
   function hasBadWord(text: string): boolean {
@@ -100,6 +92,13 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
     filter,
     hasBadWord,
     findBadWords,
+    debug(text: string): DebugSession {
+      const collector = new DebugCollector();
+
+      enginePipeline.executeWithDebug(text, collector);
+
+      return collector.build();
+    },
     use(plugin) {
       pluginManager.register(plugin);
     },
