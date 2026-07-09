@@ -1,9 +1,7 @@
-import { createFilter } from "@textguard/all";
+import { createFilter, strictPreset } from "@textguard/all";
 
-const engine = createFilter({
-  plugins: [],
-});
+const engine = createFilter(strictPreset);
 
-const session = engine.debug("سلام دنیا");
+const session = engine.debug("سلام");
 
 console.log(session.getEvents());

@@ -29,7 +29,16 @@ export class EnginePipeline {
       timestamp: Date.now(),
     });
 
-    const matches = this.execute(text);
+    const normalizedText = this.pipeline.run(text);
+
+    const matches = findMatches(
+      this.rules.getAll(),
+      {
+        text: normalizedText,
+        state: this.state,
+      },
+      collector,
+    );
 
     collector.addEvent({
       type: "pipeline:finished",

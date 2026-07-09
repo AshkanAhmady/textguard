@@ -16,6 +16,7 @@ import type { DebugSession } from "../debug";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
   const state = createEngineState(options);
+
   const ruleCollection = new RuleCollection();
   const normalizerCollection = new NormalizerCollection([
     new UnicodeNormalizer(),

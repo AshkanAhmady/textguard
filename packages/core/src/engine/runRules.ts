@@ -1,3 +1,4 @@
+import type { ExecutionObserver } from "../debug/observer/ExecutionObserver";
 import type { Match } from "../domain/match";
 import type { MatchContext } from "../domain/matchContext";
 import type { Rule } from "../domain/rule";
@@ -5,14 +6,19 @@ import type { Rule } from "../domain/rule";
 export function runRules(
   rules: readonly Rule[],
   context: MatchContext,
+  observer?: ExecutionObserver,
 ): Match[] {
   const matches: Match[] = [];
   const sortedRules = [...rules].sort((a, b) => a.priority - b.priority);
 
   for (const rule of sortedRules) {
-    if (!rule.supports(context)) continue;
+    observer?.onRuleStarted(rule);
+    if (!rule.supports(context)) {
+      continue;
+    }
 
     const ruleMatches = rule.match(context);
+    observer?.onRuleFinished(rule);
 
     for (const match of ruleMatches) {
       const overlappedIndex = matches.findIndex(

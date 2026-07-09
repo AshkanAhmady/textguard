@@ -1,7 +1,12 @@
-import { MatchContext } from "../domain/matchContext";
-import { Rule } from "../domain/rule";
+import type { ExecutionObserver } from "../debug/observer/ExecutionObserver";
+import type { MatchContext } from "../domain/matchContext";
+import type { Rule } from "../domain/rule";
 import { runRules } from "./runRules";
 
-export function findMatches(rules: readonly Rule[], context: MatchContext) {
-  return runRules(rules, context);
+export function findMatches(
+  rules: readonly Rule[],
+  context: MatchContext,
+  observer?: ExecutionObserver,
+) {
+  return runRules(rules, context, observer);
 }
