@@ -11,6 +11,7 @@ import { PluginManager } from "./pluginManager";
 import { RuleCollection } from "./ruleCollection";
 import { NormalizerCollection } from "./normalizerCollection";
 import { DictionaryPlugin } from "../plugins/dictionaryPlugin";
+import { DebugCollector } from "../debug";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
   const state = createEngineState(options);
@@ -38,7 +39,7 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
 
   pluginManager.registerAll(options.plugins ?? []);
 
-  function findBadWords(text: string): Match[] {
+  function executePipeline(text: string, collector?: DebugCollector): Match[] {
     if (!text) return [];
 
     const normalizedText = pipeline.run(text);
@@ -47,6 +48,10 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
       text: normalizedText,
       state,
     });
+  }
+
+  function findBadWords(text: string): Match[] {
+    return executePipeline(text);
   }
 
   function hasBadWord(text: string): boolean {
