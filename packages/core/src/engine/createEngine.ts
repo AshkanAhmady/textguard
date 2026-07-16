@@ -26,17 +26,7 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
 
   const pipeline = new NormalizationPipeline(normalizerCollection.getAll());
   const enginePipeline = new EnginePipeline(pipeline, ruleCollection, state);
-  const pluginContext: PluginContext = {
-    addRule(rule) {
-      ruleCollection.add(rule);
-    },
-
-    addNormalizer(normalizer) {
-      normalizerCollection.add(normalizer);
-    },
-  };
-
-  const pluginManager = new PluginManager(pluginContext);
+  const pluginManager = new PluginManager(ruleCollection, normalizerCollection);
   pluginManager.register(
     new DictionaryPlugin(state.dictionaries, state.customWords),
   );

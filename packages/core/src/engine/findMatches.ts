@@ -1,10 +1,10 @@
 import type { ExecutionObserver } from "../debug/observer/ExecutionObserver";
 import type { MatchContext } from "../domain/matchContext";
-import type { Rule } from "../domain/rule";
+import type { RegisteredRule } from "../domain/registeredRule";
 import { runRules } from "./runRules";
 
 export function findMatches(
-  rules: readonly Rule[],
+  rules: readonly RegisteredRule[],
   context: MatchContext,
   observer?: ExecutionObserver,
 ) {

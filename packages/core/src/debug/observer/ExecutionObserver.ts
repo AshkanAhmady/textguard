@@ -1,10 +1,10 @@
 import type { Match } from "../../domain/match";
-import type { Rule } from "../../domain/rule";
+import type { RegisteredRule } from "../../domain/registeredRule";
 
 export interface ExecutionObserver {
   onPipelineStarted(): void;
   onPipelineFinished(): void;
-  onRuleStarted(rule: Rule): void;
-  onRuleFinished(rule: Rule): void;
+  onRuleStarted(rule: RegisteredRule): void;
+  onRuleFinished(rule: RegisteredRule): void;
   onMatchFound(match: Match): void;
 }

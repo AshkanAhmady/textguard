@@ -1,13 +1,20 @@
 import type { Plugin } from "../domain/plugin";
-import type { PluginContext } from "../domain/pluginContext";
+import type { RuleCollection } from "./ruleCollection";
+import type { NormalizerCollection } from "./normalizerCollection";
+import { createPluginContext } from "../core/createPluginContext";
 
 export class PluginManager {
   private readonly plugins: Plugin[] = [];
 
-  constructor(private readonly context: PluginContext) {}
+  constructor(
+    private readonly rules: RuleCollection,
+    private readonly normalizers: NormalizerCollection,
+  ) {}
 
   register(plugin: Plugin): void {
-    plugin.setup(this.context);
+    const context = createPluginContext(plugin, this.rules, this.normalizers);
+
+    plugin.setup(context);
 
     this.plugins.push(plugin);
   }

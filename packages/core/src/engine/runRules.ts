@@ -1,24 +1,27 @@
 import type { ExecutionObserver } from "../debug/observer/ExecutionObserver";
 import type { Match } from "../domain/match";
 import type { MatchContext } from "../domain/matchContext";
-import type { Rule } from "../domain/rule";
+import type { RegisteredRule } from "../domain/registeredRule";
 
 export function runRules(
-  rules: readonly Rule[],
+  rules: readonly RegisteredRule[],
   context: MatchContext,
   observer?: ExecutionObserver,
 ): Match[] {
   const matches: Match[] = [];
-  const sortedRules = [...rules].sort((a, b) => a.priority - b.priority);
+  const sortedRules = [...rules].sort(
+    (a, b) => a.rule.priority - b.rule.priority,
+  );
 
-  for (const rule of sortedRules) {
-    observer?.onRuleStarted(rule);
+  for (const registeredRule of sortedRules) {
+    const { rule } = registeredRule;
+    observer?.onRuleStarted(registeredRule);
     if (!rule.supports(context)) {
       continue;
     }
 
     const ruleMatches = rule.match(context);
-    observer?.onRuleFinished(rule);
+    observer?.onRuleFinished(registeredRule);
 
     for (const match of ruleMatches) {
       const overlappedIndex = matches.findIndex(

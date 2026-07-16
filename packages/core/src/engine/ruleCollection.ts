@@ -1,17 +1,21 @@
 import type { Rule } from "../domain/rule";
+import type { RegisteredRule } from "../domain/registeredRule";
 
 export class RuleCollection {
-  private readonly rules: Rule[] = [];
+  private readonly rules: RegisteredRule[] = [];
 
-  constructor(rules: readonly Rule[] = []) {
+  constructor(rules: readonly RegisteredRule[] = []) {
     this.rules.push(...rules);
   }
 
-  add(rule: Rule): void {
-    this.rules.push(rule);
+  add(rule: Rule, plugin: string): void {
+    this.rules.push({
+      rule,
+      plugin,
+    });
   }
 
-  getAll(): readonly Rule[] {
+  getAll(): readonly RegisteredRule[] {
     return this.rules;
   }
 }

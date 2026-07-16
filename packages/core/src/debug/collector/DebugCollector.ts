@@ -1,8 +1,8 @@
 import { DebugSession } from "../models/DebugSession";
 import type { DebugEvent } from "../events";
-import type { Rule } from "../../domain/rule";
 import type { Match } from "../../domain/match";
 import type { ExecutionObserver } from "../observer/ExecutionObserver";
+import type { RegisteredRule } from "../../domain/registeredRule";
 
 export class DebugCollector implements ExecutionObserver {
   private readonly events: DebugEvent[] = [];
@@ -19,20 +19,20 @@ export class DebugCollector implements ExecutionObserver {
 
   public onPipelineFinished(): void {}
 
-  public onRuleStarted(rule: Rule): void {
+  public onRuleStarted(registeredRule: RegisteredRule): void {
     this.addEvent({
       type: "rule:started",
-      rule: rule.constructor.name,
-      plugin: "unknown",
+      rule: registeredRule.rule.name,
+      plugin: registeredRule.plugin,
       timestamp: Date.now(),
     });
   }
 
-  public onRuleFinished(rule: Rule): void {
+  public onRuleFinished(registeredRule: RegisteredRule): void {
     this.addEvent({
       type: "rule:finished",
-      rule: rule.constructor.name,
-      plugin: "unknown",
+      rule: registeredRule.rule.name,
+      plugin: registeredRule.plugin,
       timestamp: Date.now(),
     });
   }
