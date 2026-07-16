@@ -1,6 +1,7 @@
-export interface RuleFinishedEvent {
+import type { BaseDebugEvent } from "./BaseDebugEvent";
+
+export interface RuleFinishedEvent extends BaseDebugEvent {
   readonly type: "rule:finished";
-  readonly rule: string;
   readonly plugin: string;
-  readonly timestamp: number;
+  readonly rule: string;
 }

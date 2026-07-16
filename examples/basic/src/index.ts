@@ -4,4 +4,4 @@ const engine = createFilter(strictPreset);
 
 const session = engine.debug("کیر");
 
-console.log(session.getEvents());
+console.log(session.statistics());

@@ -3,12 +3,18 @@ import type { DebugEvent } from "../events";
 import type { Match } from "../../domain/match";
 import type { ExecutionObserver } from "../observer/ExecutionObserver";
 import type { RegisteredRule } from "../../domain/registeredRule";
+import type { DistributiveOmit } from "../types/DistributiveOmit";
 
 export class DebugCollector implements ExecutionObserver {
   private readonly events: DebugEvent[] = [];
+  private nextEventId = 1;
 
-  public addEvent(event: DebugEvent): void {
-    this.events.push(event);
+  public addEvent(event: DistributiveOmit<DebugEvent, "id" | "level">): void {
+    this.events.push({
+      id: this.nextEventId++,
+      level: "trace",
+      ...event,
+    } as DebugEvent);
   }
 
   public build(): DebugSession {
@@ -22,8 +28,8 @@ export class DebugCollector implements ExecutionObserver {
   public onRuleStarted(registeredRule: RegisteredRule): void {
     this.addEvent({
       type: "rule:started",
-      rule: registeredRule.rule.name,
       plugin: registeredRule.plugin,
+      rule: registeredRule.rule.name,
       timestamp: Date.now(),
     });
   }
@@ -31,8 +37,8 @@ export class DebugCollector implements ExecutionObserver {
   public onRuleFinished(registeredRule: RegisteredRule): void {
     this.addEvent({
       type: "rule:finished",
-      rule: registeredRule.rule.name,
       plugin: registeredRule.plugin,
+      rule: registeredRule.rule.name,
       timestamp: Date.now(),
     });
   }
@@ -42,7 +48,7 @@ export class DebugCollector implements ExecutionObserver {
       type: "match:found",
       plugin: registeredRule.plugin,
       rule: registeredRule.rule.name,
-      value: match.matchedText,
+      matchedText: match.matchedText,
       start: match.start,
       end: match.end,
       timestamp: Date.now(),
