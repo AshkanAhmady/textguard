@@ -6,5 +6,5 @@ export interface ExecutionObserver {
   onPipelineFinished(): void;
   onRuleStarted(rule: RegisteredRule): void;
   onRuleFinished(rule: RegisteredRule): void;
-  onMatchFound(match: Match): void;
+  onMatchFound(registeredRule: RegisteredRule, match: Match): void;
 }

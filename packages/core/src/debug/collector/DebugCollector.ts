@@ -37,5 +37,15 @@ export class DebugCollector implements ExecutionObserver {
     });
   }
 
-  public onMatchFound(match: Match): void {}
+  public onMatchFound(registeredRule: RegisteredRule, match: Match): void {
+    this.addEvent({
+      type: "match:found",
+      plugin: registeredRule.plugin,
+      rule: registeredRule.rule.name,
+      value: match.matchedText,
+      start: match.start,
+      end: match.end,
+      timestamp: Date.now(),
+    });
+  }
 }

@@ -15,15 +15,19 @@ export function runRules(
 
   for (const registeredRule of sortedRules) {
     const { rule } = registeredRule;
+
     observer?.onRuleStarted(registeredRule);
+
     if (!rule.supports(context)) {
+      observer?.onRuleFinished(registeredRule);
       continue;
     }
 
     const ruleMatches = rule.match(context);
-    observer?.onRuleFinished(registeredRule);
 
     for (const match of ruleMatches) {
+      observer?.onMatchFound(registeredRule, match);
+
       const overlappedIndex = matches.findIndex(
         (existing) => match.start < existing.end && match.end > existing.start,
       );
@@ -42,6 +46,8 @@ export function runRules(
         matches[overlappedIndex] = match;
       }
     }
+
+    observer?.onRuleFinished(registeredRule);
   }
 
   return matches.sort((a, b) => a.start - b.start);
