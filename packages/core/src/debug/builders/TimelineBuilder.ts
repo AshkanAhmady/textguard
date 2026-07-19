@@ -1,13 +1,16 @@
 import type { MatchFoundEvent } from "../events";
-import type { RuleFinishedEvent } from "../events";
 import type { DebugReport } from "../models/DebugReport";
 import type { Timeline } from "../models/Timeline";
-import type { TimelinePlugin } from "../models/TimelinePlugin";
 import type { TimelineRule } from "../models/TimelineRule";
+
+interface MutableTimelinePlugin {
+  name: string;
+  rules: TimelineRule[];
+}
 
 export class TimelineBuilder {
   public build(report: DebugReport): Timeline {
-    const pluginMap = new Map<string, TimelinePlugin>();
+    const pluginMap = new Map<string, MutableTimelinePlugin>();
 
     for (const event of report.events) {
       if (event.type !== "rule:finished") {
@@ -34,7 +37,7 @@ export class TimelineBuilder {
         )
         .map((e) => e.match);
 
-      (plugin.rules as TimelineRule[]).push({
+      plugin.rules.push({
         name: event.rule,
         matches,
       });
