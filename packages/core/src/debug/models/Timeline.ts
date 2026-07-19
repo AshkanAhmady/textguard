@@ -1,5 +1,5 @@
-import type { TimelineNode } from "./TimelineNode";
+import type { TimelinePlugin } from "./TimelinePlugin";
 
 export interface Timeline {
-  readonly nodes: readonly TimelineNode[];
+  readonly plugins: readonly TimelinePlugin[];
 }

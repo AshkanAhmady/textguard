@@ -48,9 +48,7 @@ export class DebugCollector implements ExecutionObserver {
       type: "match:found",
       plugin: registeredRule.plugin,
       rule: registeredRule.rule.name,
-      matchedText: match.matchedText,
-      start: match.start,
-      end: match.end,
+      match,
       timestamp: Date.now(),
     });
   }

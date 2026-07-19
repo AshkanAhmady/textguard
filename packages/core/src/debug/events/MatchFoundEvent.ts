@@ -1,4 +1,5 @@
 import type { BaseDebugEvent } from "./BaseDebugEvent";
+import type { Match } from "../../domain/match";
 
 export interface MatchFoundEvent extends BaseDebugEvent {
   readonly type: "match:found";
@@ -6,10 +7,5 @@ export interface MatchFoundEvent extends BaseDebugEvent {
   readonly plugin: string;
   readonly rule: string;
 
-  readonly matchedText: string;
-
-  readonly start: number;
-  readonly end: number;
-
-  readonly replacement?: string;
+  readonly match: Match;
 }
