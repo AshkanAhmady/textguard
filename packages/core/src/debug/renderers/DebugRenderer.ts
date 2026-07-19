@@ -1,5 +1,5 @@
-import type { DebugSession } from "../models/DebugSession";
+import type { DebugReport } from "../models/DebugReport";
 
 export interface DebugRenderer<TOutput> {
-  render(session: DebugSession): TOutput;
+  render(report: DebugReport): TOutput;
 }
