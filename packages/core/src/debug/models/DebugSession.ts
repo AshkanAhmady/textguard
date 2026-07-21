@@ -1,5 +1,12 @@
+import { PerformanceBuilder } from "../builders";
 import type { DebugEvent } from "../events";
 import type { DebugStatistics } from "./DebugStatistics";
+import type { PerformanceReport } from "./PerformanceReport";
+import { TimelineBuilder } from "../builders/TimelineBuilder";
+import { DebugReportBuilder } from "../builders/DebugReportBuilder";
+
+import type { Timeline } from "./Timeline";
+import type { DebugReport } from "./DebugReport";
 
 export class DebugSession {
   public constructor(private readonly events: readonly DebugEvent[]) {}
@@ -53,5 +60,17 @@ export class DebugSession {
       plugins: [...plugins],
       rules: [...rules],
     };
+  }
+
+  public performance(): PerformanceReport {
+    return new PerformanceBuilder().build(this);
+  }
+
+  public timeline(): Timeline {
+    return new TimelineBuilder().build(this);
+  }
+
+  public report(): DebugReport {
+    return new DebugReportBuilder().build(this);
   }
 }

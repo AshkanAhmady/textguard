@@ -1,5 +1,5 @@
 import type { MatchFoundEvent } from "../events";
-import type { DebugReport } from "../models/DebugReport";
+import type { DebugSession } from "../models/DebugSession";
 import type { Timeline } from "../models/Timeline";
 import type { TimelineRule } from "../models/TimelineRule";
 
@@ -9,10 +9,12 @@ interface MutableTimelinePlugin {
 }
 
 export class TimelineBuilder {
-  public build(report: DebugReport): Timeline {
+  public build(session: DebugSession): Timeline {
+    const events = session.getEvents();
+
     const pluginMap = new Map<string, MutableTimelinePlugin>();
 
-    for (const event of report.events) {
+    for (const event of events) {
       if (event.type !== "rule:finished") {
         continue;
       }
@@ -28,7 +30,7 @@ export class TimelineBuilder {
         pluginMap.set(event.plugin, plugin);
       }
 
-      const matches = report.events
+      const matches = events
         .filter(
           (e): e is MatchFoundEvent =>
             e.type === "match:found" &&

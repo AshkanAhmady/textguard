@@ -5,7 +5,6 @@ import { NormalizationPipeline } from "./normalizationPipeline";
 import { UnicodeNormalizer } from "../normalizers/unicodeNormalizer";
 import { PersianNormalizer } from "../normalizers/persianNormalizer";
 import { ArabicNormalizer } from "../normalizers/arabicNormalizer";
-import { PluginContext } from "../domain/pluginContext";
 import { PluginManager } from "./pluginManager";
 import { RuleCollection } from "./ruleCollection";
 import { NormalizerCollection } from "./normalizerCollection";
