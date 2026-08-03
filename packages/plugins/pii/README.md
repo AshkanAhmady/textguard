@@ -2,7 +2,7 @@
 
 PII / compliance detection bundle for TextGuard — catches email addresses, phone numbers, credit card numbers, and IBANs before they end up in a commit, log, or production output.
 
-> **Status: v0.1.0 — scan core + pre-commit hook.** GitHub Action (CI) mode is not implemented yet.
+> **Status: v0.1.0 — scan core + pre-commit hook + GitHub Action.**
 
 ## Install
 
@@ -40,6 +40,10 @@ node packages/plugins/pii/dist/cli.js
 This is wired into the repo's root `.husky/pre-commit` hook already — it runs automatically on every `git commit` alongside the existing `lint-staged` and `pnpm lint` steps. Rebuild the package (`pnpm --filter @textguard/plugin-pii build`) after any change to its source, since the hook runs the built `dist/cli.js`, not the TypeScript source directly.
 
 To bypass in an emergency (not recommended): `git commit --no-verify`.
+
+## GitHub Action (CI)
+
+`.github/workflows/pii-scan.yml` runs on every pull request: it diffs `base`..`head`, scans every changed file's content at `head`, and fails the check with inline annotations if PII is found. This is the first GitHub Actions workflow in this repo — there wasn't one before, despite older planning docs listing "GitHub Actions" as done.
 
 ## What's included in v1
 

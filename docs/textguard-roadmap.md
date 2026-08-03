@@ -20,13 +20,15 @@ All verified as substantially complete based on repo structure and published pac
 
 **Caveat:** 🟡 Arabic (`@textguard/plugin-ar`) is published but functionally thin — a single `index.ts`, no dictionaries/rules/tests found. If "Phase 3 complete" implies parity across fa/en/ar, it isn't there yet for Arabic.
 
+**Correction:** ❌ No `.github/workflows` existed anywhere in the repo prior to M0.4 below, despite older planning docs listing "GitHub Actions" as done in Phase 5. There was no automated test/lint run on push or PR until the PII Scan workflow was added.
+
 ---
 
 ## Phase 7 — Advanced Features
 
 ### Epic 0 — PII / Compliance CI Guard ⭐⭐⭐⭐⭐ (commercial priority — confirmed)
 
-**Status: ❌ Not started.** Added after deciding this is the most direct path to a paying feature: it reuses existing, tested detection plugins (email, phone, credit card, IBAN) instead of requiring new detection logic, and targets a real, expensive problem (PII leaking into commits, logs, or production) that companies already pay to prevent under GDPR/PCI-DSS.
+**Status: 🟡 In progress — M0.1–M0.4 done, M0.5–M0.6 remain.** Added after deciding this is the most direct path to a paying feature: it reuses existing, tested detection plugins (email, phone, credit card, IBAN) instead of requiring new detection logic, and targets a real, expensive problem (PII leaking into commits, logs, or production) that companies already pay to prevent under GDPR/PCI-DSS.
 
 **Naming (decided):** `@textguard/plugin-pii`. Distinct from `enterprisePreset` in `@textguard/all`, which remains an unrelated bundle (language dictionaries + general PII plugins).
 
@@ -37,7 +39,7 @@ Milestones:
 | M0.1 — Scope & Naming       | ✅ Done        | Package name: `@textguard/plugin-pii`. v1 scope: email, phone, credit card, IBAN (UUID excluded).                                                                                                                                                                                                                                          |
 | M0.2 — Scan Core            | ✅ Done        | `packages/plugins/pii/` created: `piiPreset` (composes the four existing detection plugins) + `scanText()`/`scanMany()` built on `filter.findBadWords()`. Tests written. Ships as v0.1.0 — not yet published to npm.                                                                                                                       |
 | M0.3 — Pre-commit Hook Mode | ✅ Done        | `textguard-pii` CLI added to `packages/plugins/pii/src/cli.ts`, wired into the repo's `.husky/pre-commit` (runs after `lint-staged`/`pnpm lint`, blocks commit on any PII finding). Added `set -e` to the hook so any step failing actually blocks the commit — this wasn't guaranteed before (only the last command's exit code counted). |
-| M0.4 — GitHub Action Mode   | ❌ Not started | CI check that fails a PR or adds inline annotations for PII findings.                                                                                                                                                                                                                                                                      |
+| M0.4 — GitHub Action Mode   | ✅ Done        | `.github/workflows/pii-scan.yml` — first CI workflow in this repo (there wasn't one, despite older docs listing "GitHub Actions" as done in Phase 5). Runs on every PR, diffs base..head, scans changed files via a new `src/ci.ts` entry, fails the check with inline annotations on any PII finding.                                     |
 | M0.5 — Reporting Output     | ❌ Not started | Console/Markdown report for v1 — reuse the existing `ConsoleRenderer`/`MarkdownRenderer` rather than building new output formatting. No dashboard yet.                                                                                                                                                                                     |
 | M0.6 — Paid Tier (later)    | ❌ Not started | Multi-repo/org dashboard, historical reporting, alerting — only after M0.1–M0.5 validate with real usage. This is the actual monetizable layer; M0.1–M0.5 is the free/open-source foundation it sits on.                                                                                                                                   |
 

@@ -18,6 +18,8 @@ It is designed to be the first product of a planned "Guard Ecosystem" of develop
 
 Monorepo managed with **pnpm workspaces + Turborepo**. Versioning/publishing via **Changesets**. Pre-commit hooks via **Husky + lint-staged**. Tests via **Vitest** (with `@vitest/coverage-v8`).
 
+**No GitHub Actions CI existed anywhere in this repo** as of this review, despite older planning docs listing it as done in Phase 5 — no test/lint automation ran on push or PR. The first workflow (`.github/workflows/pii-scan.yml`, PII scanning on PRs) was added as part of Epic 0 / M0.4.
+
 ```
 textguard/
 ├── packages/

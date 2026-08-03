@@ -17,4 +17,11 @@ export default defineConfig([
     minify: true,
     banner: { js: "#!/usr/bin/env node" },
   },
+  {
+    entry: { ci: "src/ci.ts" },
+    format: ["esm"],
+    dts: false,
+    clean: false,
+    minify: true,
+  },
 ]);
