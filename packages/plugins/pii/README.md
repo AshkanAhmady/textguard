@@ -43,7 +43,26 @@ To bypass in an emergency (not recommended): `git commit --no-verify`.
 
 ## GitHub Action (CI)
 
-`.github/workflows/pii-scan.yml` runs on every pull request: it diffs `base`..`head`, scans every changed file's content at `head`, and fails the check with inline annotations if PII is found. This is the first GitHub Actions workflow in this repo — there wasn't one before, despite older planning docs listing "GitHub Actions" as done.
+`.github/workflows/pii-scan.yml` runs on every pull request: it diffs `base`..`head`, scans every changed file's content at `head`, and fails the check with inline annotations if PII is found. It also writes a markdown summary table to the job's GitHub Actions summary page. This is the first GitHub Actions workflow in this repo — there wasn't one before, despite older planning docs listing "GitHub Actions" as done.
+
+## Reporting
+
+Both the pre-commit hook and the CI action build their output from a shared formatter in `report.ts`, so the console output and the CI summary stay consistent instead of drifting apart:
+
+```ts
+import {
+  scanText,
+  toFileResult,
+  formatConsoleReport,
+  formatMarkdownReport,
+} from "@textguard/plugin-pii";
+
+const content = "hello@example.com";
+const result = toFileResult("notes.txt", content, scanText(content));
+
+formatConsoleReport([result]); // for terminal output
+formatMarkdownReport([result]); // for a PR summary or report file
+```
 
 ## What's included in v1
 

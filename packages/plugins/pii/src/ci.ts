@@ -1,5 +1,7 @@
 import { execSync } from "node:child_process";
+import { appendFileSync } from "node:fs";
 import { scanText } from "./scan";
+import { toFileResult, formatMarkdownReport, type FileResult } from "./report";
 
 function getArg(flag: string): string | undefined {
   const index = process.argv.indexOf(flag);
@@ -24,8 +26,19 @@ function getFileContentAt(ref: string, path: string): string | null {
   }
 }
 
-function lineNumberAt(text: string, index: number): number {
-  return text.slice(0, index).split("\n").length;
+/**
+ * Writes the markdown report to GitHub's step summary, if running in
+ * Actions ($GITHUB_STEP_SUMMARY is set). No-op locally.
+ */
+function writeStepSummary(markdown: string): void {
+  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (!summaryPath) return;
+
+  try {
+    appendFileSync(summaryPath, markdown);
+  } catch {
+    // Summary is a nice-to-have — never fail the job because of it.
+  }
 }
 
 function main(): void {
@@ -38,7 +51,7 @@ function main(): void {
   }
 
   const files = getChangedFiles(base, head);
-  let hasFindings = false;
+  const results: FileResult[] = [];
 
   for (const file of files) {
     const content = getFileContentAt(head, file);
@@ -46,25 +59,25 @@ function main(): void {
     if (content === null) continue;
 
     const result = scanText(content);
+    const fileResult = toFileResult(file, content, result);
+    results.push(fileResult);
 
-    if (!result.clean) {
-      hasFindings = true;
-
-      for (const finding of result.findings) {
-        const line = lineNumberAt(content, finding.start);
-
-        // GitHub Actions workflow-command syntax — renders as an inline
-        // annotation on the PR's "Files changed" tab.
-        console.log(
-          `::error file=${file},line=${line}::PII detected [${finding.type}]: "${finding.matchedText}"`,
-        );
-      }
+    // GitHub Actions workflow-command syntax — renders as an inline
+    // annotation on the PR's "Files changed" tab.
+    for (const finding of fileResult.findings) {
+      console.log(
+        `::error file=${file},line=${finding.line}::PII detected [${finding.type}]: "${finding.matchedText}"`,
+      );
     }
   }
 
+  writeStepSummary(formatMarkdownReport(results));
+
+  const hasFindings = results.some((r) => r.findings.length > 0);
+
   if (hasFindings) {
     console.error(
-      "\ntextguard-pii: PII found in this PR — see annotations above.\n",
+      "\ntextguard-pii: PII found in this PR — see annotations and the job summary above.\n",
     );
     process.exit(1);
   }

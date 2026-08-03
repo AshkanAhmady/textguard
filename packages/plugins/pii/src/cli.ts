@@ -1,5 +1,6 @@
 import { execSync } from "node:child_process";
 import { scanText } from "./scan";
+import { toFileResult, formatConsoleReport, type FileResult } from "./report";
 
 function getStagedFiles(): string[] {
   const output = execSync("git diff --cached --name-only --diff-filter=ACM", {
@@ -18,13 +19,9 @@ function getStagedContent(path: string): string | null {
   }
 }
 
-function lineNumberAt(text: string, index: number): number {
-  return text.slice(0, index).split("\n").length;
-}
-
 function main(): void {
   const files = getStagedFiles();
-  let hasFindings = false;
+  const results: FileResult[] = [];
 
   for (const file of files) {
     const content = getStagedContent(file);
@@ -32,21 +29,14 @@ function main(): void {
     if (content === null) continue;
 
     const result = scanText(content);
-
-    if (!result.clean) {
-      hasFindings = true;
-      console.error(`\n✖ PII detected in ${file}:`);
-
-      for (const finding of result.findings) {
-        const line = lineNumberAt(content, finding.start);
-        console.error(
-          `  line ${line}: [${finding.type}] "${finding.matchedText}"`,
-        );
-      }
-    }
+    results.push(toFileResult(file, content, result));
   }
 
+  const report = formatConsoleReport(results);
+  const hasFindings = results.some((r) => r.findings.length > 0);
+
   if (hasFindings) {
+    console.error(`\n${report}`);
     console.error(
       "\ntextguard-pii: commit blocked — remove the PII above, or run " +
         "`git commit --no-verify` to bypass (not recommended).\n",
