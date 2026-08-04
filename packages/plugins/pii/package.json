@@ -21,7 +21,8 @@
     "dist"
   ],
   "bin": {
-    "textguard-pii": "./dist/cli.js"
+    "textguard-pii": "./dist/cli.js",
+    "textguard-pii-ci": "./dist/ci.js"
   },
   "sideEffects": false,
   "scripts": {

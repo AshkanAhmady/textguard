@@ -23,5 +23,6 @@ export default defineConfig([
     dts: false,
     clean: false,
     minify: true,
+    banner: { js: "#!/usr/bin/env node" },
   },
 ]);
