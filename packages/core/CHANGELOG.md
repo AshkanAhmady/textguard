@@ -1,5 +1,11 @@
 # @textguard/core
 
+## 1.0.2
+
+### Patch Changes
+
+- Fix published README examples; remove debug logs; remove dead code
+
 ## 1.0.0
 
 ### Major Changes

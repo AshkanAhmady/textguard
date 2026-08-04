@@ -1,5 +1,13 @@
 # @textguard/plugin-fa
 
+## 1.0.2
+
+### Patch Changes
+
+- Fix published README examples; remove debug logs; remove dead code
+- Updated dependencies
+  - @textguard/core@1.0.2
+
 ## 1.0.0
 
 ### Major Changes

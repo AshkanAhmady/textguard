@@ -1,6 +1,6 @@
 {
   "name": "@textguard/plugin-en",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Official English Language Plugin with Dictionaries, Patterns and Leetspeak Support for TextGuard",
   "license": "MIT",
   "type": "module",

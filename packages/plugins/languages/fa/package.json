@@ -1,6 +1,6 @@
 {
   "name": "@textguard/plugin-fa",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Official Persian Language Plugin with Dictionaries, Patterns and Lookalike Character Support for TextGuard",
   "license": "MIT",
   "type": "module",

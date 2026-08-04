@@ -1,6 +1,6 @@
 {
   "name": "@textguard/plugin-uuid",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Official UUID Detection Plugin for TextGuard",
   "type": "module",
   "main": "./dist/index.cjs",

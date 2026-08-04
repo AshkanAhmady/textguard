@@ -1,6 +1,6 @@
 {
   "name": "@textguard/plugin-ar",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Official Arabic Language Plugin for TextGuard",
   "license": "MIT",
   "type": "module",
