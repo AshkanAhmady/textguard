@@ -6,7 +6,7 @@
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI. The core stays plugin-oriented so new detectors can be added without coupling them into the engine.
 
-Package README standardization is complete. The next planned product-quality feature milestone is **Arabic implementation parity**.
+Package README standardization is complete. Current product-quality feature work is **Arabic implementation parity**.
 
 ## 2. Repository and architecture
 
@@ -56,7 +56,7 @@ Architecture decisions are recorded under `docs/architecture/`.
 
 - Persian: established/full relative to the current language architecture. README uses the current `faDictionary` API and optional `faLookalikesMapping`.
 - English: established/full relative to the current language architecture. README uses the current `enDictionary` API and optional `enLeetspeakMapping`.
-- Arabic: published foundation only. Current source exports `arDictionary`, `arPack`, and `arLanguage`; `arDictionary.words` is empty and `arPack` is empty. Documentation accurately states this. Arabic parity is the next implementation milestone.
+- Arabic: parity is now in progress. AR1 adds conservative `arProfanity` and `arInsults` resources and populates the existing `arDictionary` and `arPack` exports without changing Core or removing existing Arabic exports.
 
 ### Structured-data detection
 
@@ -77,34 +77,34 @@ M0.7 (paid tier) remains intentionally later until open-source usage validates d
 
 ## 7. Completed milestone — Package README standardization
 
-The npm-facing documentation cleanup is complete:
+The npm-facing documentation cleanup is complete. The permanent rule remains: public behavior/API changes update affected documentation in the same PR.
 
-- ✅ root README;
-- ✅ published package audit;
-- ✅ `@textguard/all` README;
-- ✅ Persian and English READMEs;
-- ✅ all structured-data detector READMEs;
-- ✅ Arabic README aligned with the current foundation-only package;
-- ✅ final package-wide consistency verification across Core, PII, All, language, and detection packages.
+## 8. Current milestone — Arabic implementation parity
 
-The permanent rule remains: examples should be short, copy/paste-ready, compatible with shipped public APIs, and safe for the repository PII scan without broad ignore rules. Public behavior/API changes update affected documentation in the same PR.
+Arabic parity is intentionally incremental and should not trigger unrelated Core refactors.
 
-## 8. Next milestone — Arabic implementation parity
+### AR1 — usable dictionary baseline — current PR
 
-Before implementation, inspect the Persian/English language-plugin structure and define a conservative Arabic scope. Preserve existing public exports where possible and avoid unnecessary Core changes.
+- add `arProfanity` and `arInsults` dictionaries;
+- populate the existing `arDictionary` from those resources;
+- populate the existing `arPack` while preserving its export name;
+- retain `arLanguage` unchanged;
+- add integration tests through the public `createFilter()` API;
+- update the package README and add a Changesets minor release entry.
 
-Current Arabic baseline:
+### AR2 — normalization — next
 
-- `arDictionary.words` is empty;
-- `arPack` is empty;
-- `arLanguage` provides locale metadata;
-- package README intentionally does not claim working profanity detection yet.
+Treat Arabic normalization as a separate design concern. Evaluate Arabic letter variants and diacritics (`أ`, `إ`, `آ`, `ى`, combining marks, etc.) with explicit tests before adding a mapping. Avoid transformations that create broad false positives.
+
+### AR3 / AR4 — later
+
+Expand Arabic coverage/categories conservatively, then decide whether quality is sufficient for bundle/preset inclusion. Spam/pattern resources should not be copied mechanically from other languages.
 
 ## 9. Known technical debt
 
 Still tracked:
 
-- Arabic language parity.
+- Arabic parity beyond AR1.
 - `packages/presets/` vs `packages/all/src/presets/` ownership/duplication.
 - existing `enterprisePreset` naming collides conceptually with the future secrets/JWT/API-key roadmap feature.
 - ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
