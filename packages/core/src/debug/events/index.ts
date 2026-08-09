@@ -8,8 +8,12 @@ export * from "./RuleStartedEvent";
 export * from "./RuleFinishedEvent";
 
 export * from "./MatchFoundEvent";
+export * from "./MatchAcceptedEvent";
+export * from "./MatchRejectedEvent";
 
+import type { MatchAcceptedEvent } from "./MatchAcceptedEvent";
 import type { MatchFoundEvent } from "./MatchFoundEvent";
+import type { MatchRejectedEvent } from "./MatchRejectedEvent";
 import type { PipelineFinishedEvent } from "./PipelineFinishedEvent";
 import type { PipelineStartedEvent } from "./PipelineStartedEvent";
 import type { PluginFinishedEvent } from "./PluginFinishedEvent";
@@ -24,4 +28,6 @@ export type DebugEvent =
   | PluginFinishedEvent
   | RuleStartedEvent
   | RuleFinishedEvent
-  | MatchFoundEvent;
+  | MatchFoundEvent
+  | MatchAcceptedEvent
+  | MatchRejectedEvent;
