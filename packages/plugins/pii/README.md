@@ -25,6 +25,8 @@ npx textguard-pii init
 
 Husky itself must already be installed/initialized in the consuming project for `.husky/pre-commit` to run.
 
+For a complete consumer-style walkthrough, see [`examples/pii-consumer`](../../../examples/pii-consumer). That example is also executed by TextGuard CI so the documented setup cannot silently drift from the package behavior.
+
 ## Library usage
 
 ```ts
@@ -90,7 +92,7 @@ npx textguard-pii-ci --base <base-ref> --head <head-ref>
 
 ## Consumer validation
 
-TextGuard CI now packs `@textguard/plugin-pii`, installs that tarball into a clean temporary git project, runs `textguard-pii init`, and verifies:
+TextGuard CI executes the consumer example in `examples/pii-consumer`. The example packs `@textguard/plugin-pii`, installs that tarball into a clean temporary git project, runs `textguard-pii init`, and verifies:
 
 - non-allowlisted PII blocks a real commit;
 - allowlisted values and ignored paths permit the intended commit;
