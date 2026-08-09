@@ -17,7 +17,7 @@ Quality bar: use `@textguard/plugin-pii` as the reference for developer usabilit
 | `@textguard/plugin-pii` | ✅ Complete / reference | Consumer setup, `init`, policy exceptions, CLI/CI, detection scope, and E2E validation documented. |
 | `@textguard/plugin-fa` | ✅ Complete | Current dictionary API and optional normalization mapping documented. |
 | `@textguard/plugin-en` | ✅ Complete | Current dictionary API and optional leetspeak mapping documented. |
-| `@textguard/plugin-ar` | ✅ Accurate for current state | Published foundation state and real exports documented without claiming implementation parity. |
+| `@textguard/plugin-ar` | ✅ Current | README now documents the AR1 usable baseline (`arProfanity`, `arInsults`, populated `arDictionary`/`arPack`) and clearly lists remaining normalization/coverage limitations. |
 | `@textguard/plugin-email` | ✅ Complete | Current API, safe example, and detection limitation documented. |
 | `@textguard/plugin-url` | ✅ Complete | Current API, concise example, and detection limitation documented. |
 | `@textguard/plugin-phone` | ✅ Complete | Detector-specific example and format-detection limitations documented. |
@@ -28,19 +28,9 @@ Quality bar: use `@textguard/plugin-pii` as the reference for developer usabilit
 
 ## Final consistency result
 
-README standardization is **complete** for the current published package surface.
+README standardization remains **complete** for the current published package surface.
 
-The final pass confirms:
-
-- every published package has a non-empty developer-facing README;
-- package examples use shipped public APIs rather than stale interfaces;
-- detector claims match current validation behavior;
-- Core documents the current Debug and Explain surfaces;
-- PII documents explicit allowlist/ignore/suppression policy instead of encouraging broad scanner bypasses;
-- Arabic documentation accurately describes its current foundation-only implementation rather than implying Persian/English parity;
-- examples remain intentionally short and npm-consumer oriented.
-
-No runtime/API change is part of this documentation milestone.
+The permanent rule is that runtime/public API changes update affected README content in the same PR. The Arabic AR1 implementation follows that rule by updating its package README together with the new dictionaries and exports.
 
 ## Standard for future packages
 
@@ -66,6 +56,6 @@ Keep examples short. Do not add architecture details ordinary consumers do not n
 5. ✅ Arabic README consistency.
 6. ✅ Final package-wide consistency check — Core, PII, All, language, and detection packages.
 
-## Next product step
+## Current product step
 
-README cleanup is closed. The next planned product-quality milestone is **Arabic implementation parity**, kept separate from this documentation-only work.
+README cleanup is closed. Current product-quality work is **Arabic implementation parity**, beginning with the AR1 usable dictionary baseline.
