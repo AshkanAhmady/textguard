@@ -7,4 +7,10 @@ export interface ExecutionObserver {
   onRuleStarted(rule: RegisteredRule): void;
   onRuleFinished(rule: RegisteredRule): void;
   onMatchFound(registeredRule: RegisteredRule, match: Match): void;
+  onMatchAccepted?(registeredRule: RegisteredRule, match: Match): void;
+  onMatchRejected?(
+    registeredRule: RegisteredRule,
+    match: Match,
+    winner: Match,
+  ): void;
 }
