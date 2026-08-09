@@ -9,7 +9,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 ## Near-term execution order
 
 1. **Package README standardization — ✅ complete.** Root README and every published package README have been reviewed and aligned with the current public surface.
-2. **Arabic language parity — next, lower priority feature work.** Bring `@textguard/plugin-ar` from its published foundation state toward the Persian/English quality bar.
+2. **Arabic language parity — 🟡 in progress.** First usable dictionary slice is implemented in the current branch; the existing Core Arabic normalization path still needs a dedicated audit/coverage pass, then broader Arabic coverage follows.
 3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
 
 ---
@@ -47,20 +47,18 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ### Package README standardization — ✅ complete
 
-- ✅ root README replaced;
-- ✅ published-package audit completed in `docs/PACKAGE-README-AUDIT.md`;
-- ✅ `@textguard/all` README rewritten;
-- ✅ Persian and English READMEs corrected;
-- ✅ Phone, IP, UUID, Credit Card, and IBAN READMEs corrected;
-- ✅ Email and URL READMEs standardized;
-- ✅ Arabic README aligned with its actual foundation-only implementation;
-- ✅ final consistency check completed across Core, PII, All, language, and detection packages.
+The npm-facing README cleanup is complete. Future public API/behavior changes must update affected READMEs in the same PR.
 
-Future public API/behavior changes must continue updating affected READMEs in the same PR.
+### Arabic language parity — 🟡 in progress
 
-### Arabic language parity — next
+Keep Arabic parity incremental and isolated from unrelated Core refactors.
 
-`@textguard/plugin-ar` is currently a published foundation: `arDictionary` has no words and `arPack` is empty. The next feature milestone should define and implement a conservative Arabic parity scope without disturbing Core architecture or existing package APIs.
+| Slice | Status | Scope |
+| --- | --- | --- |
+| AR1 — usable dictionary baseline | 🟡 Current PR | Add conservative profanity + insult dictionaries, populate `arDictionary`/`arPack`, integration tests, README, and release changeset. Dictionary entries must follow the canonical text produced by the existing Core `ArabicNormalizer`. |
+| AR2 — Arabic normalization audit | ❌ Next | Audit the already-shipped Core `ArabicNormalizer`, add regression coverage for letter variants and diacritics, and only change normalization behavior if tests justify it. |
+| AR3 — coverage expansion | ❌ Later | Expand vocabulary/categories conservatively based on tests and real usage; evaluate spam/pattern resources separately. |
+| AR4 — bundle/preset parity | ❌ Later | Decide when Arabic should join higher-level presets/bundles after quality is sufficient. |
 
 ### Other technical debt
 

@@ -1,10 +1,10 @@
 # @textguard/plugin-ar 🇸🇦
 
-Arabic language package for TextGuard.
+Arabic language moderation resources for TextGuard.
 
-> **Current status:** published foundation / early development.
+> **Current status:** usable baseline. Arabic parity is still in progress.
 
-The package currently exposes Arabic language metadata and placeholder dictionary/pack exports. It does **not yet provide Persian/English-level Arabic moderation coverage**: the current `arDictionary` has no words and `arPack` is empty. Arabic parity is tracked as the next implementation phase after the README cleanup.
+The package now ships a small built-in profanity and insult baseline that works through the normal TextGuard dictionary API. Coverage is intentionally conservative and is not yet equivalent to the Persian or English packages.
 
 ## Installation
 
@@ -12,7 +12,7 @@ The package currently exposes Arabic language metadata and placeholder dictionar
 pnpm add @textguard/core @textguard/plugin-ar
 ```
 
-## Current usage
+## Quick start
 
 ```ts
 import { createFilter } from "@textguard/core";
@@ -21,29 +21,40 @@ import { arDictionary } from "@textguard/plugin-ar";
 const filter = createFilter({
   dictionaries: [arDictionary],
 });
+
+const result = filter.filter("لا تكن غبي");
+
+console.log(result.filteredText);
 ```
 
-This API is valid today, but because the shipped Arabic dictionary is currently empty, it does not add useful Arabic word detection yet.
-
-## Current exports
+## Exports
 
 ```ts
 import {
   arDictionary,
+  arProfanity,
+  arInsults,
   arPack,
   arLanguage,
 } from "@textguard/plugin-ar";
 ```
 
-- `arDictionary` — valid TextGuard dictionary object; currently contains no words.
-- `arPack` — currently an empty object reserved for the future Arabic language pack.
-- `arLanguage` — Arabic locale metadata (`code`, native name, English name).
+- `arDictionary` — combined Arabic dictionary used by `createFilter()`.
+- `arProfanity` — baseline profanity dictionary.
+- `arInsults` — baseline insults dictionary.
+- `arPack` — grouped Arabic resources (`profanity` and `insults`).
+- `arLanguage` — Arabic locale metadata.
 
-## Planned parity work
+## Current limitations
 
-Arabic implementation work will be handled separately from this documentation pass. The parity phase is expected to add real Arabic dictionaries/resources and then update this README with practical moderation examples.
+This release is the first useful Arabic moderation slice, not full language parity yet.
 
-Until that work lands, use this package only if you specifically need the current Arabic metadata/foundation exports.
+- coverage is intentionally small and should be expanded conservatively;
+- Arabic normalization is not included yet;
+- diacritics and letter variants such as `أ` / `إ` / `آ` are not normalized automatically by this package yet;
+- spam/pattern resources are not part of the current Arabic pack.
+
+Those concerns are tracked as separate follow-up work so normalization and broader vocabulary can be reviewed independently from the initial dictionary baseline.
 
 ## License
 
