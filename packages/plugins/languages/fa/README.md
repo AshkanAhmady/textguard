@@ -1,47 +1,72 @@
-````markdown
 # @textguard/plugin-fa 🇮🇷
 
-> **پلاگین و دایره واژگان رسمی زبان فارسی برای سیستم فیلترینگ هوشمند و مدرن `textguard`.**
+پکیج رسمی زبان فارسی برای TextGuard.
 
-این پکیج به صورت اختصاصی برای زبان فارسی بهینه‌سازی شده است و الگوهای پیچیده متنی، کاراکترهای یونیکد هم‌شکل (نیم‌فاصله، ی و ک عربی) و کلمات نامناسب متداول در پلتفرم‌های فارسی را با بالاترین دقت و سرعت پردازش می‌کند.
+این پکیج دیکشنری فارسی، الگوهای رایج توهین/اسپم و mapping مربوط به حروف مشابه فارسی و عربی را در اختیار `@textguard/core` قرار می‌دهد.
 
----
-
-### ✨ ویژگی‌های کلیدی نسخه فارسی
-
-- 🛠️ **پشتیبانی کامل از ساختارهای یونیکد:** شناسایی متونی که تلاش دارند فیلتر را با تغییر ساختار حروف یا چسباندن کلمات دور بزنند.
-- ⌨️ **سازگاری با کیبوردهای مختلف:** یکپارچه‌سازی خودکار تفاوت‌های میان کیبورد فارسی و عربی.
-- ⚡ **عملکرد بسیار سریع (High Performance):** بدون ایجاد کوچک‌ترین سربار روی سرورهای Node.js یا فرانت‌اند.
-
----
-
-### 🚀 نصب
+## نصب
 
 ```bash
-pnpm add @textguard/core @textguard/plugin-fa
-💻 نحوه استفاده و مثال‌های واقعی
-به کمک پکیج اصلی و این واژه‌نامه فارسی، می‌توانید کامنت‌ها، چت‌ها و نام‌های کاربری سیستم خود را در سریع‌ترین زمان ممکن پایش کنید:
+npm install @textguard/core @textguard/plugin-fa
+```
 
-TypeScript
-import { createFilter } from '@textguard/core';
-import { faRules } from '@textguard/plugin-fa';
+## شروع سریع
+
+```ts
+import { createFilter } from "@textguard/core";
+import {
+  faDictionary,
+  faLookalikesMapping,
+} from "@textguard/plugin-fa";
 
 const filter = createFilter({
-  languages: [faRules]
+  dictionaries: [faDictionary],
+  faLookalikesMapping,
 });
 
-// نمونه اول: تشخیص کلمات نامناسب استاندارد
-const checkText = filter.hasProfanity("خواهش می‌کنم کارهای احمقانه انجام ندهید.");
-console.log(checkText); // true
+console.log(filter.hasBadWord("این رفتار احمقانه است"));
 
-// نمونه دوم: سانسور هوشمند و جایگزینی با کاراکتر امن
-const sanitized = filter.clean("لطفاً این رفتار احمق را گزارش کنید.");
-console.log(sanitized); // "لطفاً این رفتار **** را گزارش کنید."
-
-// نمونه سوم: هوشمندی در قبال انواع ساختارهای نگارشی فارسی
-// سیستم به خوبی متوجه تفاوت‌ها یا فواصل کلمات می‌شود
-console.log(filter.hasProfanity("او یک احمق_است")); // true
-📄 لایسنس
-MIT © Ashkan Ahmadi
+const result = filter.filter("این رفتار احمقانه است");
+console.log(result.filteredText);
+console.log(result.matches);
 ```
-````
+
+## چه چیزهایی داخل این پکیج است؟
+
+- `faDictionary` — دیکشنری آماده برای استفاده مستقیم با `createFilter`.
+- `faProfanity` — واژگان مرتبط با profanity.
+- `faInsults` — واژگان مرتبط با توهین.
+- `faSpam` — الگوها و واژگان مرتبط با spam.
+- `faPatterns` — الگوهای تکمیلی فارسی.
+- `faLookalikesMapping` — mapping حروف مشابه برای نرمال‌سازی بهتر متن فارسی.
+- `faPack` — مجموعه‌ی exportهای اصلی فارسی در یک object.
+- `faLanguage` — metadata زبان فارسی.
+
+## نکته درباره حروف مشابه
+
+`faLookalikesMapping` به‌صورت خودکار فعال نمی‌شود. اگر می‌خواهید تفاوت‌هایی مثل فرم‌های فارسی/عربی بعضی حروف در normalization لحاظ شوند، آن را صریحاً به `createFilter` بدهید:
+
+```ts
+const filter = createFilter({
+  dictionaries: [faDictionary],
+  faLookalikesMapping,
+});
+```
+
+## API اصلی TextGuard
+
+بعد از ساخت filter می‌توانید از APIهای فعلی core استفاده کنید:
+
+```ts
+filter.hasBadWord(text);
+filter.findBadWords(text);
+filter.filter(text);
+filter.debug(text);
+filter.explain(text);
+```
+
+APIهای قدیمی مثل `languages`, `hasProfanity()` و `clean()` دیگر API فعلی TextGuard نیستند.
+
+## License
+
+MIT
