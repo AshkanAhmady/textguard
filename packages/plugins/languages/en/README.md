@@ -1,43 +1,72 @@
-````markdown
 # @textguard/plugin-en 🇺🇸🇬🇧
 
-> **Official English language pack, dictionary, and advanced Leetspeak rules for the `textguard` ecosystem.**
+Official English language package for TextGuard.
 
-This extension package provides an optimized dictionary of profanities and sophisticated detection rules tailored specifically for English text moderation.
+It provides an English dictionary, profanity/insult/spam entries, pattern data, and an optional leetspeak mapping for `@textguard/core`.
 
----
-
-### 🔥 Key Highlight: Advanced Leetspeak Detection
-
-Trolls and spammers love to bypass standard filters by replacing letters with numbers or symbols (e.g., writing `1di0t` instead of `idiot`). `@textguard/plugin-en` comes equipped with built-in **Leetspeak obfuscation patterns** that catch these bypass attempts automatically.
-
----
-
-### 🚀 Installation
+## Install
 
 ```bash
-pnpm add @textguard/core @textguard/plugin-en
-💻 Usage & Filtering Variations
-TypeScript
-import { createFilter } from '@textguard/core';
-import { enRules } from '@textguard/plugin-en';
+npm install @textguard/core @textguard/plugin-en
+```
+
+## Quick start
+
+```ts
+import { createFilter } from "@textguard/core";
+import {
+  enDictionary,
+  enLeetspeakMapping,
+} from "@textguard/plugin-en";
 
 const filter = createFilter({
-  languages: [enRules]
+  dictionaries: [enDictionary],
+  leetspeakMapping: enLeetspeakMapping,
 });
 
-// --- Case 1: Standard Filtering ---
-console.log(filter.hasProfanity("Don't act like an idiot!")); // true
-console.log(filter.clean("You are an idiot.")); // "You are an ****."
+console.log(filter.hasBadWord("Don't act like an idiot"));
 
-// --- Case 2: Leetspeak Obfuscation Bypass (Smart Detection) ---
-// The engine automatically decodes symbols and numbers to their original alphabet meanings
-console.log(filter.hasProfanity("Don't act like an 1d10t!")); // true
-console.log(filter.clean("Hey 1D10T, leave.")); // "Hey ****, leave."
-
-// --- Case 3: Case Insensitivity ---
-console.log(filter.hasProfanity("He is an IDIOT.")); // true
-📄 License
-MIT © Ashkan Ahmadi
+const result = filter.filter("Don't act like an idiot");
+console.log(result.filteredText);
+console.log(result.matches);
 ```
-````
+
+## What this package exports
+
+- `enDictionary` — ready-to-use dictionary for `createFilter`.
+- `enProfanity` — profanity entries.
+- `enInsults` — insult entries.
+- `enSpam` — spam-related entries.
+- `enPatterns` — additional English patterns.
+- `enLeetspeakMapping` — optional leetspeak mapping.
+- `enPack` — grouped English resources.
+- `enLanguage` — English language metadata.
+
+## Leetspeak support
+
+`enLeetspeakMapping` is exported by this package, but it is not enabled automatically. Pass it explicitly when you want TextGuard normalization to account for configured leetspeak substitutions:
+
+```ts
+const filter = createFilter({
+  dictionaries: [enDictionary],
+  leetspeakMapping: enLeetspeakMapping,
+});
+```
+
+## Current TextGuard API
+
+Once the filter is created, use the current core methods:
+
+```ts
+filter.hasBadWord(text);
+filter.findBadWords(text);
+filter.filter(text);
+filter.debug(text);
+filter.explain(text);
+```
+
+Older examples using `languages`, `hasProfanity()`, or `clean()` do not represent the current TextGuard API.
+
+## License
+
+MIT
