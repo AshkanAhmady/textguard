@@ -36,6 +36,7 @@ describe("Debug Engine contract", () => {
     expect(events.some((event) => event.type === "rule:started")).toBe(true);
     expect(events.some((event) => event.type === "rule:finished")).toBe(true);
     expect(events.some((event) => event.type === "match:found")).toBe(true);
+    expect(events.some((event) => event.type === "match:accepted")).toBe(true);
 
     const eventTypes = events.map((event) => event.type);
     expect(eventTypes.indexOf("rule:started")).toBeLessThan(
@@ -43,6 +44,12 @@ describe("Debug Engine contract", () => {
     );
     expect(eventTypes.indexOf("match:found")).toBeLessThan(
       eventTypes.indexOf("rule:finished"),
+    );
+    expect(eventTypes.indexOf("rule:finished")).toBeLessThan(
+      eventTypes.indexOf("match:accepted"),
+    );
+    expect(eventTypes.indexOf("match:accepted")).toBeLessThan(
+      eventTypes.indexOf("pipeline:finished"),
     );
   });
 
@@ -80,7 +87,7 @@ describe("Debug Engine contract", () => {
     expect(Object.isFrozen(session.getMatches())).toBe(true);
   });
 
-  it("records candidate matches even when overlap resolution removes one", () => {
+  it("records candidates and explicit accepted/rejected overlap decisions", () => {
     const shorterRule: Rule = {
       id: "shorter",
       name: "Shorter",
@@ -107,19 +114,74 @@ describe("Debug Engine contract", () => {
 
     const finalMatches = filter.findBadWords("abc");
     const session = filter.debug("abc");
-    const debugMatches = session
-      .getEvents()
+    const events = session.getEvents();
+
+    const candidates = events
       .filter((event) => event.type === "match:found")
       .map((event) => event.match);
+    const accepted = events
+      .filter((event) => event.type === "match:accepted")
+      .map((event) => event.match);
+    const rejected = events.filter((event) => event.type === "match:rejected");
 
     expect(finalMatches).toEqual([
       { word: "abc", matchedText: "abc", start: 0, end: 3 },
     ]);
     expect(session.getMatches()).toEqual(finalMatches);
-    expect(debugMatches).toEqual([
+    expect(candidates).toEqual([
       { word: "ab", matchedText: "ab", start: 0, end: 2 },
       { word: "abc", matchedText: "abc", start: 0, end: 3 },
     ]);
+    expect(accepted).toEqual(finalMatches);
+    expect(rejected).toHaveLength(1);
+    expect(rejected[0]).toMatchObject({
+      type: "match:rejected",
+      rule: "Shorter",
+      reason: "overlap",
+      match: { matchedText: "ab", start: 0, end: 2 },
+      winner: { matchedText: "abc", start: 0, end: 3 },
+    });
+  });
+
+  it("rejects a shorter later candidate without changing the final result", () => {
+    const longerRule: Rule = {
+      id: "longer-first",
+      name: "Longer First",
+      category: "test",
+      severity: "high",
+      priority: 1,
+      supports: () => true,
+      match: () => [{ word: "abc", matchedText: "abc", start: 0, end: 3 }],
+    };
+
+    const shorterRule: Rule = {
+      id: "shorter-later",
+      name: "Shorter Later",
+      category: "test",
+      severity: "low",
+      priority: 2,
+      supports: () => true,
+      match: () => [{ word: "ab", matchedText: "ab", start: 0, end: 2 }],
+    };
+
+    const session = createFilter({
+      plugins: [createTestPlugin(longerRule, shorterRule)],
+    }).debug("abc");
+
+    const rejected = session
+      .getEvents()
+      .filter((event) => event.type === "match:rejected");
+
+    expect(session.getMatches()).toEqual([
+      { word: "abc", matchedText: "abc", start: 0, end: 3 },
+    ]);
+    expect(rejected).toHaveLength(1);
+    expect(rejected[0]).toMatchObject({
+      rule: "Shorter Later",
+      reason: "overlap",
+      match: { matchedText: "ab", start: 0, end: 2 },
+      winner: { matchedText: "abc", start: 0, end: 3 },
+    });
   });
 
   it("keeps the legacy DebugSession(events) constructor compatible", () => {
