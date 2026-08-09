@@ -8,7 +8,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **PII consumer integration / DX hardening.** Current focus. Consumer init and policy configuration are merged; external install/commit/CI validation is now in progress.
+1. **PII consumer integration / DX hardening.** Current focus. Consumer init and policy configuration are merged; external validation now runs through the executable `examples/pii-consumer` walkthrough; final public docs follow.
 2. **Package README standardization.** Audit all published package READMEs using the PII README as the quality reference.
 3. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` after PII DX and README cleanup.
 
@@ -24,10 +24,10 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 | --- | --- | --- |
 | M0.1 — Scope & Naming | ✅ Done | `@textguard/plugin-pii`; email, phone, credit card, IBAN. |
 | M0.2 — Scan Core | ✅ Done | `piiPreset`, `scanText()` and `scanMany()` implemented. |
-| M0.3 — Pre-commit Hook Mode | 🟡 Partial | Scanner blocks commits and `init` wires consumer hooks; external commit validation is being automated in CI. |
-| M0.4 — GitHub Action Mode | 🟡 Partial | CI scanner/workflow setup exists; external pass/fail validation is being automated in CI. |
+| M0.3 — Pre-commit Hook Mode | 🟡 Partial | Scanner blocks commits; `init` wires consumer hooks and shared policy configuration is merged. |
+| M0.4 — GitHub Action Mode | 🟡 Partial | CI scanner exists; consumer workflow setup and shared policy configuration are merged. |
 | M0.5 — Reporting Output | ✅ Done | Console/markdown reporting exists. |
-| M0.6 — Consumer Setup / DX | 🟡 In progress | `init` and shared policy configuration are merged. Current step packs and installs the package in a clean consumer fixture, verifies real commit blocking, allowlist/ignore behavior, and CI blocking. Final public-doc pass follows after E2E is green. |
+| M0.6 — Consumer Setup / DX | 🟡 In progress | `npx textguard-pii init` and `textguard-pii.config.json` policy are merged. Current step validates the packaged consumer flow through `examples/pii-consumer`, including real commit blocking, allowlist/ignore behavior, and CI pass/fail. Final public docs follow after E2E is green. |
 | M0.7 — Paid Tier | ❌ Later | Only after open-source usage validates demand. |
 
 ### Epic 1 — Debug Engine ⭐⭐⭐⭐⭐
