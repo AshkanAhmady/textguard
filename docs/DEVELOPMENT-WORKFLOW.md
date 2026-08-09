@@ -41,11 +41,20 @@ Epic 1 / M5 Explain API is complete: Debug hardening, Explain domain/builder, pu
 
 Stay on this sequence before Arabic parity or broader roadmap features:
 
-1. **Root README — ✅ current PR.** Replace obsolete Turborepo starter content with a real TextGuard overview, install guidance, quick start, package map, Explain/Debug/PII entry points, examples, and repository-development links.
-2. **Published package audit — next.** Inventory every package README and identify empty, obsolete, inconsistent, or misleading documentation.
-3. **Package README standardization.** Use `@textguard/plugin-pii` as the quality reference: purpose, install, quick start, API/options, examples, and relevant validation/limitations.
+1. **Root README — ✅ merged.** The repository now has a real TextGuard overview and onboarding path.
+2. **Published package audit — ✅ current PR.** Findings and rewrite priorities are recorded in `docs/PACKAGE-README-AUDIT.md`.
+3. **Package README standardization — next.** Rewrite in audit priority order, beginning with empty `@textguard/all`, then obsolete Persian/English docs, then incorrect detection-plugin docs.
 4. **Example alignment.** Keep examples simple for ordinary developers and make sure documented APIs match shipped behavior.
-5. **Closeout.** Update roadmap/project docs with the final audit status before starting Arabic parity.
+5. **Closeout.** Update roadmap/project docs with final package status before starting Arabic parity.
+
+## README rewrite rules
+
+- Use `@textguard/plugin-pii` as the quality reference, not as a rigid template.
+- Prefer short install + quick-start paths over architecture-heavy explanations.
+- Every code sample must match the current exported API.
+- Detector README claims must match actual validation behavior.
+- Avoid raw PII literals in repository docs when equivalent safe examples can be assembled without weakening PII enforcement.
+- Do not expand Arabic implementation scope during documentation cleanup; describe its current state accurately and leave parity work for its planned phase.
 
 ## Priorities after README standardization
 
@@ -54,4 +63,4 @@ Stay on this sequence before Arabic parity or broader roadmap features:
 
 ## Current branch note
 
-`agent/root-readme-standardization` is documentation-only. It replaces the obsolete root README and advances the persistent status to the published-package README audit. Package README rewrites belong to subsequent dedicated PRs.
+`agent/package-readme-audit` is documentation-only. It records the package README inventory and rewrite order; it intentionally does not rewrite package READMEs in bulk. The next branch starts with `@textguard/all`.
