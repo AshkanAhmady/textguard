@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 export const PRE_COMMIT_COMMAND = "npx textguard-pii";
 export const PII_WORKFLOW_PATH = ".github/workflows/pii-scan.yml";
 export const PRE_COMMIT_PATH = ".husky/pre-commit";
+const HUSKY_DEFAULT_PRE_COMMIT = "npm test";
 
 export const PII_WORKFLOW_TEMPLATE = `name: PII Scan
 
@@ -33,8 +34,17 @@ jobs:
 export function addPreCommitCommand(existing: string): string {
   if (existing.includes(PRE_COMMIT_COMMAND)) return existing;
 
-  const trimmed = existing.trimEnd();
-  return `${trimmed}${trimmed ? "\n" : ""}${PRE_COMMIT_COMMAND}\n`;
+  const trimmed = existing.trim();
+
+  // `npx husky init` creates `npm test` as a starter placeholder. In a fresh
+  // npm project that command fails by default and prevents the first commit.
+  // Replace only that exact placeholder; preserve any real/custom hook logic.
+  if (trimmed === HUSKY_DEFAULT_PRE_COMMIT) {
+    return `${PRE_COMMIT_COMMAND}\n`;
+  }
+
+  const trimmedEnd = existing.trimEnd();
+  return `${trimmedEnd}${trimmedEnd ? "\n" : ""}${PRE_COMMIT_COMMAND}\n`;
 }
 
 export interface InitResult {
