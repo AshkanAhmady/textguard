@@ -59,8 +59,8 @@ Architecture decisions are recorded under `docs/architecture/`.
 
 ### Language plugins
 
-- Persian: established/full relative to the current language architecture.
-- English: established/full relative to the current language architecture.
+- Persian: established/full relative to the current language architecture. README now documents `faDictionary` and optional `faLookalikesMapping` through the current core API.
+- English: established/full relative to the current language architecture. README now documents `enDictionary` and optional `enLeetspeakMapping` through the current core API.
 - Arabic: published but intentionally thinner; parity work is tracked at lower priority after README cleanup.
 
 ### Structured-data detection
@@ -95,18 +95,20 @@ M0.3, M0.4, and M0.6 are complete. M0.7 (paid tier) intentionally remains later 
 
 ## 7. Current milestone — Documentation quality
 
-The root README replacement and published-package README audit are complete. Audit findings and rewrite order live in `docs/PACKAGE-README-AUDIT.md`.
+The root README, package audit, `@textguard/all` README, and Persian/English README corrections are complete or in the current review step. Audit findings and rewrite order live in `docs/PACKAGE-README-AUDIT.md`.
 
-Confirmed priorities:
+Current sequence:
 
-- `@textguard/all` is P0 because its published README is empty;
-- Persian and English READMEs are P0 because they document removed APIs and have malformed markdown;
-- Phone, IP, UUID, Credit Card, and IBAN READMEs are P0 because copied or invalid examples misrepresent package behavior;
-- Email and URL are P1 consistency/quality work;
-- Core and PII are already useful, with PII serving as the quality reference;
-- Arabic README cleanup stays conservative until the lower-priority Arabic parity implementation work.
+- ✅ root README;
+- ✅ published package audit;
+- ✅ `@textguard/all` README;
+- ✅ Persian and English README correctness pass;
+- next: Phone, IP, UUID, Credit Card, and IBAN P0 detection README fixes;
+- then Email/URL standardization;
+- then conservative Arabic README consistency;
+- final package-wide consistency check.
 
-The next implementation sequence is package-by-package README rewriting in that priority order. Examples must stay short, copy/paste-ready, compatible with shipped public APIs, and safe for the repository PII scan without broad ignore rules.
+Examples must stay short, copy/paste-ready, compatible with shipped public APIs, and safe for the repository PII scan without broad ignore rules.
 
 For workflows with meaningful consumer setup, prefer examples under `examples/` that developers can inspect and CI can execute. Executable examples are part of the public documentation surface.
 
@@ -120,7 +122,7 @@ Still tracked:
 - ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
 - overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases; Debug/Explain expose the final decision correctly but do not change ranking semantics.
 - HTML Debug renderer remains missing.
-- published-package README cleanup is the current priority.
+- remaining detection-package README cleanup is the current priority.
 
 ## 9. Development discipline
 
@@ -139,6 +141,6 @@ See `docs/DEVELOPMENT-WORKFLOW.md` for the persistent execution sequence.
 
 Near-term sequence is now:
 
-**Explain complete → PII consumer DX complete → root README complete → package README audit complete → package-by-package README standardization → Arabic parity → reassess adoption and broader roadmap.**
+**Explain complete → PII consumer DX complete → root/package README cleanup → Arabic parity → reassess adoption and broader roadmap.**
 
 Secrets presets, benchmark suite, VS Code/Chrome integrations, AI work, and the paid PII tier remain later roadmap items.
