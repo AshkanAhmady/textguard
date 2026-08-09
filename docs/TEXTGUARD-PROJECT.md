@@ -6,7 +6,7 @@
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI. The core stays plugin-oriented so new detectors can be added without coupling them into the engine.
 
-Current product focus is **finish package README consistency**, then Arabic implementation parity.
+Package README standardization is complete. The next planned product-quality feature milestone is **Arabic implementation parity**.
 
 ## 2. Repository and architecture
 
@@ -56,11 +56,11 @@ Architecture decisions are recorded under `docs/architecture/`.
 
 - Persian: established/full relative to the current language architecture. README uses the current `faDictionary` API and optional `faLookalikesMapping`.
 - English: established/full relative to the current language architecture. README uses the current `enDictionary` API and optional `enLeetspeakMapping`.
-- Arabic: published foundation only. Current source exports `arDictionary`, `arPack`, and `arLanguage`; `arDictionary.words` is empty and `arPack` is empty. The README now states this explicitly. Arabic parity remains separate implementation work after documentation cleanup.
+- Arabic: published foundation only. Current source exports `arDictionary`, `arPack`, and `arLanguage`; `arDictionary.words` is empty and `arPack` is empty. Documentation accurately states this. Arabic parity is the next implementation milestone.
 
 ### Structured-data detection
 
-Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist. Their package READMEs now use current APIs and detector-specific examples; Credit Card documents Luhn validation and IBAN documents mod-97 validation.
+Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist. Their package READMEs use current APIs and detector-specific examples; Credit Card documents Luhn validation and IBAN documents mod-97 validation.
 
 ### PII package
 
@@ -75,27 +75,32 @@ Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist. Their package 
 
 M0.7 (paid tier) remains intentionally later until open-source usage validates demand.
 
-## 7. Current milestone — Documentation quality
+## 7. Completed milestone — Package README standardization
 
-Completed:
+The npm-facing documentation cleanup is complete:
 
 - ✅ root README;
 - ✅ published package audit;
 - ✅ `@textguard/all` README;
-- ✅ Persian and English README correctness pass;
-- ✅ P0 detector READMEs: Phone, IP, UUID, Credit Card, IBAN;
-- ✅ P1 detector READMEs: Email and URL;
-- ✅ Arabic README consistency pass reflecting the actual foundation-only state.
+- ✅ Persian and English READMEs;
+- ✅ all structured-data detector READMEs;
+- ✅ Arabic README aligned with the current foundation-only package;
+- ✅ final package-wide consistency verification across Core, PII, All, language, and detection packages.
 
-Remaining sequence:
+The permanent rule remains: examples should be short, copy/paste-ready, compatible with shipped public APIs, and safe for the repository PII scan without broad ignore rules. Public behavior/API changes update affected documentation in the same PR.
 
-1. Final package-wide README consistency check.
-2. Arabic implementation parity.
-3. Reassess adoption and broader roadmap priorities.
+## 8. Next milestone — Arabic implementation parity
 
-Examples must stay short, copy/paste-ready, compatible with shipped public APIs, and safe for the repository PII scan without broad ignore rules.
+Before implementation, inspect the Persian/English language-plugin structure and define a conservative Arabic scope. Preserve existing public exports where possible and avoid unnecessary Core changes.
 
-## 8. Known technical debt
+Current Arabic baseline:
+
+- `arDictionary.words` is empty;
+- `arPack` is empty;
+- `arLanguage` provides locale metadata;
+- package README intentionally does not claim working profanity detection yet.
+
+## 9. Known technical debt
 
 Still tracked:
 
@@ -106,7 +111,7 @@ Still tracked:
 - overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases.
 - HTML Debug renderer remains missing.
 
-## 9. Development discipline
+## 10. Development discipline
 
 Every coherent change-set should:
 
@@ -119,10 +124,10 @@ Every coherent change-set should:
 
 See `docs/DEVELOPMENT-WORKFLOW.md` for the persistent execution sequence.
 
-## 10. Long-term roadmap guardrail
+## 11. Long-term roadmap guardrail
 
 Near-term sequence is:
 
-**Explain complete → PII consumer DX complete → package README cleanup → Arabic parity → reassess adoption and broader roadmap.**
+**Explain complete → PII consumer DX complete → package README cleanup complete → Arabic parity → reassess adoption and broader roadmap.**
 
 Secrets presets, benchmark suite, VS Code/Chrome integrations, AI work, and the paid PII tier remain later roadmap items.
