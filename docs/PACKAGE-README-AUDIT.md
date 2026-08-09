@@ -12,7 +12,7 @@ Quality bar: use `@textguard/plugin-pii` as the reference for structure and deve
 
 | Package | Current state | Priority | Main issue |
 | --- | --- | --- | --- |
-| `@textguard/all` | ❌ Empty | P0 | Published bundle has an empty README. |
+| `@textguard/all` | ✅ Rewritten | P0 | Main bundle README now documents install, quick start, presets, exports, Explain/Debug, and current limitations. |
 | `@textguard/core` | ✅ Good | P2 | Current and useful; only consistency polish may be needed later. |
 | `@textguard/plugin-pii` | ✅ Reference | P2 | Current quality reference; no rewrite needed now. |
 | `@textguard/plugin-fa` | ❌ Obsolete/broken | P0 | Markdown is malformed and examples use removed APIs such as `languages`, `hasProfanity`, and `clean`. |
@@ -30,7 +30,7 @@ Quality bar: use `@textguard/plugin-pii` as the reference for structure and deve
 
 ### P0 — must fix first
 
-1. `@textguard/all` ships an empty README. This is the main onboarding bundle and should be the first package README rewritten.
+1. ✅ `@textguard/all` no longer ships an empty README.
 2. Persian and English language READMEs document an older public API (`languages`, `hasProfanity`, `clean`) that is not the current TextGuard API. Their markdown fences are also malformed.
 3. Phone, IP, UUID, Credit Card, and IBAN READMEs contain copied examples unrelated to their actual detector.
 4. Credit Card documentation contains an invalid JavaScript identifier in the import/example and understates validator behavior.
@@ -65,7 +65,7 @@ Keep examples short. Do not add architecture details that ordinary consumers do 
 
 ## Rewrite sequence
 
-1. `@textguard/all` — highest-impact onboarding package; currently empty.
+1. ✅ `@textguard/all` — highest-impact onboarding package; rewritten first.
 2. `@textguard/plugin-fa` and `@textguard/plugin-en` — remove obsolete API examples and fix markdown.
 3. Detection P0 group — Phone, IP, UUID, Credit Card, IBAN.
 4. Detection P1 group — Email and URL.
