@@ -8,9 +8,9 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **PII consumer integration / DX hardening.** Current focus. Consumer init and policy configuration are merged; external validation now runs through the executable `examples/pii-consumer` walkthrough; final public docs follow.
-2. **Package README standardization.** Audit all published package READMEs using the PII README as the quality reference.
-3. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` after PII DX and README cleanup.
+1. **Package README standardization.** Current focus. Audit all published package READMEs using the PII README as the quality reference, including the obsolete root README.
+2. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` after README cleanup.
+3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
 
 ---
 
@@ -18,16 +18,16 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ### Epic 0 — PII / Compliance CI Guard ⭐⭐⭐⭐⭐
 
-**Status: 🟡 Consumer DX hardening in progress.**
+**Status: ✅ Open-source consumer DX complete through M0.6. M0.7 remains intentionally later.**
 
 | Milestone | Status | Detail |
 | --- | --- | --- |
 | M0.1 — Scope & Naming | ✅ Done | `@textguard/plugin-pii`; email, phone, credit card, IBAN. |
 | M0.2 — Scan Core | ✅ Done | `piiPreset`, `scanText()` and `scanMany()` implemented. |
-| M0.3 — Pre-commit Hook Mode | 🟡 Partial | Scanner blocks commits; `init` wires consumer hooks and shared policy configuration is merged. |
-| M0.4 — GitHub Action Mode | 🟡 Partial | CI scanner exists; consumer workflow setup and shared policy configuration are merged. |
+| M0.3 — Pre-commit Hook Mode | ✅ Done | Scanner blocks real commits; `npx textguard-pii init` wires Husky safely and shared policy configuration is enforced. |
+| M0.4 — GitHub Action Mode | ✅ Done | CI scanner and generated consumer workflow exist; packaged E2E verifies CI pass/fail behavior using the shared policy. |
 | M0.5 — Reporting Output | ✅ Done | Console/markdown reporting exists. |
-| M0.6 — Consumer Setup / DX | 🟡 In progress | `npx textguard-pii init` and `textguard-pii.config.json` policy are merged. Current step validates the packaged consumer flow through `examples/pii-consumer`, including real commit blocking, allowlist/ignore behavior, and CI pass/fail. Final public docs follow after E2E is green. |
+| M0.6 — Consumer Setup / DX | ✅ Done | Copy/paste setup, `init`, shared config (`allowlist`, `ignorePaths`, suppressions), executable consumer example, and packaged external E2E validation are complete. |
 | M0.7 — Paid Tier | ❌ Later | Only after open-source usage validates demand. |
 
 ### Epic 1 — Debug Engine ⭐⭐⭐⭐⭐
@@ -45,16 +45,18 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Product-quality backlog
 
-### Package README standardization — high priority after PII DX
+### Package README standardization — current high priority
 
+- replace the obsolete root Turborepo-starter README with a real TextGuard project README;
 - every published package needs a useful README;
 - use `@textguard/plugin-pii` as the structural/quality reference;
 - examples must match current APIs;
-- no empty README may ship.
+- no empty README may ship;
+- prefer short, copy/paste-ready examples that ordinary package consumers can follow.
 
 ### Arabic language parity — lower priority
 
-Bring `@textguard/plugin-ar` to the Persian/English quality bar after PII DX and README standardization.
+Bring `@textguard/plugin-ar` to the Persian/English quality bar after README standardization.
 
 ### Other technical debt
 
@@ -67,4 +69,4 @@ Bring `@textguard/plugin-ar` to the Persian/English quality bar after PII DX and
 
 ## Current product-quality focus
 
-**usable PII integration in real consumer repos → strong npm/package documentation → adoption feedback.**
+**strong npm/package documentation → simpler onboarding → adoption feedback.**

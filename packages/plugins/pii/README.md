@@ -2,30 +2,34 @@
 
 **Stop PII from reaching a commit or pull request.**
 
-`@textguard/plugin-pii` detects email addresses, phone numbers, credit card numbers, and IBANs and can enforce those checks locally and in CI.
+`@textguard/plugin-pii` detects email addresses, phone numbers, credit card numbers, and IBANs and can enforce those checks locally before commits and in pull-request CI.
 
-## Install
+## Quick start
 
-```bash
-npm install -D @textguard/plugin-pii
-```
-
-## Set up a consumer project
+Install the package and Husky, initialize Husky, then let TextGuard wire the PII checks:
 
 ```bash
+npm install -D @textguard/plugin-pii husky
+npx husky init
 npx textguard-pii init
 ```
 
-`init` safely prepares the existing PII enforcement surfaces:
+`textguard-pii init`:
 
 - creates or updates `.husky/pre-commit` with `npx textguard-pii`;
-- leaves an already-configured hook unchanged;
+- preserves real commands already present in the hook;
+- replaces Husky's default placeholder-only `npm test` hook when applicable;
 - creates `.github/workflows/pii-scan.yml` when no workflow exists at that path;
 - never overwrites an existing PII workflow file.
 
-Husky itself must already be installed/initialized in the consuming project for `.husky/pre-commit` to run.
+After setup, stage a file and commit normally. Non-allowed PII causes the pre-commit hook to exit non-zero and block the commit.
 
-For a complete consumer-style walkthrough, see [`examples/pii-consumer`](../../../examples/pii-consumer). That example is also executed by TextGuard CI so the documented setup cannot silently drift from the package behavior.
+```bash
+git add .
+git commit -m "my change"
+```
+
+For a simple consumer-style walkthrough, see [`examples/pii-consumer`](../../../examples/pii-consumer). TextGuard CI executes that same example so the documented workflow is regression-tested.
 
 ## Library usage
 
@@ -39,9 +43,11 @@ result.clean; // false
 result.findings;
 ```
 
+`scanText()` remains strict: it reports what detectors find. Consumer policy is applied separately by the file/CLI/CI surfaces.
+
 ## Allow intentional test data
 
-Create `textguard-pii.config.json` in the consumer repository root. The same policy is used by the pre-commit CLI and the PR/CI scanner.
+Some projects intentionally contain values that look like PII in tests, fixtures, or documentation. Create `textguard-pii.config.json` in the repository root when an explicit exception is required.
 
 ```json
 {
@@ -59,15 +65,19 @@ Create `textguard-pii.config.json` in the consumer repository root. The same pol
 }
 ```
 
-`allowlist` is detector-specific, so an allowed email value does not automatically allow a phone, card, or IBAN finding with the same text. `ignorePaths` skips an entire matching file. `suppressions` are intentionally narrower and can be restricted by path, detector type, and exact matched value.
+The same policy is used by the pre-commit CLI and the PR/CI scanner.
 
-Prefer the narrowest exception that fits the case. For example, use an exact allowlisted test value before ignoring a whole directory.
+- `allowlist` allows exact known values for a specific detector type.
+- `ignorePaths` skips whole files matching the configured glob.
+- `suppressions` allow narrower exceptions restricted by path, detector type, and optionally exact matched text.
 
-The library API also exposes `scanFile(path, text, config)` and the policy types when custom integration is needed.
+Prefer the narrowest exception that fits the case. In most cases an exact allowlisted test value is safer than ignoring a whole directory.
+
+The library API also exposes `scanFile(path, text, config)` and the policy types for custom integrations.
 
 ## Manual pre-commit setup
 
-If you prefer manual setup, add this to `.husky/pre-commit`:
+If you do not want to use `init`, add this command to `.husky/pre-commit` yourself:
 
 ```sh
 npx textguard-pii
@@ -81,7 +91,9 @@ The `textguard-pii-ci` executable scans a git diff and exits non-zero when non-a
 npx textguard-pii-ci --base <base-ref> --head <head-ref>
 ```
 
-## Current detection scope
+`npx textguard-pii init` creates a GitHub Actions workflow using this command automatically unless a workflow already exists at `.github/workflows/pii-scan.yml`.
+
+## Detection scope
 
 | Type | Validation |
 | --- | --- |
@@ -92,20 +104,15 @@ npx textguard-pii-ci --base <base-ref> --head <head-ref>
 
 ## Consumer validation
 
-TextGuard CI executes the consumer example in `examples/pii-consumer`. The example packs `@textguard/plugin-pii`, installs that tarball into a clean temporary git project, runs `textguard-pii init`, and verifies:
+TextGuard CI executes `examples/pii-consumer/e2e.mjs`. The harness packs the real `@textguard/plugin-pii` package, installs it into a clean temporary git repository, runs the documented setup path, and verifies that:
 
-- non-allowlisted PII blocks a real commit;
-- allowlisted values and ignored paths permit the intended commit;
+- a non-allowlisted PII value blocks a real commit;
+- an exact allowlisted value is accepted;
+- ignored fixture paths are accepted;
 - the CI scanner accepts policy-approved changes;
 - the CI scanner rejects a non-allowlisted leak.
 
-This protects the consumer setup path from regressing even when the monorepo itself still builds successfully.
-
-## Consumer DX still in progress
-
-The remaining step is the final public documentation pass after the external E2E check is green. At that point M0.6 can be marked complete.
-
-Detection and policy remain separate: detectors report findings; the PII policy layer decides whether an intentional finding should block.
+Detection and policy intentionally remain separate: detectors report findings; the PII policy layer decides whether an intentional finding should block.
 
 ## License
 

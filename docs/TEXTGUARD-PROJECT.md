@@ -4,9 +4,9 @@
 
 ## 1. Product
 
-TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, and a structured Explain API. The core stays plugin-oriented so new detectors can be added without coupling them into the engine.
+TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI. The core stays plugin-oriented so new detectors can be added without coupling them into the engine.
 
-Current product focus after Explain is **PII consumer reliability and developer experience**, then package README quality, then lower-priority Arabic parity.
+Current product focus is **package/root README quality and simpler npm onboarding**, then lower-priority Arabic parity.
 
 ## 2. Repository and architecture
 
@@ -41,7 +41,7 @@ filter.explain(text: string): ExplainResult;
 filter.use(plugin: Plugin): void;
 ```
 
-`filter.explain(text)` is part of Epic 1 / M5 and is implemented. It returns original/normalized input, final accepted matches, plugin/rule metadata, structured reason data, and a summary. Explain uses the same debug-capable engine execution path; it does not re-run rules separately.
+`filter.explain(text)` is implemented as Epic 1 / M5. It returns original/normalized input, final accepted matches, plugin/rule metadata, structured reason data, and a summary. Explain uses the same debug-capable engine execution path; it does not re-run rules separately.
 
 ## 4. Debug and Explain architecture
 
@@ -53,7 +53,7 @@ The Debug Engine provides the foundation required for reliable Explain behavior:
 - Explain only projects final accepted matches.
 - Explain reasons remain intentionally generic (`rule-match`) until rules expose richer structured facts. The core must not invent detector-specific explanations.
 
-Architecture decisions are recorded in ADR-001 through ADR-006 under `docs/architecture/`.
+Architecture decisions are recorded under `docs/architecture/`.
 
 ## 5. Plugin state
 
@@ -61,7 +61,7 @@ Architecture decisions are recorded in ADR-001 through ADR-006 under `docs/archi
 
 - Persian: established/full relative to the current language architecture.
 - English: established/full relative to the current language architecture.
-- Arabic: published but intentionally thinner; parity work is tracked at lower priority after PII DX and README cleanup.
+- Arabic: published but intentionally thinner; parity work is tracked at lower priority after README cleanup.
 
 ### Structured-data detection
 
@@ -71,35 +71,42 @@ Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist. Credit Card an
 
 `@textguard/plugin-pii` combines the relevant PII detectors and provides scanning/CLI/CI surfaces.
 
-Current consumer capabilities:
+Consumer capabilities through M0.6 are complete:
 
 - `npx textguard-pii init` wires a Husky pre-commit command and creates the GitHub workflow without overwriting an existing workflow file;
 - `textguard-pii.config.json` provides detector-specific allowlists, ignored paths/globs, and narrowly scoped suppressions;
 - both pre-commit and CI scanners use the same policy layer;
-- detection stays strict and policy decides whether a finding should block.
+- detection stays strict and policy decides whether a finding should block;
+- `examples/pii-consumer` is a simple executable consumer reference;
+- CI packs the real published package shape into a clean temporary repository and validates blocked commits, policy-approved commits, ignored paths, and CI pass/fail behavior.
 
-`examples/pii-consumer` is the executable consumer reference. Developers can inspect the same setup path that CI executes. Its E2E harness packs the real package into a clean temporary git repository and verifies a blocked commit, allowlisted/ignored-path behavior, and CI pass/fail behavior. This keeps examples and product behavior aligned.
+Husky must be installed and initialized in the consuming project before the generated `.husky/pre-commit` hook can execute. The PII README documents the full copy/paste setup sequence.
 
-Husky still needs to be installed/initialized in the consuming project before the generated `.husky/pre-commit` hook can execute; the README must state this clearly until setup handling changes.
+## 6. Completed milestone — PII Consumer DX Hardening
 
-## 6. Current milestone — PII Consumer DX Hardening
+Execution sequence is complete:
 
-Execution sequence:
+1. Consumer init foundation — ✅ merged.
+2. Shared policy/configuration layer — ✅ merged.
+3. External end-to-end validation — ✅ merged and green.
+4. Final public documentation — ✅ completed in the closeout pass.
 
-1. Consumer init foundation — merged.
-2. Shared policy/configuration layer — merged.
-3. External end-to-end validation — current, implemented as the executable `examples/pii-consumer` walkthrough plus CI harness.
-4. Final public documentation — next after E2E is green.
+M0.3, M0.4, and M0.6 are considered complete. M0.7 (paid tier) intentionally remains later until open-source usage validates demand.
 
-M0.6 must not be marked complete until the external E2E check is green and the final copy/paste-ready documentation pass is merged.
+## 7. Current milestone — Documentation quality
 
-## 7. Documentation backlog
+Package README quality is inconsistent and the root README is still an obsolete Turborepo starter. The next work sequence is a repository-wide documentation cleanup.
 
-Package README quality is inconsistent. After PII DX, audit every published package and use the current `@textguard/plugin-pii` README as the reference format/quality bar.
+Goals:
+
+- replace the root README with a real TextGuard project overview and quick start;
+- audit every published package README;
+- use the current `@textguard/plugin-pii` README as the structure/quality reference;
+- make examples short and copy/paste-ready for ordinary developers;
+- ensure examples match current public APIs;
+- ensure no published package has an empty or obsolete README.
 
 For workflows with meaningful consumer setup, prefer examples under `examples/` that developers can inspect and CI can execute. Executable examples are part of the public documentation surface.
-
-No published package should ship with an empty or obsolete README.
 
 ## 8. Known technical debt
 
@@ -111,14 +118,14 @@ Still tracked:
 - ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
 - overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases; Debug/Explain expose the final decision correctly but do not change ranking semantics.
 - HTML Debug renderer remains missing.
-- repository-wide package README cleanup remains pending.
+- repository-wide package README cleanup is the current priority.
 
 ## 9. Development discipline
 
 Every coherent change-set should:
 
 1. start from latest `main` on its own branch;
-2. include relevant tests;
+2. include relevant tests when behavior changes;
 3. update stale roadmap/project/ADR/README/example documentation in the same branch;
 4. open a PR for maintainer review;
 5. merge only with required checks green;
@@ -128,8 +135,8 @@ See `docs/DEVELOPMENT-WORKFLOW.md` for the persistent execution sequence.
 
 ## 10. Long-term roadmap guardrail
 
-Do not jump directly from Explain into broad new feature breadth. Near-term sequence is:
+Near-term sequence is now:
 
-**Explain complete → PII consumer DX → package README standardization → Arabic parity → reassess adoption and broader roadmap.**
+**Explain complete → PII consumer DX complete → package/root README standardization → Arabic parity → reassess adoption and broader roadmap.**
 
-Secrets presets, benchmark suite, VS Code/Chrome integrations, and AI work remain later roadmap items.
+Secrets presets, benchmark suite, VS Code/Chrome integrations, AI work, and the paid PII tier remain later roadmap items.
