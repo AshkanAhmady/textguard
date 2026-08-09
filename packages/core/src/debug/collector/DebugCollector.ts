@@ -8,6 +8,9 @@ import type { DistributiveOmit } from "../types/DistributiveOmit";
 export class DebugCollector implements ExecutionObserver {
   private readonly events: DebugEvent[] = [];
   private nextEventId = 1;
+  private input = "";
+  private normalizedInput = "";
+  private matches: readonly Match[] = [];
 
   public addEvent(event: DistributiveOmit<DebugEvent, "id" | "level">): void {
     this.events.push({
@@ -17,8 +20,23 @@ export class DebugCollector implements ExecutionObserver {
     } as DebugEvent);
   }
 
+  public setExecutionState(
+    input: string,
+    normalizedInput: string,
+    matches: readonly Match[],
+  ): void {
+    this.input = input;
+    this.normalizedInput = normalizedInput;
+    this.matches = Object.freeze([...matches]);
+  }
+
   public build(): DebugSession {
-    return new DebugSession(Object.freeze([...this.events]));
+    return new DebugSession({
+      input: this.input,
+      normalizedInput: this.normalizedInput,
+      matches: this.matches,
+      events: Object.freeze([...this.events]),
+    });
   }
 
   public onPipelineStarted(): void {}
