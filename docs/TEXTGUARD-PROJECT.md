@@ -20,7 +20,7 @@ Key packages:
 - detection plugins: Email, URL, Phone, IP, UUID, Credit Card, IBAN
 - `packages/plugins/pii` → `@textguard/plugin-pii`
 
-Core architecture remains plugin-oriented. Arabic parity uses the existing `Dictionary` contract and the existing normalization pipeline; no Arabic-specific Core API is being introduced.
+Arabic parity continues to use the existing `Dictionary` contract and shared normalization pipeline. No Arabic-specific Core API is required.
 
 ## 3. Current public core API
 
@@ -47,7 +47,7 @@ filter.use(plugin: Plugin): void;
 
 - Persian: established/full relative to the current language architecture.
 - English: established/full relative to the current language architecture.
-- Arabic: parity is in progress. AR1 established usable profanity/insult dictionaries. AR2 hardens the already-existing Core Arabic normalization and expands high-confidence vocabulary while retaining the same public exports.
+- Arabic: parity is in progress. AR1 established usable profanity/insult dictionaries; AR2 hardened normalization and expanded high-confidence coverage; AR3 now adds small dialect-focused vocabulary slices with regression tests.
 
 ### Structured-data detection
 
@@ -71,29 +71,29 @@ Arabic parity stays incremental and reviewable.
 
 ### AR1 — usable dictionary baseline — ✅ merged
 
-- `arProfanity` and `arInsults` added;
-- existing `arDictionary`, `arPack`, and `arLanguage` preserved;
-- public `createFilter()` integration tests added;
-- package README and release metadata updated.
+Usable profanity/insult dictionaries, existing public exports preserved, public `createFilter()` integration tests added, package README and release metadata updated.
 
-### AR2 — normalization + coverage hardening — current PR
+### AR2 — normalization + coverage hardening — ✅ merged
 
-- audit the existing Core `ArabicNormalizer` instead of adding a second normalization path;
-- remove common Arabic diacritics before matching;
-- normalize Alef Maqsura (`ى`) consistently with the current shared Yeh canonical form;
-- retain existing normalization for Alef/Hamza variants and Taa Marbuta;
-- expand Arabic profanity/insult dictionaries with common, high-confidence terms;
-- add public API regression tests for diacritics, letter variants, expanded vocabulary, and ordinary benign Arabic text.
+Core Arabic normalization was audited and extended for common diacritics and Alef Maqsura; common high-confidence vocabulary and benign regression tests were added.
 
-Arabic vocabulary is not considered a finite “complete list.” Dialect, spelling, and context vary substantially, so further expansion must be driven by tested coverage and false-positive evidence rather than bulk word imports.
+### AR3 — dialect/coverage expansion — current PR
 
-### AR3 / AR4 — later
+- add a first small dialectal profanity slice with common high-confidence vulgar forms;
+- keep existing Arabic exports and dictionary contract unchanged;
+- test additions through the public `createFilter()` API;
+- preserve benign Arabic regression cases;
+- avoid large copied slang lists or low-confidence dialect entries.
 
-AR3 may add dialect-specific coverage and evaluate spam/pattern resources. AR4 decides whether Arabic quality is sufficient for bundle/preset inclusion.
+Arabic vocabulary is not considered a finite “complete list.” Dialect, spelling, and context vary substantially, so expansion remains evidence-driven and test-backed.
+
+### AR4 — later
+
+Decide whether Arabic quality is sufficient for bundle/preset inclusion after AR3 coverage is stable.
 
 ## 9. Known technical debt
 
-- Arabic parity beyond AR2.
+- Arabic parity beyond AR3.
 - `packages/presets/` vs `packages/all/src/presets/` ownership/duplication.
 - existing `enterprisePreset` naming collides conceptually with the future secrets/JWT/API-key roadmap feature.
 - ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
