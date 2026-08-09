@@ -5,7 +5,7 @@ import { arDictionary, arInsults, arPack, arProfanity } from "../index";
 
 describe("TextGuard Arabic language coverage", () => {
   it("exports populated profanity and insult dictionaries", () => {
-    expect(arProfanity.words.length).toBeGreaterThanOrEqual(10);
+    expect(arProfanity.words.length).toBeGreaterThanOrEqual(15);
     expect(arInsults.words.length).toBeGreaterThanOrEqual(10);
     expect(arDictionary.words.length).toBe(
       arProfanity.words.length + arInsults.words.length,
@@ -21,6 +21,15 @@ describe("TextGuard Arabic language coverage", () => {
     expect(filter.hasBadWord("هذا كلام قَحْبَة")).toBe(true);
     expect(filter.hasBadWord("هذا كلام قحبه")).toBe(true);
     expect(filter.hasBadWord("يا ابن الكلب")).toBe(true);
+  });
+
+  it("detects high-confidence dialect profanity variants", () => {
+    const filter = createFilter({ dictionaries: [arDictionary] });
+
+    expect(filter.hasBadWord("كلام طيز")).toBe(true);
+    expect(filter.hasBadWord("كلام زبي")).toBe(true);
+    expect(filter.hasBadWord("هذا خرا")).toBe(true);
+    expect(filter.hasBadWord("يا عرص")).toBe(true);
   });
 
   it("detects expanded Arabic insults", () => {
