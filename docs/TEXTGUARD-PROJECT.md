@@ -41,11 +41,11 @@ filter.explain(text: string): ExplainResult;
 filter.use(plugin: Plugin): void;
 ```
 
-`filter.explain(text)` is part of Epic 1 / M5 and is now implemented. It returns original/normalized input, final accepted matches, plugin/rule metadata, structured reason data, and a summary. Explain uses the same debug-capable engine execution path; it does not re-run rules separately.
+`filter.explain(text)` is part of Epic 1 / M5 and is implemented. It returns original/normalized input, final accepted matches, plugin/rule metadata, structured reason data, and a summary. Explain uses the same debug-capable engine execution path; it does not re-run rules separately.
 
 ## 4. Debug and Explain architecture
 
-The Debug Engine now provides the foundation required for reliable Explain behavior:
+The Debug Engine provides the foundation required for reliable Explain behavior:
 
 - DebugSession stores original input, normalized input, final overlap-resolved matches, and events.
 - Match lifecycle is explicit: `match:found` is a candidate, then `match:accepted` or `match:rejected` records final resolution.
@@ -53,16 +53,7 @@ The Debug Engine now provides the foundation required for reliable Explain behav
 - Explain only projects final accepted matches.
 - Explain reasons remain intentionally generic (`rule-match`) until rules expose richer structured facts. The core must not invent detector-specific explanations.
 
-Architecture decisions are recorded in:
-
-- ADR-001 — Debug Engine foundation
-- ADR-002 — DebugSession authoritative state
-- ADR-003 — match lifecycle events
-- ADR-004 — rule metadata preservation
-- ADR-005 — Explain domain projection
-- ADR-006 — public `filter.explain()` entry point
-
-M5.6 adds final integration coverage for empty/clean input, Unicode normalization, overlap resolution, and multiple plugins, plus current public core documentation.
+Architecture decisions are recorded in ADR-001 through ADR-006 under `docs/architecture/`.
 
 ## 5. Plugin state
 
@@ -78,34 +69,37 @@ Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist. Credit Card an
 
 ### PII package
 
-`@textguard/plugin-pii` combines the relevant PII detectors and provides scanning/CLI/CI surfaces. TextGuard's own repository can run pre-commit/PR scanning, but installing the npm package into a fresh consumer project does **not yet** automatically configure that consumer's Husky hook or GitHub workflow.
+`@textguard/plugin-pii` combines the relevant PII detectors and provides scanning/CLI/CI surfaces.
 
-That gap is the next product-quality milestone.
+Current consumer capabilities:
 
-## 6. Next milestone — PII Consumer DX Hardening
+- `npx textguard-pii init` wires a Husky pre-commit command and creates the GitHub workflow without overwriting an existing workflow file;
+- `textguard-pii.config.json` provides detector-specific allowlists, ignored paths/globs, and narrowly scoped suppressions;
+- both pre-commit and CI scanners use the same policy layer;
+- detection stays strict and policy decides whether a finding should block.
 
-After Explain M5 is merged complete, work should move directly to PII consumer integration before broad roadmap expansion.
+`examples/pii-consumer` is the executable consumer reference. Developers can inspect the same setup path that CI executes. Its E2E harness packs the real package into a clean temporary git repository and verifies a blocked commit, allowlisted/ignored-path behavior, and CI pass/fail behavior. This keeps examples and product behavior aligned.
 
-Planned goals:
+Husky still needs to be installed/initialized in the consuming project before the generated `.husky/pre-commit` hook can execute; the README must state this clearly until setup handling changes.
 
-- validate package installation in a clean external-style project;
-- preferred setup flow: `npx textguard-pii init`;
-- verify real pre-commit blocking;
-- verify real PR/GitHub Action blocking;
-- add configuration/policy for intentional findings:
-  - allowlisted values;
-  - ignored paths/globs;
-  - narrowly scoped suppressions;
-- keep this policy outside the individual detectors;
-- document setup with copy/paste-ready examples.
+## 6. Current milestone — PII Consumer DX Hardening
 
-Detection answers "is this PII-like?"; the PII policy layer answers "should this finding block this repository?"
+Execution sequence:
+
+1. Consumer init foundation — merged.
+2. Shared policy/configuration layer — merged.
+3. External end-to-end validation — current, implemented as the executable `examples/pii-consumer` walkthrough plus CI harness.
+4. Final public documentation — next after E2E is green.
+
+M0.6 must not be marked complete until the external E2E check is green and the final copy/paste-ready documentation pass is merged.
 
 ## 7. Documentation backlog
 
 Package README quality is inconsistent. After PII DX, audit every published package and use the current `@textguard/plugin-pii` README as the reference format/quality bar.
 
-`@textguard/core` README is corrected as part of M5.6 because its old examples used obsolete APIs and Explain needs public documentation. The repository-wide README cleanup remains separate work.
+For workflows with meaningful consumer setup, prefer examples under `examples/` that developers can inspect and CI can execute. Executable examples are part of the public documentation surface.
+
+No published package should ship with an empty or obsolete README.
 
 ## 8. Known technical debt
 
@@ -115,7 +109,7 @@ Still tracked:
 - `packages/presets/` vs `packages/all/src/presets/` ownership/duplication.
 - existing `enterprisePreset` naming collides conceptually with the future secrets/JWT/API-key roadmap feature.
 - ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
-- overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases; Debug/Explain now expose the final decision correctly but do not change ranking semantics.
+- overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases; Debug/Explain expose the final decision correctly but do not change ranking semantics.
 - HTML Debug renderer remains missing.
 - repository-wide package README cleanup remains pending.
 
@@ -125,7 +119,7 @@ Every coherent change-set should:
 
 1. start from latest `main` on its own branch;
 2. include relevant tests;
-3. update stale roadmap/project/ADR/README documentation in the same branch;
+3. update stale roadmap/project/ADR/README/example documentation in the same branch;
 4. open a PR for maintainer review;
 5. merge only with required checks green;
 6. delete the feature branch after merge.

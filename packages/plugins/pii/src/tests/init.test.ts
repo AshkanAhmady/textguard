@@ -6,6 +6,10 @@ describe("PII init setup", () => {
     expect(addPreCommitCommand("")).toBe(`${PRE_COMMIT_COMMAND}\n`);
   });
 
+  it("replaces Husky's default npm test placeholder", () => {
+    expect(addPreCommitCommand("npm test\n")).toBe(`${PRE_COMMIT_COMMAND}\n`);
+  });
+
   it("appends the command without removing existing hook commands", () => {
     expect(addPreCommitCommand("pnpm lint\n")).toBe(
       `pnpm lint\n${PRE_COMMIT_COMMAND}\n`,

@@ -1,0 +1,13 @@
+{
+  "allowlist": {
+    "email": ["fixture-email"]
+  },
+  "ignorePaths": ["fixtures/**"],
+  "suppressions": [
+    {
+      "path": "docs/**",
+      "type": "email",
+      "matchedText": "fixture-email"
+    }
+  ]
+}

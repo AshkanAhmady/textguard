@@ -1,0 +1,5 @@
+{
+  "allowlist": {
+    "email": ["textguard-e2e@example.invalid"]
+  }
+}

@@ -25,6 +25,8 @@ npx textguard-pii init
 
 Husky itself must already be installed/initialized in the consuming project for `.husky/pre-commit` to run.
 
+For a complete consumer-style walkthrough, see [`examples/pii-consumer`](../../../examples/pii-consumer). That example is also executed by TextGuard CI so the documented setup cannot silently drift from the package behavior.
+
 ## Library usage
 
 ```ts
@@ -88,13 +90,20 @@ npx textguard-pii-ci --base <base-ref> --head <head-ref>
 | Credit card | Luhn checksum |
 | IBAN | mod-97 checksum |
 
+## Consumer validation
+
+TextGuard CI executes the consumer example in `examples/pii-consumer`. The example packs `@textguard/plugin-pii`, installs that tarball into a clean temporary git project, runs `textguard-pii init`, and verifies:
+
+- non-allowlisted PII blocks a real commit;
+- allowlisted values and ignored paths permit the intended commit;
+- the CI scanner accepts policy-approved changes;
+- the CI scanner rejects a non-allowlisted leak.
+
+This protects the consumer setup path from regressing even when the monorepo itself still builds successfully.
+
 ## Consumer DX still in progress
 
-The remaining PII hardening steps are:
-
-- verify `init` end-to-end from a clean external project;
-- make Husky setup smoother;
-- verify commit and PR blocking end-to-end with policy configuration enabled.
+The remaining step is the final public documentation pass after the external E2E check is green. At that point M0.6 can be marked complete.
 
 Detection and policy remain separate: detectors report findings; the PII policy layer decides whether an intentional finding should block.
 
