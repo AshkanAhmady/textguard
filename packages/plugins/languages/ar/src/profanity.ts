@@ -8,7 +8,7 @@ export const arProfanity: Dictionary = {
     { word: "قحبه", severity: "high", category: "profanity" },
     { word: "شرموط", severity: "high", category: "profanity" },
     { word: "شرموطه", severity: "high", category: "profanity" },
-    { word: "كس امك", severity: "high", category: "profanity" },
+    { word: "کس امک", severity: "high", category: "profanity" },
     { word: "ابن القحبه", severity: "high", category: "profanity" },
   ],
 };
