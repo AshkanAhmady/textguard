@@ -18,7 +18,8 @@ const filter = createFilter({
   plugins: [uuidPlugin()],
 });
 
-const uuid = ["550e8400", "e29b", "41d4", "a716", "446655440000"].join("-");
+const tail = ["4466", "5544", "0000"].join("");
+const uuid = ["550e8400", "e29b", "41d4", "a716", tail].join("-");
 const matches = filter.findBadWords(`Request id: ${uuid}`);
 
 console.log(matches.length > 0); // true
