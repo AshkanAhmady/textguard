@@ -95,16 +95,18 @@ M0.3, M0.4, and M0.6 are complete. M0.7 (paid tier) intentionally remains later 
 
 ## 7. Current milestone — Documentation quality
 
-The obsolete root Turborepo README has now been replaced with a real TextGuard overview and quick start. The remaining documentation work is the published-package audit and package-by-package standardization.
+The root README replacement and published-package README audit are complete. Audit findings and rewrite order live in `docs/PACKAGE-README-AUDIT.md`.
 
-Goals:
+Confirmed priorities:
 
-- ✅ real root README with project overview, quick start, package map, Explain/Debug entry points, PII setup, examples, and contributor links;
-- audit every published package README;
-- use the current `@textguard/plugin-pii` README as the structure/quality reference;
-- make examples short and copy/paste-ready for ordinary developers;
-- ensure examples match current public APIs;
-- ensure no published package has an empty or obsolete README.
+- `@textguard/all` is P0 because its published README is empty;
+- Persian and English READMEs are P0 because they document removed APIs and have malformed markdown;
+- Phone, IP, UUID, Credit Card, and IBAN READMEs are P0 because copied or invalid examples misrepresent package behavior;
+- Email and URL are P1 consistency/quality work;
+- Core and PII are already useful, with PII serving as the quality reference;
+- Arabic README cleanup stays conservative until the lower-priority Arabic parity implementation work.
+
+The next implementation sequence is package-by-package README rewriting in that priority order. Examples must stay short, copy/paste-ready, compatible with shipped public APIs, and safe for the repository PII scan without broad ignore rules.
 
 For workflows with meaningful consumer setup, prefer examples under `examples/` that developers can inspect and CI can execute. Executable examples are part of the public documentation surface.
 
@@ -137,6 +139,6 @@ See `docs/DEVELOPMENT-WORKFLOW.md` for the persistent execution sequence.
 
 Near-term sequence is now:
 
-**Explain complete → PII consumer DX complete → root README complete → published-package README standardization → Arabic parity → reassess adoption and broader roadmap.**
+**Explain complete → PII consumer DX complete → root README complete → package README audit complete → package-by-package README standardization → Arabic parity → reassess adoption and broader roadmap.**
 
 Secrets presets, benchmark suite, VS Code/Chrome integrations, AI work, and the paid PII tier remain later roadmap items.
