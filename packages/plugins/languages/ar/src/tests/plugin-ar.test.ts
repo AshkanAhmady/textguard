@@ -27,14 +27,17 @@ describe("TextGuard Arabic language baseline", () => {
     const result = filter.filter("لا تكن غبي");
 
     expect(filter.hasBadWord("لا تكن غبي")).toBe(true);
-    expect(result.filteredText).not.toContain("غبي");
+    expect(filter.hasBadWord("لا تكن غبی")).toBe(true);
+    expect(result.matches).toHaveLength(1);
   });
 
-  it("handles alef variants through the core Arabic normalizer", () => {
+  it("handles shared Arabic/Persian canonical letter variants", () => {
     const filter = createFilter({ dictionaries: [arDictionary] });
 
     expect(filter.hasBadWord("أنت أحمق")).toBe(true);
     expect(filter.hasBadWord("أنت احمق")).toBe(true);
+    expect(filter.hasBadWord("أنت كلب")).toBe(true);
+    expect(filter.hasBadWord("أنت کلب")).toBe(true);
   });
 
   it("does not flag ordinary Arabic text", () => {
