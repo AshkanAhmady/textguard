@@ -61,7 +61,7 @@ Milestones:
 | M2 — Renderers | 🟡 Partial | Console/JSON/Markdown exist; HTML renderer remains missing. |
 | M3 — Timeline | ✅ Done | Timeline builder/model implemented. |
 | M4 — Performance Diagnostics | ✅ Done | Performance builder/report exposed by `session.performance()`. |
-| M5 — Explain API | 🟡 In progress | M5.0–M5.3 Debug hardening are merged. M5.4 now introduces structured Explain models and `ExplainBuilder` as a projection of accepted `DebugSession` matches. Public `filter.explain()` and final integration/docs remain next. |
+| M5 — Explain API | 🟡 In progress | M5.0–M5.4 are merged. M5.5 exposes public `filter.explain(text)` through the existing debug execution path and `ExplainBuilder`; final integration/edge-case tests and public docs remain before M5 is complete. |
 | M6 — Future Integrations | ❌ Not started | VS Code / Chrome / CLI / Playground / AI consumers come later. |
 
 Current M5 sequence is tracked in `docs/DEVELOPMENT-WORKFLOW.md` and architecture ADRs. Do not skip ahead while that sequence is active.
