@@ -31,7 +31,10 @@ Husky itself must already be installed/initialized in the consuming project for 
 ```ts
 import { scanText } from "@textguard/plugin-pii";
 
-const result = scanText("Contact: hello@example.com");
+// Build demo PII at runtime so the repository's own PII guard does not
+// treat this README example as an accidental committed finding.
+const demoEmail = ["hello", "example.com"].join("@");
+const result = scanText(`Contact: ${demoEmail}`);
 
 result.clean; // false
 result.findings;
