@@ -16,6 +16,5 @@ export const arProfanity: Dictionary = {
     { word: "ابن الحمار", severity: "high", category: "profanity" },
     { word: "منیوک", severity: "high", category: "profanity" },
     { word: "متناک", severity: "high", category: "profanity" },
-    { word: "خول", severity: "high", category: "profanity" },
   ],
 };
