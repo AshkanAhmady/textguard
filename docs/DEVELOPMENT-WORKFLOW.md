@@ -32,33 +32,44 @@ Epic 1 / M5 Explain API is complete.
 
 PII consumer init, shared policy configuration, external E2E validation, and final public docs are complete through M0.6.
 
-## Current work sequence — README standardization
-
-Stay on this sequence before Arabic parity or broader roadmap features:
+## Completed work sequence — README standardization
 
 1. **Root README — ✅ merged.**
 2. **Published package audit — ✅ merged.**
 3. **`@textguard/all` README — ✅ merged.**
 4. **Persian + English READMEs — ✅ merged.**
 5. **Detection P0 READMEs — ✅ merged.**
-6. **Detection P1 READMEs — ✅ merged.** Email and URL now use the current API and standard package structure.
-7. **Arabic README consistency — ✅ current branch.** Document the exact current exports and foundation-only capability without expanding implementation scope.
-8. **Final consistency pass — next.** Confirm every published package README is current, non-empty, easy to follow, and aligned with shipped exports.
+6. **Detection P1 READMEs — ✅ merged.**
+7. **Arabic README consistency — ✅ merged.**
+8. **Final package-wide consistency pass — ✅ complete in current branch.** Core, PII, All, language, and detector documentation are aligned with the current published surface.
 
-## README rewrite rules
+## README maintenance rules
 
-- Use `@textguard/plugin-pii` as the quality reference, not as a rigid template.
+- Use `@textguard/plugin-pii` as a quality reference, not as a rigid template.
 - Prefer short install + quick-start paths over architecture-heavy explanations.
 - Every code sample must match the current exported API.
 - Detector README claims must match actual validation behavior.
 - Avoid raw PII literals in repository docs when equivalent safe examples can be assembled without weakening PII enforcement.
-- Do not expand Arabic implementation scope during documentation cleanup.
+- Update affected README/example documentation in the same PR as future public API or behavior changes.
 
-## Priorities after README standardization
+## Next work sequence — Arabic implementation parity
 
-1. Arabic language parity.
-2. Reassess adoption feedback and the broader roadmap before expanding feature breadth.
+After this documentation-only PR is merged, start Arabic parity from the latest `main` on a fresh branch.
+
+Before coding:
+
+1. compare Persian, English, and Arabic package structures;
+2. define the smallest useful Arabic parity scope;
+3. preserve current Arabic exports/backward compatibility where practical;
+4. identify dictionary, normalization, tests, package integration, and documentation tasks;
+5. only then implement the first coherent Arabic slice.
+
+Do not broaden this into Core refactors or unrelated roadmap work.
+
+## Priorities after Arabic parity
+
+Reassess adoption feedback and the broader roadmap before expanding feature breadth.
 
 ## Current branch note
 
-`agent/arabic-readme-consistency` is documentation-only. It fixes the Arabic README/export drift and makes the package's current empty dictionary/pack state explicit. The next branch is the final package-wide README consistency pass.
+`agent/readme-final-consistency` is documentation-only. It closes the package README cleanup milestone and advances the documented next step to Arabic implementation parity.
