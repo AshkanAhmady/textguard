@@ -9,7 +9,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 ## Near-term execution order
 
 1. **Package README standardization — ✅ complete.**
-2. **Arabic language parity — 🟡 in progress.** AR1 is merged. AR2 now audits normalization and expands high-confidence vocabulary in one reviewable slice.
+2. **Arabic language parity — 🟡 in progress.** AR1 and AR2 are merged; AR3 now expands dialect coverage in small, tested slices.
 3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
 
 ---
@@ -54,8 +54,8 @@ Future public API/behavior changes must update affected READMEs in the same PR.
 | Slice | Status | Scope |
 | --- | --- | --- |
 | AR1 — usable dictionary baseline | ✅ Done | Conservative profanity + insult dictionaries, populated `arDictionary`/`arPack`, public API tests, README, and release metadata. |
-| AR2 — normalization + coverage hardening | 🟡 Current PR | Audit the existing Core normalizer, add diacritic/Alef-Maqsura coverage, expand common high-confidence profanity/insults, and add benign regression cases. |
-| AR3 — dialect/coverage expansion | ❌ Later | Expand dialect-specific vocabulary only with evidence and false-positive tests; evaluate spam/pattern resources separately. |
+| AR2 — normalization + coverage hardening | ✅ Done | Existing Core normalizer audited; common diacritics/Alef-Maqsura handled; high-confidence Arabic vocabulary expanded; benign regression cases added. |
+| AR3 — dialect/coverage expansion | 🟡 Current PR | Add a small first dialectal profanity slice with public API tests and keep expansion evidence-driven to control false positives. |
 | AR4 — bundle/preset parity | ❌ Later | Decide when Arabic should join higher-level presets/bundles after quality is sufficient. |
 
 Arabic profanity coverage is intentionally not treated as a finite “complete list”; dialect and spelling variation require incremental, tested expansion.
