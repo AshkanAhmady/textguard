@@ -62,7 +62,7 @@ try {
   run("git", ["commit", "-m", "baseline"], consumerDir);
 
   const blockedEmail = ["blocked", "example.com"].join("@");
-  writeFileSync(join(consumerDir, "fixture.txt"), `contact=${blockedEmail}\n`);
+  writeFileSync(join(consumerDir, "fixture.txt"), `contact: ${blockedEmail}\n`);
   run("git", ["add", "fixture.txt"], consumerDir);
 
   const blockedCommit = runStatus(
@@ -88,7 +88,7 @@ try {
   const ignoredEmail = ["ignored", "example.com"].join("@");
   writeFileSync(
     join(consumerDir, "fixtures", "sample.txt"),
-    `contact=${ignoredEmail}\n`,
+    `contact: ${ignoredEmail}\n`,
   );
   run("git", ["add", "."], consumerDir);
   run("git", ["commit", "-m", "allow intentional test pii"], consumerDir);
@@ -100,7 +100,7 @@ try {
   );
 
   const rejectedEmail = ["rejected", "example.com"].join("@");
-  writeFileSync(join(consumerDir, "leak.txt"), `contact=${rejectedEmail}\n`);
+  writeFileSync(join(consumerDir, "leak.txt"), `contact: ${rejectedEmail}\n`);
   run("git", ["add", "leak.txt"], consumerDir);
   run(
     "git",
