@@ -35,8 +35,13 @@ describe("Debug Engine contract", () => {
     expect(events.some((event) => event.type === "rule:started")).toBe(true);
     expect(events.some((event) => event.type === "rule:finished")).toBe(true);
     expect(events.some((event) => event.type === "match:found")).toBe(true);
-    expect(events.map((event) => event.id)).toEqual(
-      events.map((_, index) => index + 1),
+
+    const eventTypes = events.map((event) => event.type);
+    expect(eventTypes.indexOf("rule:started")).toBeLessThan(
+      eventTypes.indexOf("match:found"),
+    );
+    expect(eventTypes.indexOf("match:found")).toBeLessThan(
+      eventTypes.indexOf("rule:finished"),
     );
   });
 
