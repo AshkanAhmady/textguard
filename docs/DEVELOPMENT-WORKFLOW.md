@@ -34,18 +34,21 @@ Epic 1 / M5 Explain API is complete: Debug hardening, Explain domain/builder, pu
 
 1. **PII DX 1 — consumer init foundation — ✅ merged.** `npx textguard-pii init` safely wires the pre-commit scanner and GitHub workflow without overwriting existing setup.
 2. **PII DX 2 — policy/configuration layer — ✅ merged.** Detector-specific allowlists, ignored paths/globs, and narrowly scoped suppressions are shared by CLI and CI; detectors remain strict.
-3. **PII DX 3 — external end-to-end validation — ✅ merged and green.** `examples/pii-consumer` is both the simple developer walkthrough and the regression harness. The real packaged artifact is installed into a clean consumer-style repository and commit/CI behavior is verified end to end.
+3. **PII DX 3 — external end-to-end validation — ✅ merged and green.** `examples/pii-consumer` is both the simple developer walkthrough and the regression harness.
 4. **PII DX 4 — final public docs — ✅ merged.** The PII README is copy/paste-ready and M0.3/M0.4/M0.6 are complete.
 
 ## Current work sequence — README standardization
 
 Stay on this sequence before Arabic parity or broader roadmap features:
 
-1. **Root README — ✅ merged.** The repository now has a real TextGuard overview and onboarding path.
-2. **Published package audit — ✅ current PR.** Findings and rewrite priorities are recorded in `docs/PACKAGE-README-AUDIT.md`.
-3. **Package README standardization — next.** Rewrite in audit priority order, beginning with empty `@textguard/all`, then obsolete Persian/English docs, then incorrect detection-plugin docs.
-4. **Example alignment.** Keep examples simple for ordinary developers and make sure documented APIs match shipped behavior.
-5. **Closeout.** Update roadmap/project docs with final package status before starting Arabic parity.
+1. **Root README — ✅ merged.**
+2. **Published package audit — ✅ merged.** Findings and priorities are in `docs/PACKAGE-README-AUDIT.md`.
+3. **`@textguard/all` README — 🟡 current PR.** Replace the empty README with a simple current quick start, package map, preset guidance, Explain/Debug entry points, and honest notes about incomplete presets.
+4. **Persian + English READMEs — next.** Remove obsolete APIs and fix malformed markdown.
+5. **Detection P0 READMEs.** Fix Phone, IP, UUID, Credit Card, and IBAN correctness issues.
+6. **Detection P1 READMEs.** Standardize Email and URL.
+7. **Arabic README consistency.** Keep scope documentation-only until Arabic parity work begins.
+8. **Final consistency pass.** Confirm every published package is current, non-empty, and easy to follow.
 
 ## README rewrite rules
 
@@ -63,4 +66,4 @@ Stay on this sequence before Arabic parity or broader roadmap features:
 
 ## Current branch note
 
-`agent/package-readme-audit` is documentation-only. It records the package README inventory and rewrite order; it intentionally does not rewrite package READMEs in bulk. The next branch starts with `@textguard/all`.
+`agent/all-readme` is documentation-only. It fixes the highest-impact empty package README without changing runtime behavior. The next branch fixes the obsolete Persian and English package documentation.
