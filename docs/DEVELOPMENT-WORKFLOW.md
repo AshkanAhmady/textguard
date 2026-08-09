@@ -35,27 +35,27 @@ If documentation conflicts with implementation, verify the code first and then c
 
 ## Current work sequence — Explain API preparation
 
-Before implementing Epic 1 / M5 Explain API, the Debug Engine is being hardened in small reviewable PRs.
+Before implementing Epic 1 / M5 Explain API itself, the Debug Engine is being hardened in small reviewable PRs. Follow this sequence unless the maintainer explicitly changes it; do not jump ahead to later roadmap features while this preparation sequence is active.
 
 Current sequence:
 
 1. **M5.0 — Debug Contract Audit — ✅ merged.** Contract tests capture current Debug Engine behavior, including candidate matches versus final overlap-resolved matches. The same PR also fixed CI issues exposed by the new required checks.
-2. **M5.1 — DebugSession authoritative state — 🟡 current PR.** Preserve original input, normalized input, and final overlap-resolved matches in `DebugSession` while keeping the legacy `DebugSession(events)` constructor and existing APIs backward compatible. Architectural rationale is recorded in `docs/architecture/ADR-002-debug-session-state.md`.
-3. **M5.2 — Match lifecycle events — next.** Make candidate/accepted/rejected match semantics explicit so Debug/Explain consumers cannot confuse candidates with final results.
-4. **M5.3 — Rule/plugin metadata preservation.** Preserve enough rule metadata for reliable explanations without changing the existing `Match` public contract unnecessarily.
+2. **M5.1 — DebugSession authoritative state — ✅ merged.** `DebugSession` preserves original input, normalized input, and final overlap-resolved matches while keeping the legacy constructor and existing APIs backward compatible. Architectural rationale is recorded in `docs/architecture/ADR-002-debug-session-state.md`.
+3. **M5.2 — Match lifecycle events — 🟡 current PR.** Keep `match:found` as candidate discovery and add explicit `match:accepted` / `match:rejected` events so Debug/Explain consumers can see the final overlap decision without guessing from the event stream. Architectural rationale is recorded in `docs/architecture/ADR-003-match-lifecycle-events.md`.
+4. **M5.3 — Rule/plugin metadata preservation — next.** Preserve enough rule metadata for reliable explanations without changing the existing `Match` public contract unnecessarily.
 5. **M5.4+ — Explain domain/API.** Build Explain as a projection of DebugSession, not as a second rule-execution engine.
 
 Each item should normally ship as its own branch and pull request unless two steps are inseparable and keeping them separate would make the repository temporarily invalid.
 
 ## Current branch note
 
-`agent/debug-session-state` implements M5.1 only. It does not change detection semantics, overlap resolution, rule/plugin contracts, or `match:found` event semantics.
+`agent/debug-match-lifecycle` implements M5.2 only.
 
-The session now owns an authoritative execution snapshot:
+It adds explicit lifecycle semantics without changing detection behavior or overlap ranking:
 
-- original input via `session.getInput()`;
-- normalized input via `session.getNormalizedInput()`;
-- final overlap-resolved matches via `session.getMatches()`;
-- execution history via the existing `session.getEvents()`.
+- `match:found` means a rule discovered a candidate;
+- `match:rejected` means overlap resolution removed that candidate and records the winning match;
+- `match:accepted` is emitted only for matches that survive into the final result;
+- `session.getMatches()` remains the authoritative final detection result.
 
-This separation is intentional: events describe what happened during execution, while `getMatches()` is the source of truth for the final detection outcome. M5.2 will make candidate/accepted/rejected event semantics explicit.
+The overlap-selection algorithm itself is intentionally unchanged. M5.3 will add reliable rule/plugin metadata for Explain without expanding this branch into the Explain API itself.

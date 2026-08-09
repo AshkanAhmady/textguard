@@ -3,12 +3,17 @@ import type { Match } from "../domain/match";
 import type { MatchContext } from "../domain/matchContext";
 import type { RegisteredRule } from "../domain/registeredRule";
 
+interface ResolvedMatch {
+  readonly match: Match;
+  readonly registeredRule: RegisteredRule;
+}
+
 export function runRules(
   rules: readonly RegisteredRule[],
   context: MatchContext,
   observer?: ExecutionObserver,
 ): Match[] {
-  const matches: Match[] = [];
+  const matches: ResolvedMatch[] = [];
   const sortedRules = [...rules].sort(
     (a, b) => a.rule.priority - b.rule.priority,
   );
@@ -29,26 +34,40 @@ export function runRules(
       observer?.onMatchFound(registeredRule, match);
 
       const overlappedIndex = matches.findIndex(
-        (existing) => match.start < existing.end && match.end > existing.start,
+        (existing) =>
+          match.start < existing.match.end && match.end > existing.match.start,
       );
 
       if (overlappedIndex === -1) {
-        matches.push(match);
+        matches.push({ match, registeredRule });
         continue;
       }
 
       const existing = matches[overlappedIndex];
 
-      const existingLength = existing.end - existing.start;
+      const existingLength = existing.match.end - existing.match.start;
       const currentLength = match.end - match.start;
 
       if (currentLength > existingLength) {
-        matches[overlappedIndex] = match;
+        observer?.onMatchRejected?.(
+          existing.registeredRule,
+          existing.match,
+          match,
+        );
+        matches[overlappedIndex] = { match, registeredRule };
+      } else {
+        observer?.onMatchRejected?.(registeredRule, match, existing.match);
       }
     }
 
     observer?.onRuleFinished(registeredRule);
   }
 
-  return matches.sort((a, b) => a.start - b.start);
+  const resolvedMatches = matches.sort((a, b) => a.match.start - b.match.start);
+
+  for (const resolved of resolvedMatches) {
+    observer?.onMatchAccepted?.(resolved.registeredRule, resolved.match);
+  }
+
+  return resolvedMatches.map((resolved) => resolved.match);
 }
