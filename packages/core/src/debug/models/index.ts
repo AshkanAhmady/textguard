@@ -1,4 +1,5 @@
 export * from "./DebugReport";
+export * from "./DebugRuleMetadata";
 export * from "./Timeline";
 export * from "./TimelinePlugin";
 export * from "./TimelineRule";
