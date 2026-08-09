@@ -40,6 +40,8 @@ export class EnginePipeline {
       collector,
     );
 
+    collector.setExecutionState(text, normalizedText, matches);
+
     collector.addEvent({
       type: "pipeline:finished",
       timestamp: Date.now(),

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createFilter } from "../createFilter";
+import { DebugSession } from "../debug";
 import type { Plugin } from "../domain/plugin";
 import type { Rule } from "../domain/rule";
 
@@ -45,6 +46,40 @@ describe("Debug Engine contract", () => {
     );
   });
 
+  it("preserves original input, normalized input, and final matches", () => {
+    const shorterRule: Rule = {
+      id: "shorter",
+      name: "Shorter",
+      category: "test",
+      severity: "low",
+      priority: 1,
+      supports: () => true,
+      match: () => [{ word: "ab", matchedText: "ab", start: 0, end: 2 }],
+    };
+
+    const longerRule: Rule = {
+      id: "longer",
+      name: "Longer",
+      category: "test",
+      severity: "high",
+      priority: 2,
+      supports: () => true,
+      match: () => [{ word: "abc", matchedText: "abc", start: 0, end: 3 }],
+    };
+
+    const input = "e\u0301";
+    const session = createFilter({
+      plugins: [createTestPlugin(shorterRule, longerRule)],
+    }).debug(input);
+
+    expect(session.getInput()).toBe(input);
+    expect(session.getNormalizedInput()).toBe("é");
+    expect(session.getMatches()).toEqual([
+      { word: "abc", matchedText: "abc", start: 0, end: 3 },
+    ]);
+    expect(Object.isFrozen(session.getMatches())).toBe(true);
+  });
+
   it("records candidate matches even when overlap resolution removes one", () => {
     const shorterRule: Rule = {
       id: "shorter",
@@ -71,8 +106,8 @@ describe("Debug Engine contract", () => {
     });
 
     const finalMatches = filter.findBadWords("abc");
-    const debugMatches = filter
-      .debug("abc")
+    const session = filter.debug("abc");
+    const debugMatches = session
       .getEvents()
       .filter((event) => event.type === "match:found")
       .map((event) => event.match);
@@ -80,10 +115,20 @@ describe("Debug Engine contract", () => {
     expect(finalMatches).toEqual([
       { word: "abc", matchedText: "abc", start: 0, end: 3 },
     ]);
+    expect(session.getMatches()).toEqual(finalMatches);
     expect(debugMatches).toEqual([
       { word: "ab", matchedText: "ab", start: 0, end: 2 },
       { word: "abc", matchedText: "abc", start: 0, end: 3 },
     ]);
+  });
+
+  it("keeps the legacy DebugSession(events) constructor compatible", () => {
+    const session = new DebugSession([]);
+
+    expect(session.getInput()).toBe("");
+    expect(session.getNormalizedInput()).toBe("");
+    expect(session.getMatches()).toEqual([]);
+    expect(session.getEvents()).toEqual([]);
   });
 
   it("derives statistics, timeline, performance, and report from one session", () => {

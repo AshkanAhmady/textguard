@@ -37,23 +37,25 @@ If documentation conflicts with implementation, verify the code first and then c
 
 Before implementing Epic 1 / M5 Explain API, the Debug Engine is being hardened in small reviewable PRs.
 
-Planned sequence:
+Current sequence:
 
-1. **M5.0 — Debug Contract Audit** — add contract tests that capture current Debug Engine behavior, including candidate matches versus final overlap-resolved matches.
-2. **M5.1 — DebugSession authoritative state** — preserve original input, normalized input, and final matches in `DebugSession` while keeping existing APIs backward compatible.
-3. **M5.2 — Match lifecycle events** — make candidate/accepted/rejected match semantics explicit so Debug/Explain consumers cannot confuse candidates with final results.
-4. **M5.3 — Rule/plugin metadata preservation** — preserve enough rule metadata for reliable explanations without changing the existing `Match` public contract unnecessarily.
-5. **M5.4+ — Explain domain/API** — build Explain as a projection of DebugSession, not as a second rule-execution engine.
+1. **M5.0 — Debug Contract Audit — ✅ merged.** Contract tests capture current Debug Engine behavior, including candidate matches versus final overlap-resolved matches. The same PR also fixed CI issues exposed by the new required checks.
+2. **M5.1 — DebugSession authoritative state — 🟡 current PR.** Preserve original input, normalized input, and final overlap-resolved matches in `DebugSession` while keeping the legacy `DebugSession(events)` constructor and existing APIs backward compatible. Architectural rationale is recorded in `docs/architecture/ADR-002-debug-session-state.md`.
+3. **M5.2 — Match lifecycle events — next.** Make candidate/accepted/rejected match semantics explicit so Debug/Explain consumers cannot confuse candidates with final results.
+4. **M5.3 — Rule/plugin metadata preservation.** Preserve enough rule metadata for reliable explanations without changing the existing `Match` public contract unnecessarily.
+5. **M5.4+ — Explain domain/API.** Build Explain as a projection of DebugSession, not as a second rule-execution engine.
 
 Each item should normally ship as its own branch and pull request unless two steps are inseparable and keeping them separate would make the repository temporarily invalid.
 
 ## Current branch note
 
-`agent/debug-engine-hardening` establishes the M5.0 baseline only. It adds Debug Engine contract tests and intentionally does not change production runtime behavior or the public API. The overlap test documents the current known gap: `match:found` represents a discovered candidate before overlap resolution and therefore is not necessarily a final match.
+`agent/debug-session-state` implements M5.1 only. It does not change detection semantics, overlap resolution, rule/plugin contracts, or `match:found` event semantics.
 
-This branch also hardens CI issues uncovered by PR validation:
+The session now owns an authoritative execution snapshot:
 
-- the Debug Engine contract test asserts event ordering without assuming every `DebugEvent` union member exposes an `id` field;
-- the PII workflow uses the repository `packageManager` declaration as the single pnpm version source;
-- the PII workflow builds the package together with its workspace dependency graph before executing the compiled CI scanner, so runtime imports such as `@textguard/core/dist/index.js` exist;
-- the PII package now declares the small Node runtime surface used by its CLI/CI TypeScript sources so repository-wide type checking covers those entry points instead of failing on missing Node globals.
+- original input via `session.getInput()`;
+- normalized input via `session.getNormalizedInput()`;
+- final overlap-resolved matches via `session.getMatches()`;
+- execution history via the existing `session.getEvents()`.
+
+This separation is intentional: events describe what happened during execution, while `getMatches()` is the source of truth for the final detection outcome. M5.2 will make candidate/accepted/rejected event semantics explicit.
