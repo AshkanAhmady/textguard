@@ -8,7 +8,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **Package README standardization.** Current focus. Root README, package audit, and `@textguard/all` README are complete; next is Persian/English README correction, followed by detector README cleanup.
+1. **Package README standardization.** Current focus. Root README, package audit, `@textguard/all`, Persian, and English README corrections are complete; next is the P0 detector README group.
 2. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` after README cleanup.
 3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
 
@@ -49,9 +49,10 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 - ✅ root README replaced;
 - ✅ published-package audit completed in `docs/PACKAGE-README-AUDIT.md`;
-- ✅ `@textguard/all` README rewritten with current APIs and honest preset limitations;
-- 🟡 next: fix obsolete Persian and English READMEs;
-- then correct P0 detector READMEs, standardize Email/URL, align Arabic README wording, and run a final consistency pass;
+- ✅ `@textguard/all` README rewritten;
+- ✅ Persian and English READMEs corrected to the current API and valid markdown;
+- 🟡 next: correct P0 detector READMEs — Phone, IP, UUID, Credit Card, IBAN;
+- then standardize Email/URL, align Arabic README wording, and run a final consistency pass;
 - every published package needs a useful README;
 - examples must match current APIs and remain simple for normal npm consumers.
 
