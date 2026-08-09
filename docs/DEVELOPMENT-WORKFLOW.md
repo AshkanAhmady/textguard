@@ -21,7 +21,10 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 - `docs/TEXTGUARD-PROJECT.md`
 - `docs/architecture/*.md`
 - package/root `README.md` files
+- relevant `examples/` projects
 - this file
+
+Prefer executable examples when a feature has a concrete consumer setup path. When practical, CI should exercise the same example developers are expected to follow so examples and product behavior cannot drift silently.
 
 ## Completed work sequence — Explain API
 
@@ -33,7 +36,7 @@ Stay on this sequence before broad roadmap work:
 
 1. **PII DX 1 — consumer init foundation — ✅ merged.** `npx textguard-pii init` safely wires the existing pre-commit scanner and GitHub workflow without overwriting existing setup.
 2. **PII DX 2 — policy/configuration layer — ✅ merged.** Detector-specific allowlists, ignored paths/globs, and narrowly scoped suppressions are shared by CLI and CI; detectors remain strict.
-3. **PII DX 3 — external end-to-end validation — 🟡 current PR.** Pack/install the package into a clean consumer-style project, run `init`, validate a real blocked commit, validate allowlist/ignored-path exceptions, and validate CI pass/fail behavior. This scenario is added to CI so regressions are caught automatically.
+3. **PII DX 3 — external end-to-end validation — 🟡 current PR.** `examples/pii-consumer` is the executable consumer walkthrough and CI regression harness. It packs/installs the package into a clean consumer-style project, runs `init`, validates a real blocked commit, validates allowlist/ignored-path exceptions, and validates CI pass/fail behavior.
 4. **PII DX 4 — final public docs.** Make the README/setup path copy/paste-ready and mark M0.6 complete only after external E2E is green.
 
 ## Priorities after PII DX
@@ -43,4 +46,4 @@ Stay on this sequence before broad roadmap work:
 
 ## Current branch note
 
-`agent/pii-e2e-validation` implements PII DX 3 only. It adds consumer-style packaging/install/commit/CI validation; it does not yet mark M0.6 complete until this PR is green and the final public-doc pass is merged.
+`agent/pii-e2e-validation` implements PII DX 3 only. It keeps the external consumer scenario under `examples/pii-consumer` so developer documentation and regression coverage use the same flow; it does not yet mark M0.6 complete until this PR is green and the final public-doc pass is merged.
