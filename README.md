@@ -1,161 +1,122 @@
-# Turborepo starter
+# TextGuard
 
-This Turborepo starter is maintained by the Turborepo core team.
+TextGuard is a modular TypeScript toolkit for text filtering, profanity detection, structured-data detection, debugging, explanations, and PII protection in developer workflows.
 
-## Using this example
+Use the complete bundle for the simplest setup, or install only the core and plugins you need.
 
-Run the following command:
+## Quick start
 
-<!--  -->
-
-```sh
-npx create-turbo@latest
+```bash
+npm install @textguard/all
 ```
 
-## What's inside?
+```ts
+import { createFilter, strictPreset } from "@textguard/all";
 
-This Turborepo includes the following packages/apps:
+const filter = createFilter(strictPreset);
 
-### Apps and Packages
+const result = filter.filter("some input text");
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+console.log(result.filteredText);
+console.log(result.matches);
 ```
 
-Without global `turbo`, use your package manager:
+`@textguard/all` includes the core package, language plugins, structured-data detectors, and built-in presets.
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+## Core API
+
+```ts
+const filter = createFilter(options);
+
+filter.hasBadWord(text);
+filter.findBadWords(text);
+filter.filter(text);
+filter.debug(text);
+filter.explain(text);
+filter.use(plugin);
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+### Explain why something matched
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+```ts
+const explanation = filter.explain("some input text");
 
-```sh
-turbo build --filter=docs
+console.log(explanation.matches);
+console.log(explanation.summary);
 ```
 
-Without global `turbo`:
+`explain()` is built on the same Debug Engine execution path used by TextGuard. It reports final accepted matches together with plugin and rule metadata instead of running a separate detection engine.
 
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+### Debug a filtering run
+
+```ts
+const session = filter.debug("some input text");
+const report = session.report();
+
+console.log(report);
 ```
 
-### Develop
+The Debug Engine records normalization, rule execution, match lifecycle decisions, overlap resolution, and performance diagnostics.
 
-To develop all apps and packages, run the following command:
+## Packages
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+TextGuard is published as a set of focused packages:
 
-```sh
-cd my-turborepo
-turbo dev
+| Package | Purpose |
+| --- | --- |
+| `@textguard/all` | Complete bundle and easiest starting point |
+| `@textguard/core` | Core engine and plugin API |
+| `@textguard/plugin-fa` | Persian language rules |
+| `@textguard/plugin-en` | English language rules |
+| `@textguard/plugin-ar` | Arabic language rules |
+| `@textguard/plugin-email` | Email detection |
+| `@textguard/plugin-url` | URL detection |
+| `@textguard/plugin-phone` | Phone-number detection |
+| `@textguard/plugin-ip` | IP-address detection |
+| `@textguard/plugin-uuid` | UUID detection |
+| `@textguard/plugin-credit-card` | Credit-card detection with Luhn validation |
+| `@textguard/plugin-iban` | IBAN detection with mod-97 validation |
+| `@textguard/plugin-pii` | PII scanning for commits and pull requests |
+
+## PII guard for commits and pull requests
+
+`@textguard/plugin-pii` can stop accidental PII from reaching a commit or pull request.
+
+```bash
+npm install -D @textguard/plugin-pii husky
+npx husky init
+npx textguard-pii init
 ```
 
-Without global `turbo`, use your package manager:
+The package supports detector-specific allowlists, ignored paths/globs, and narrowly scoped suppressions through `textguard-pii.config.json`.
 
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
+See [`packages/plugins/pii/README.md`](packages/plugins/pii/README.md) for the full setup and [`examples/pii-consumer`](examples/pii-consumer) for a simple consumer example that is also exercised by CI.
+
+## Examples
+
+Examples live under [`examples/`](examples/). They are intended to stay small and understandable for ordinary package consumers.
+
+- [`examples/basic`](examples/basic) — core filtering/debug usage
+- [`examples/pii-consumer`](examples/pii-consumer) — real consumer setup for commit/PR PII protection
+
+## Repository development
+
+This repository is a pnpm/Turborepo monorepo.
+
+```bash
+pnpm install
+pnpm build
+pnpm check-types
+pnpm vitest run
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Architecture decisions and current delivery status live under [`docs/`](docs/):
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+- [`docs/TEXTGUARD-PROJECT.md`](docs/TEXTGUARD-PROJECT.md) — current product and architecture overview
+- [`docs/textguard-roadmap.md`](docs/textguard-roadmap.md) — verified roadmap status
+- [`docs/DEVELOPMENT-WORKFLOW.md`](docs/DEVELOPMENT-WORKFLOW.md) — contribution/change workflow
+- [`docs/architecture/`](docs/architecture/) — architecture decision records
 
-```sh
-turbo dev --filter=web
-```
+## License
 
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+MIT
