@@ -12,41 +12,31 @@ Quality bar: use `@textguard/plugin-pii` as the reference for structure and deve
 
 | Package | Current state | Priority | Main issue |
 | --- | --- | --- | --- |
-| `@textguard/all` | ✅ Rewritten | P0 | Main bundle README now documents install, quick start, presets, exports, Explain/Debug, and current limitations. |
+| `@textguard/all` | ✅ Rewritten | P0 | Main bundle README documents install, quick start, presets, exports, Explain/Debug, and current limitations. |
 | `@textguard/core` | ✅ Good | P2 | Current and useful; only consistency polish may be needed later. |
 | `@textguard/plugin-pii` | ✅ Reference | P2 | Current quality reference; no rewrite needed now. |
-| `@textguard/plugin-fa` | ✅ Corrected | P0 | Current `dictionaries`/filter API documented; malformed markdown and removed APIs are gone. |
-| `@textguard/plugin-en` | ✅ Corrected | P0 | Current `dictionaries`/filter API documented; leetspeak setup is explicit rather than implied automatic. |
-| `@textguard/plugin-ar` | 🟡 Usable but thin | P2 | Current API shape is closer to reality, but package status/capability wording needs alignment with the lower-priority Arabic parity plan. |
-| `@textguard/plugin-email` | 🟡 Minimal | P1 | Valid basic usage, but too thin and includes literal PII-like sample data that can conflict with repository scans. |
-| `@textguard/plugin-url` | 🟡 Mostly usable | P1 | Better than most detection READMEs, but needs standardized structure and examples. |
-| `@textguard/plugin-phone` | ✅ Corrected | P0 | Now demonstrates phone detection with the current plugin API and documents format-detection limitations. |
-| `@textguard/plugin-ip` | ✅ Corrected | P0 | Now demonstrates IP detection instead of copied email examples. |
-| `@textguard/plugin-uuid` | ✅ Corrected | P0 | Now demonstrates UUID detection instead of copied email examples. |
-| `@textguard/plugin-credit-card` | ✅ Corrected | P0 | Uses the real `creditCardPlugin()` API and documents Luhn validation accurately. |
-| `@textguard/plugin-iban` | ✅ Corrected | P0 | Demonstrates IBAN detection and documents mod-97 validation accurately. |
+| `@textguard/plugin-fa` | ✅ Corrected | P0 | Current API and optional normalization mapping documented. |
+| `@textguard/plugin-en` | ✅ Corrected | P0 | Current API and optional leetspeak mapping documented. |
+| `@textguard/plugin-ar` | 🟡 Usable but thin | P2 | Next documentation step: align wording with its current capabilities without expanding implementation scope. |
+| `@textguard/plugin-email` | ✅ Corrected | P1 | Standard structure, current API, safe copy/paste example, and detection limitation documented. |
+| `@textguard/plugin-url` | ✅ Corrected | P1 | Standard structure, current API, concise example, and detection limitation documented. |
+| `@textguard/plugin-phone` | ✅ Corrected | P0 | Detector-specific example and format-detection limitations documented. |
+| `@textguard/plugin-ip` | ✅ Corrected | P0 | Detector-specific example documented. |
+| `@textguard/plugin-uuid` | ✅ Corrected | P0 | Detector-specific example documented. |
+| `@textguard/plugin-credit-card` | ✅ Corrected | P0 | Real API and Luhn validation documented accurately. |
+| `@textguard/plugin-iban` | ✅ Corrected | P0 | IBAN detection and mod-97 validation documented accurately. |
 
-## Confirmed problems
+## Remaining work
 
-### P0 — corrected
+### P1 — corrected
 
-1. ✅ `@textguard/all` no longer ships an empty README.
-2. ✅ Persian and English READMEs now use current APIs and valid markdown.
-3. ✅ Phone, IP, UUID, Credit Card, and IBAN READMEs now use detector-specific examples.
-4. ✅ Credit Card documentation now uses the valid `creditCardPlugin()` export and explains Luhn validation.
-5. ✅ IBAN documentation now explains mod-97 validation instead of describing the detector as regex-only.
+- ✅ Email README now follows the standard package structure and avoids a raw email literal in repository source.
+- ✅ URL README now follows the same concise detector structure.
 
-### P1 — next
+### P2 — next
 
-- Email README works as a minimal example but lacks the standard package structure.
-- URL README is usable but should be normalized to the same concise format as the rest of the package family.
-- Detection examples should avoid raw PII literals where repository PII scans would flag the documentation itself; build examples from safe fragments when needed.
-
-### P2 — polish / later
-
-- Core README is already current and useful.
-- PII README is the reference format.
-- Arabic README is usable for the current thin package, but final capability wording should be revisited together with Arabic parity rather than pretending parity already exists.
+- Arabic README is usable for the current thin package, but capability/status wording should match implementation without implying Persian/English parity.
+- Core and PII are already good references and only need verification in the final consistency pass.
 
 ## Standard README template
 
@@ -68,8 +58,8 @@ Keep examples short. Do not add architecture details that ordinary consumers do 
 1. ✅ `@textguard/all` — completed.
 2. ✅ `@textguard/plugin-fa` and `@textguard/plugin-en` — completed.
 3. ✅ Detection P0 group — Phone, IP, UUID, Credit Card, IBAN.
-4. **Next:** Detection P1 group — Email and URL.
-5. Arabic README consistency pass without expanding Arabic implementation scope.
+4. ✅ Detection P1 group — Email and URL.
+5. **Next:** Arabic README consistency pass without expanding Arabic implementation scope.
 6. Final consistency check across Core, PII, All, language, and detection packages.
 
 ## Definition of done

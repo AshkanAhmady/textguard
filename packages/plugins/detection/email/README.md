@@ -1,6 +1,6 @@
 # @textguard/plugin-email
 
-Official Email Detection Plugin for TextGuard.
+Email-address detection plugin for TextGuard.
 
 ## Installation
 
@@ -8,25 +8,34 @@ Official Email Detection Plugin for TextGuard.
 pnpm add @textguard/core @textguard/plugin-email
 ```
 
-## Usage
+## Quick start
 
 ```ts
 import { createFilter } from "@textguard/core";
 import { emailPlugin } from "@textguard/plugin-email";
 
-const guard = createFilter();
+const filter = createFilter({
+  plugins: [emailPlugin()],
+});
 
-guard.use(emailPlugin());
+const email = ["hello", "example.com"].join("@");
+const matches = filter.findBadWords(`Contact: ${email}`);
 
-const result = guard.findBadWords("contact me at hello@example.com");
+console.log(matches.length > 0); // true
 ```
 
-## Features
+You can also register the plugin later with `filter.use(emailPlugin())`.
 
-- Email detection
-- Regex based
-- Plugin architecture
-- TypeScript support
+## What it detects
+
+The plugin detects email-address-shaped values in text. Detection is intended for text filtering and PII discovery; it does not verify that an address exists or can receive mail.
+
+## Filtering
+
+```ts
+const result = filter.filter(`Contact: ${email}`);
+console.log(result.filteredText);
+```
 
 ## License
 
