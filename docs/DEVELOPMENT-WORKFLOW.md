@@ -34,9 +34,9 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 ## Current work sequence — Arabic implementation parity
 
 1. **AR1 — usable dictionary baseline — ✅ merged.** Conservative profanity/insult dictionaries and public API integration tests.
-2. **AR2 — normalization + coverage hardening — 🟡 current branch.** Audit the existing Core Arabic normalizer, add common diacritic/Alef-Maqsura normalization, broaden high-confidence vocabulary, and add benign regression tests.
-3. **AR3 — dialect/coverage expansion.** Add dialect-specific vocabulary only when coverage evidence and false-positive tests justify it; evaluate spam/pattern resources independently.
-4. **AR4 — bundle/preset parity.** Include Arabic in broader presets/bundles only after coverage and normalization quality are sufficient.
+2. **AR2 — normalization + coverage hardening — ✅ merged.** Existing Core Arabic normalization audited and extended; high-confidence coverage and benign regression tests added.
+3. **AR3 — dialect/coverage expansion — 🟡 current branch.** Add small dialect-focused vocabulary slices only when entries are high confidence, keep public API tests, and avoid bulk slang imports.
+4. **AR4 — bundle/preset parity.** Include Arabic in broader presets/bundles only after coverage quality is sufficient.
 
 ## Arabic parity rules
 
@@ -54,4 +54,4 @@ Reassess adoption feedback and the broader roadmap before expanding feature brea
 
 ## Current branch note
 
-`agent/arabic-normalization-coverage` combines the requested vocabulary expansion with the next planned AR2 normalization audit. It changes `@textguard/core` normalization behavior and `@textguard/plugin-ar` coverage, so both packages have release Changesets in this PR.
+`agent/arabic-dialect-coverage` is AR3 slice 1. It changes only `@textguard/plugin-ar` vocabulary/tests/docs and therefore needs a package Changeset, but no Core release.
