@@ -30,20 +30,28 @@ Prefer executable examples when a feature has a concrete consumer setup path. Wh
 
 Epic 1 / M5 Explain API is complete: Debug hardening, Explain domain/builder, public `filter.explain()`, integration tests, and core public docs are merged.
 
-## Current work sequence — PII Consumer DX Hardening
+## Completed work sequence — PII Consumer DX Hardening
 
-Stay on this sequence before broad roadmap work:
-
-1. **PII DX 1 — consumer init foundation — ✅ merged.** `npx textguard-pii init` safely wires the existing pre-commit scanner and GitHub workflow without overwriting existing setup.
+1. **PII DX 1 — consumer init foundation — ✅ merged.** `npx textguard-pii init` safely wires the pre-commit scanner and GitHub workflow without overwriting existing setup.
 2. **PII DX 2 — policy/configuration layer — ✅ merged.** Detector-specific allowlists, ignored paths/globs, and narrowly scoped suppressions are shared by CLI and CI; detectors remain strict.
-3. **PII DX 3 — external end-to-end validation — 🟡 current PR.** `examples/pii-consumer` is the executable consumer walkthrough and CI regression harness. It packs/installs the package into a clean consumer-style project, runs `init`, validates a real blocked commit, validates allowlist/ignored-path exceptions, and validates CI pass/fail behavior.
-4. **PII DX 4 — final public docs.** Make the README/setup path copy/paste-ready and mark M0.6 complete only after external E2E is green.
+3. **PII DX 3 — external end-to-end validation — ✅ merged and green.** `examples/pii-consumer` is both the simple developer walkthrough and the regression harness. The real packaged artifact is installed into a clean consumer-style repository and commit/CI behavior is verified end to end.
+4. **PII DX 4 — final public docs — ✅ closeout.** The PII README is copy/paste-ready and M0.3/M0.4/M0.6 are complete.
 
-## Priorities after PII DX
+## Current work sequence — README standardization
 
-1. Package README standardization using `@textguard/plugin-pii` as the quality reference.
-2. Arabic language parity at lower priority.
+Stay on this sequence before Arabic parity or broader roadmap features:
+
+1. **Root README.** Replace the obsolete Turborepo starter content with a real TextGuard overview, install guidance, core quick start, package map, PII entry point, examples, and contribution/development links.
+2. **Published package audit.** Inventory every package README and identify empty, obsolete, inconsistent, or misleading documentation.
+3. **Package README standardization.** Use `@textguard/plugin-pii` as the quality reference: purpose, install, quick start, API/options, examples, and relevant validation/limitations.
+4. **Example alignment.** Keep examples simple for ordinary developers and make sure documented APIs match shipped behavior.
+5. **Closeout.** Update roadmap/project docs with the final audit status before starting Arabic parity.
+
+## Priorities after README standardization
+
+1. Arabic language parity at lower priority.
+2. Reassess adoption feedback and the broader roadmap before expanding feature breadth.
 
 ## Current branch note
 
-`agent/pii-e2e-validation` implements PII DX 3 only. It keeps the external consumer scenario under `examples/pii-consumer` so developer documentation and regression coverage use the same flow; it does not yet mark M0.6 complete until this PR is green and the final public-doc pass is merged.
+`agent/pii-dx-closeout` closes the PII Consumer DX milestone and moves persistent project focus to README standardization. It intentionally does not rewrite the root README or package READMEs beyond `@textguard/plugin-pii`; those belong to the next dedicated work sequence.
