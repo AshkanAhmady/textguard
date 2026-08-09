@@ -34,5 +34,5 @@ jobs:
       - name: Test
         run: pnpm vitest run --coverage
 
-      - name: PII external consumer E2E
-        run: pnpm --filter @textguard/plugin-pii test:e2e
+      - name: PII external consumer example E2E
+        run: node examples/pii-consumer/e2e.mjs
