@@ -14,7 +14,7 @@ npx textguard-pii init
 
 ## Policy configuration
 
-Create `textguard-pii.config.json` in the repository root when intentional test/demo values need an exception.
+Create `textguard-pii.config.json` in the repository root when intentional test/demo values need an exception. A copyable template is included in this folder as `textguard-pii.config.example.json`.
 
 ```json
 {
