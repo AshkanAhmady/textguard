@@ -41,17 +41,12 @@ filter.explain(text: string): ExplainResult;
 filter.use(plugin: Plugin): void;
 ```
 
-`filter.explain(text)` is implemented as Epic 1 / M5. It returns original/normalized input, final accepted matches, plugin/rule metadata, structured reason data, and a summary. Explain uses the same debug-capable engine execution path; it does not re-run rules separately.
-
 ## 4. Debug and Explain architecture
-
-The Debug Engine provides the foundation required for reliable Explain behavior:
 
 - DebugSession stores original input, normalized input, final overlap-resolved matches, and events.
 - Match lifecycle is explicit: `match:found` is a candidate, then `match:accepted` or `match:rejected` records final resolution.
-- Match lifecycle events preserve plugin identity and rule metadata (`id`, `name`, `category`, `severity`, `priority`).
-- Explain only projects final accepted matches.
-- Explain reasons remain intentionally generic (`rule-match`) until rules expose richer structured facts. The core must not invent detector-specific explanations.
+- Explain only projects final accepted matches and uses the same debug-capable execution path.
+- Explain reasons remain intentionally generic (`rule-match`) until rules expose richer structured facts.
 
 Architecture decisions are recorded under `docs/architecture/`.
 
@@ -59,58 +54,53 @@ Architecture decisions are recorded under `docs/architecture/`.
 
 ### Language plugins
 
-- Persian: established/full relative to the current language architecture. README now documents `faDictionary` and optional `faLookalikesMapping` through the current core API.
-- English: established/full relative to the current language architecture. README now documents `enDictionary` and optional `enLeetspeakMapping` through the current core API.
-- Arabic: published but intentionally thinner; parity work is tracked at lower priority after README cleanup.
+- Persian: established/full relative to the current language architecture. README uses the current `faDictionary` API and optional `faLookalikesMapping`.
+- English: established/full relative to the current language architecture. README uses the current `enDictionary` API and optional `enLeetspeakMapping`.
+- Arabic: published but intentionally thinner; parity work is tracked after README cleanup.
 
 ### Structured-data detection
 
-Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist. Credit Card and IBAN include validator logic rather than relying only on regex shape.
+Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist.
+
+Current documentation status:
+
+- Phone, IP, and UUID READMEs now demonstrate their actual detector behavior with current plugin APIs.
+- Credit Card README uses `creditCardPlugin()` and documents Luhn validation.
+- IBAN README documents mod-97 validation.
+- Email and URL remain the next documentation-standardization step.
 
 ### PII package
 
-`@textguard/plugin-pii` combines the relevant PII detectors and provides scanning/CLI/CI surfaces.
-
-Consumer capabilities through M0.6 are complete:
-
-- `npx textguard-pii init` wires a Husky pre-commit command and creates the GitHub workflow without overwriting an existing workflow file;
-- `textguard-pii.config.json` provides detector-specific allowlists, ignored paths/globs, and narrowly scoped suppressions;
-- both pre-commit and CI scanners use the same policy layer;
-- detection stays strict and policy decides whether a finding should block;
-- `examples/pii-consumer` is a simple executable consumer reference;
-- CI packs the real published package shape into a clean temporary repository and validates blocked commits, policy-approved commits, ignored paths, and CI pass/fail behavior.
-
-Husky must be installed and initialized in the consuming project before the generated `.husky/pre-commit` hook can execute. The PII README documents the full copy/paste setup sequence.
+`@textguard/plugin-pii` combines the relevant PII detectors and provides scanning/CLI/CI surfaces. Consumer capabilities through M0.6 are complete, including `init`, shared policy configuration, executable consumer examples, and external E2E validation.
 
 ## 6. Completed milestone — PII Consumer DX Hardening
-
-Execution sequence is complete:
 
 1. Consumer init foundation — ✅ merged.
 2. Shared policy/configuration layer — ✅ merged.
 3. External end-to-end validation — ✅ merged and green.
 4. Final public documentation — ✅ merged.
 
-M0.3, M0.4, and M0.6 are complete. M0.7 (paid tier) intentionally remains later until open-source usage validates demand.
+M0.7 (paid tier) remains intentionally later until open-source usage validates demand.
 
 ## 7. Current milestone — Documentation quality
 
-The root README, package audit, `@textguard/all` README, and Persian/English README corrections are complete or in the current review step. Audit findings and rewrite order live in `docs/PACKAGE-README-AUDIT.md`.
-
-Current sequence:
+Completed:
 
 - ✅ root README;
 - ✅ published package audit;
 - ✅ `@textguard/all` README;
 - ✅ Persian and English README correctness pass;
-- next: Phone, IP, UUID, Credit Card, and IBAN P0 detection README fixes;
-- then Email/URL standardization;
-- then conservative Arabic README consistency;
-- final package-wide consistency check.
+- ✅ P0 detector README fixes: Phone, IP, UUID, Credit Card, IBAN.
+
+Remaining sequence:
+
+1. Email and URL README standardization.
+2. Conservative Arabic README consistency pass.
+3. Final package-wide consistency check.
+4. Arabic implementation parity.
+5. Reassess adoption and broader roadmap priorities.
 
 Examples must stay short, copy/paste-ready, compatible with shipped public APIs, and safe for the repository PII scan without broad ignore rules.
-
-For workflows with meaningful consumer setup, prefer examples under `examples/` that developers can inspect and CI can execute. Executable examples are part of the public documentation surface.
 
 ## 8. Known technical debt
 
@@ -120,9 +110,8 @@ Still tracked:
 - `packages/presets/` vs `packages/all/src/presets/` ownership/duplication.
 - existing `enterprisePreset` naming collides conceptually with the future secrets/JWT/API-key roadmap feature.
 - ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
-- overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases; Debug/Explain expose the final decision correctly but do not change ranking semantics.
+- overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases.
 - HTML Debug renderer remains missing.
-- remaining detection-package README cleanup is the current priority.
 
 ## 9. Development discipline
 
@@ -139,8 +128,8 @@ See `docs/DEVELOPMENT-WORKFLOW.md` for the persistent execution sequence.
 
 ## 10. Long-term roadmap guardrail
 
-Near-term sequence is now:
+Near-term sequence is:
 
-**Explain complete → PII consumer DX complete → root/package README cleanup → Arabic parity → reassess adoption and broader roadmap.**
+**Explain complete → PII consumer DX complete → package README cleanup → Arabic parity → reassess adoption and broader roadmap.**
 
 Secrets presets, benchmark suite, VS Code/Chrome integrations, AI work, and the paid PII tier remain later roadmap items.
