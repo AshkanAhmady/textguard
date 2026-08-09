@@ -34,37 +34,32 @@ PII consumer init, shared policy configuration, external E2E validation, and fin
 
 ## Completed work sequence — README standardization
 
-1. **Root README — ✅ merged.**
-2. **Published package audit — ✅ merged.**
-3. **`@textguard/all` README — ✅ merged.**
-4. **Persian + English READMEs — ✅ merged.**
-5. **Detection P0 READMEs — ✅ merged.**
-6. **Detection P1 READMEs — ✅ merged.**
-7. **Arabic README consistency — ✅ merged.**
-8. **Final package-wide consistency pass — ✅ complete in current branch.** Core, PII, All, language, and detector documentation are aligned with the current published surface.
+Root, package audit, All, language, detector, Arabic consistency, and final package-wide README verification are complete.
+
+## Current work sequence — Arabic implementation parity
+
+Keep Arabic parity incremental and do not broaden it into Core refactors.
+
+1. **AR1 — usable dictionary baseline — 🟡 current PR.** Add conservative profanity and insult dictionaries, populate existing `arDictionary`/`arPack`, test through `createFilter()`, update README, and include a Changesets minor entry.
+2. **AR2 — Arabic normalization — next.** Decide and test Arabic letter/diacritic normalization separately. Avoid unsafe transformations that create broad false positives.
+3. **AR3 — coverage expansion.** Expand vocabulary/categories conservatively; evaluate spam/pattern resources independently rather than copying them from Persian/English.
+4. **AR4 — bundle/preset parity.** Only include Arabic in broader presets/bundles after coverage and normalization quality are sufficient.
+
+## Arabic parity rules
+
+- Preserve existing exports (`arDictionary`, `arPack`, `arLanguage`) where practical.
+- New resources should use the existing `Dictionary` contract instead of adding language-specific Core APIs.
+- Test user-visible behavior through the public `createFilter()` API, not only raw arrays.
+- Separate vocabulary expansion from normalization changes so false-positive regressions are reviewable.
+- Keep README and release metadata aligned with each runtime slice.
 
 ## README maintenance rules
 
-- Use `@textguard/plugin-pii` as a quality reference, not as a rigid template.
 - Prefer short install + quick-start paths over architecture-heavy explanations.
 - Every code sample must match the current exported API.
 - Detector README claims must match actual validation behavior.
 - Avoid raw PII literals in repository docs when equivalent safe examples can be assembled without weakening PII enforcement.
 - Update affected README/example documentation in the same PR as future public API or behavior changes.
-
-## Next work sequence — Arabic implementation parity
-
-After this documentation-only PR is merged, start Arabic parity from the latest `main` on a fresh branch.
-
-Before coding:
-
-1. compare Persian, English, and Arabic package structures;
-2. define the smallest useful Arabic parity scope;
-3. preserve current Arabic exports/backward compatibility where practical;
-4. identify dictionary, normalization, tests, package integration, and documentation tasks;
-5. only then implement the first coherent Arabic slice.
-
-Do not broaden this into Core refactors or unrelated roadmap work.
 
 ## Priorities after Arabic parity
 
@@ -72,4 +67,4 @@ Reassess adoption feedback and the broader roadmap before expanding feature brea
 
 ## Current branch note
 
-`agent/readme-final-consistency` is documentation-only. It closes the package README cleanup milestone and advances the documented next step to Arabic implementation parity.
+`agent/arabic-usable-baseline` is the first runtime Arabic parity slice. It intentionally limits scope to a usable profanity/insult baseline and leaves normalization and broader coverage for separate reviewable PRs.
