@@ -1,6 +1,6 @@
 # TextGuard Package README Audit
 
-> Source of truth for the README standardization pass. Audit performed against `main` after PR #12.
+> Source of truth for the README standardization pass. Audit performed against the published package surface and updated as cleanup PRs land.
 
 ## Scope
 
@@ -15,8 +15,8 @@ Quality bar: use `@textguard/plugin-pii` as the reference for structure and deve
 | `@textguard/all` | ✅ Rewritten | P0 | Main bundle README now documents install, quick start, presets, exports, Explain/Debug, and current limitations. |
 | `@textguard/core` | ✅ Good | P2 | Current and useful; only consistency polish may be needed later. |
 | `@textguard/plugin-pii` | ✅ Reference | P2 | Current quality reference; no rewrite needed now. |
-| `@textguard/plugin-fa` | ❌ Obsolete/broken | P0 | Markdown is malformed and examples use removed APIs such as `languages`, `hasProfanity`, and `clean`. |
-| `@textguard/plugin-en` | ❌ Obsolete/broken | P0 | Same malformed structure and removed APIs as the Persian README. |
+| `@textguard/plugin-fa` | ✅ Corrected | P0 | Current `dictionaries`/filter API documented; malformed markdown and removed APIs are gone. |
+| `@textguard/plugin-en` | ✅ Corrected | P0 | Current `dictionaries`/filter API documented; leetspeak setup is explicit rather than implied automatic. |
 | `@textguard/plugin-ar` | 🟡 Usable but thin | P2 | Current API shape is closer to reality, but package status/capability wording needs alignment with the lower-priority Arabic parity plan. |
 | `@textguard/plugin-email` | 🟡 Minimal | P1 | Valid basic usage, but too thin and includes literal PII-like sample data that can conflict with repository scans. |
 | `@textguard/plugin-url` | 🟡 Mostly usable | P1 | Better than most detection READMEs, but needs standardized structure and examples. |
@@ -31,8 +31,8 @@ Quality bar: use `@textguard/plugin-pii` as the reference for structure and deve
 ### P0 — must fix first
 
 1. ✅ `@textguard/all` no longer ships an empty README.
-2. Persian and English language READMEs document an older public API (`languages`, `hasProfanity`, `clean`) that is not the current TextGuard API. Their markdown fences are also malformed.
-3. Phone, IP, UUID, Credit Card, and IBAN READMEs contain copied examples unrelated to their actual detector.
+2. ✅ Persian and English READMEs now use current APIs and valid markdown.
+3. Phone, IP, UUID, Credit Card, and IBAN READMEs still contain copied examples unrelated to their actual detector.
 4. Credit Card documentation contains an invalid JavaScript identifier in the import/example and understates validator behavior.
 5. IBAN documentation understates validator behavior by presenting it as regex-only.
 
@@ -65,9 +65,9 @@ Keep examples short. Do not add architecture details that ordinary consumers do 
 
 ## Rewrite sequence
 
-1. ✅ `@textguard/all` — highest-impact onboarding package; rewritten first.
-2. `@textguard/plugin-fa` and `@textguard/plugin-en` — remove obsolete API examples and fix markdown.
-3. Detection P0 group — Phone, IP, UUID, Credit Card, IBAN.
+1. ✅ `@textguard/all` — completed.
+2. ✅ `@textguard/plugin-fa` and `@textguard/plugin-en` — current APIs and markdown corrected.
+3. **Next:** Detection P0 group — Phone, IP, UUID, Credit Card, IBAN.
 4. Detection P1 group — Email and URL.
 5. Arabic README consistency pass without expanding Arabic implementation scope.
 6. Final consistency check across Core, PII, All, language, and detection packages.
