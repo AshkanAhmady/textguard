@@ -18,27 +18,50 @@ npx textguard-pii init
 
 `init` safely prepares the existing PII enforcement surfaces:
 
-- creates `.husky/pre-commit` with `npx textguard-pii` when the hook does not exist;
-- appends the command when a pre-commit hook already exists;
+- creates or updates `.husky/pre-commit` with `npx textguard-pii`;
 - leaves an already-configured hook unchanged;
 - creates `.github/workflows/pii-scan.yml` when no workflow exists at that path;
 - never overwrites an existing PII workflow file.
 
-Husky itself must already be installed/initialized in the consuming project for `.husky/pre-commit` to run. Automatic Husky dependency/setup handling is part of the remaining Consumer DX work.
+Husky itself must already be installed/initialized in the consuming project for `.husky/pre-commit` to run.
 
 ## Library usage
 
 ```ts
 import { scanText } from "@textguard/plugin-pii";
 
-// Build demo PII at runtime so the repository's own PII guard does not
-// treat this README example as an accidental committed finding.
 const demoEmail = ["hello", "example.com"].join("@");
 const result = scanText(`Contact: ${demoEmail}`);
 
 result.clean; // false
 result.findings;
 ```
+
+## Allow intentional test data
+
+Create `textguard-pii.config.json` in the consumer repository root. The same policy is used by the pre-commit CLI and the PR/CI scanner.
+
+```json
+{
+  "allowlist": {
+    "email": ["fixture-email"]
+  },
+  "ignorePaths": ["tests/fixtures/**"],
+  "suppressions": [
+    {
+      "path": "docs/**",
+      "type": "email",
+      "matchedText": "fixture-email"
+    }
+  ]
+}
+```
+
+`allowlist` is detector-specific, so an allowed email value does not automatically allow a phone, card, or IBAN finding with the same text. `ignorePaths` skips an entire matching file. `suppressions` are intentionally narrower and can be restricted by path, detector type, and exact matched value.
+
+Prefer the narrowest exception that fits the case. For example, use an exact allowlisted test value before ignoring a whole directory.
+
+The library API also exposes `scanFile(path, text, config)` and the policy types when custom integration is needed.
 
 ## Manual pre-commit setup
 
@@ -50,7 +73,7 @@ npx textguard-pii
 
 ## Manual CI setup
 
-The `textguard-pii-ci` executable scans a git diff and exits non-zero when PII is found:
+The `textguard-pii-ci` executable scans a git diff and exits non-zero when non-allowed PII is found:
 
 ```bash
 npx textguard-pii-ci --base <base-ref> --head <head-ref>
@@ -67,14 +90,13 @@ npx textguard-pii-ci --base <base-ref> --head <head-ref>
 
 ## Consumer DX still in progress
 
-The next PII hardening steps are:
+The remaining PII hardening steps are:
 
 - verify `init` end-to-end from a clean external project;
 - make Husky setup smoother;
-- add policy configuration for allowlisted values, ignored paths/globs, and narrowly scoped suppressions;
-- verify commit and PR blocking end-to-end.
+- verify commit and PR blocking end-to-end with policy configuration enabled.
 
-Detection and policy will remain separate: detectors report findings; the PII policy layer will decide whether an intentional finding should block.
+Detection and policy remain separate: detectors report findings; the PII policy layer decides whether an intentional finding should block.
 
 ## License
 
