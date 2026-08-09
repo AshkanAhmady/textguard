@@ -1,12 +1,10 @@
 # @textguard/plugin-ar 🇸🇦
 
-Official Arabic language plugin for TextGuard.
+Arabic language package for TextGuard.
 
-This plugin provides Arabic language resources for TextGuard, including profanity dictionaries, language-specific rules, and future Arabic normalization support.
+> **Current status:** published foundation / early development.
 
-> **Status:** Early development (Phase 6)
-
----
+The package currently exposes Arabic language metadata and placeholder dictionary/pack exports. It does **not yet provide Persian/English-level Arabic moderation coverage**: the current `arDictionary` has no words and `arPack` is empty. Arabic parity is tracked as the next implementation phase after the README cleanup.
 
 ## Installation
 
@@ -14,9 +12,7 @@ This plugin provides Arabic language resources for TextGuard, including profanit
 pnpm add @textguard/core @textguard/plugin-ar
 ```
 
----
-
-## Usage
+## Current usage
 
 ```ts
 import { createFilter } from "@textguard/core";
@@ -25,38 +21,29 @@ import { arDictionary } from "@textguard/plugin-ar";
 const filter = createFilter({
   dictionaries: [arDictionary],
 });
-
-const result = filter.filter("...");
-
-console.log(result.filteredText);
 ```
 
----
+This API is valid today, but because the shipped Arabic dictionary is currently empty, it does not add useful Arabic word detection yet.
 
-## Exports
+## Current exports
 
-This package currently exports:
+```ts
+import {
+  arDictionary,
+  arPack,
+  arLanguage,
+} from "@textguard/plugin-ar";
+```
 
-- `arDictionary`
-- `arPack`
-- `language`
+- `arDictionary` — valid TextGuard dictionary object; currently contains no words.
+- `arPack` — currently an empty object reserved for the future Arabic language pack.
+- `arLanguage` — Arabic locale metadata (`code`, native name, English name).
 
-Future releases may include:
+## Planned parity work
 
-- Arabic normalizers
-- Arabic-specific rules
-- Locale metadata
-- Additional dictionaries
+Arabic implementation work will be handled separately from this documentation pass. The parity phase is expected to add real Arabic dictionaries/resources and then update this README with practical moderation examples.
 
----
-
-## Compatibility
-
-| Package         | Version |
-| --------------- | ------- |
-| @textguard/core | ^1.x    |
-
----
+Until that work lands, use this package only if you specifically need the current Arabic metadata/foundation exports.
 
 ## License
 
