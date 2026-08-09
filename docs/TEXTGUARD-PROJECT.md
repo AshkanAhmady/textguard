@@ -56,7 +56,7 @@ Architecture decisions are recorded under `docs/architecture/`.
 
 - Persian: established/full relative to the current language architecture. README uses the current `faDictionary` API and optional `faLookalikesMapping`.
 - English: established/full relative to the current language architecture. README uses the current `enDictionary` API and optional `enLeetspeakMapping`.
-- Arabic: parity is now in progress. AR1 adds conservative `arProfanity` and `arInsults` resources and populates the existing `arDictionary` and `arPack` exports without changing Core or removing existing Arabic exports.
+- Arabic: parity is now in progress. AR1 adds conservative `arProfanity` and `arInsults` resources and populates the existing `arDictionary` and `arPack` exports without changing Core or removing existing Arabic exports. Dictionary entries follow the canonical text produced by Core's already-shipped `ArabicNormalizer`.
 
 ### Structured-data detection
 
@@ -89,12 +89,13 @@ Arabic parity is intentionally incremental and should not trigger unrelated Core
 - populate the existing `arDictionary` from those resources;
 - populate the existing `arPack` while preserving its export name;
 - retain `arLanguage` unchanged;
-- add integration tests through the public `createFilter()` API;
+- keep dictionary entries compatible with the canonical output of the current Core `ArabicNormalizer`;
+- add integration tests through the public `createFilter()` API, including normalized Arabic variants;
 - update the package README and add a Changesets minor release entry.
 
-### AR2 — normalization — next
+### AR2 — normalization audit — next
 
-Treat Arabic normalization as a separate design concern. Evaluate Arabic letter variants and diacritics (`أ`, `إ`, `آ`, `ى`, combining marks, etc.) with explicit tests before adding a mapping. Avoid transformations that create broad false positives.
+Core already ships `ArabicNormalizer`, including mappings such as `أ/إ/آ → ا` and `ة → ه`. AR2 should audit that existing behavior rather than introduce a second normalization path. Add explicit regression tests for letter variants and diacritics, then change Core normalization only when a concrete failing case justifies it. Avoid transformations that create broad false positives.
 
 ### AR3 / AR4 — later
 
