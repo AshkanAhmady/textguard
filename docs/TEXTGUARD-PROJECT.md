@@ -6,7 +6,7 @@
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI. The core stays plugin-oriented so new detectors can be added without coupling them into the engine.
 
-Current product focus is **package/root README quality and simpler npm onboarding**, then lower-priority Arabic parity.
+Current product focus is **package README quality and simpler npm onboarding**, then lower-priority Arabic parity.
 
 ## 2. Repository and architecture
 
@@ -89,17 +89,17 @@ Execution sequence is complete:
 1. Consumer init foundation — ✅ merged.
 2. Shared policy/configuration layer — ✅ merged.
 3. External end-to-end validation — ✅ merged and green.
-4. Final public documentation — ✅ completed in the closeout pass.
+4. Final public documentation — ✅ merged.
 
-M0.3, M0.4, and M0.6 are considered complete. M0.7 (paid tier) intentionally remains later until open-source usage validates demand.
+M0.3, M0.4, and M0.6 are complete. M0.7 (paid tier) intentionally remains later until open-source usage validates demand.
 
 ## 7. Current milestone — Documentation quality
 
-Package README quality is inconsistent and the root README is still an obsolete Turborepo starter. The next work sequence is a repository-wide documentation cleanup.
+The obsolete root Turborepo README has now been replaced with a real TextGuard overview and quick start. The remaining documentation work is the published-package audit and package-by-package standardization.
 
 Goals:
 
-- replace the root README with a real TextGuard project overview and quick start;
+- ✅ real root README with project overview, quick start, package map, Explain/Debug entry points, PII setup, examples, and contributor links;
 - audit every published package README;
 - use the current `@textguard/plugin-pii` README as the structure/quality reference;
 - make examples short and copy/paste-ready for ordinary developers;
@@ -118,7 +118,7 @@ Still tracked:
 - ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
 - overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases; Debug/Explain expose the final decision correctly but do not change ranking semantics.
 - HTML Debug renderer remains missing.
-- repository-wide package README cleanup is the current priority.
+- published-package README cleanup is the current priority.
 
 ## 9. Development discipline
 
@@ -137,6 +137,6 @@ See `docs/DEVELOPMENT-WORKFLOW.md` for the persistent execution sequence.
 
 Near-term sequence is now:
 
-**Explain complete → PII consumer DX complete → package/root README standardization → Arabic parity → reassess adoption and broader roadmap.**
+**Explain complete → PII consumer DX complete → root README complete → published-package README standardization → Arabic parity → reassess adoption and broader roadmap.**
 
 Secrets presets, benchmark suite, VS Code/Chrome integrations, AI work, and the paid PII tier remain later roadmap items.
