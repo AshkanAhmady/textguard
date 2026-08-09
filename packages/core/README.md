@@ -1,56 +1,122 @@
-Markdown
+# @textguard/core
 
-# @textguard/core 🛡️
+Core text detection, filtering, debugging, and explanation engine for TextGuard.
 
-> **The ultimate, blazing-fast text moderation and profanity filtering engine for modern JavaScript/TypeScript applications.**
+`@textguard/core` is intentionally plugin-based: the core owns execution, normalization, filtering, Debug, and Explain infrastructure, while language and structured-data detection live in separate plugins.
 
-`@textguard/core` is the lightweight heart of the TextGuard ecosystem. Built with performance and flexibility in mind, it allows you to create highly customizable text filters, handle multi-language packs seamlessly, and eliminate unwanted content with zero-dependency overhead.
-
----
-
-### ✨ Features
-
-- 🚀 **Zero Dependencies:** Ultra-light bundle size with maximum performance.
-- 📦 **Modular Architecture:** Keep your bundle size small by only importing the language packs (`fa`, `en`, etc.) you actually need.
-- 🧠 **Advanced Engine (`createFilter`):** Intelligently combines patterns, handles complex regex variations, and provides context-aware filtering.
-- ⚡ **Full TypeScript Support:** Strictly typed for a world-class developer experience.
-
----
-
-### 🚀 Installation
+## Installation
 
 ```bash
 pnpm add @textguard/core
-💻 Quick Start
-The core engine revolves around the powerful createFilter method. You can instantly combine multiple official language packs or inject your own custom rules.
+```
 
-TypeScript
-import { createFilter } from '@textguard/core';
-import { faRules } from '@textguard/plugin-fa';
-import { enRules } from '@textguard/plugin-en';
+## Basic usage
 
-// Initialize the filter engine with selected language configurations
+```ts
+import { createFilter } from "@textguard/core";
+
 const filter = createFilter({
-  languages: [faRules, enRules],
-  customBlacklist: ['spam-link-example.com'], // Easily extend on the fly
+  customWords: ["blocked-token"],
+  mask: "*",
 });
 
-// 1. Simple Check
-const hasBadWords = filter.hasProfanity("This is a clean sentence with an idiot mentioned.");
-console.log(hasBadWords); // true
+filter.hasBadWord("contains blocked-token"); // true
 
-// 2. Clean and Mask Text
-const cleanedText = filter.clean("این یک متن نمونه است احمق!");
-console.log(cleanedText); // "این یک متن نمونه است ****!"
-🌐 The Roadmap (Multi-Language Ecosystem)
-TextGuard is built to scale globally. Currently, it fully supports:
-
-🟢 @textguard/plugin-fa (Official Persian Pack)
-
-🟢 @textguard/plugin-en (Official English Pack)
-
-💡 More languages (such as Arabic, Spanish, and German) are actively under development and coming very soon!
-
-📄 License
-MIT © Ashkan Ahmadi
+const matches = filter.findBadWords("contains blocked-token");
+const filtered = filter.filter("contains blocked-token");
 ```
+
+## Using plugins
+
+```ts
+import { createFilter } from "@textguard/core";
+import { emailPlugin } from "@textguard/plugin-email";
+
+const filter = createFilter({
+  plugins: [emailPlugin],
+});
+```
+
+Plugins can also be registered later with `filter.use(plugin)`.
+
+## Explain API
+
+Use `filter.explain(text)` when you need to know which final detection matched and where it came from.
+
+```ts
+const explanation = filter.explain("some input");
+
+console.log(explanation.matched);
+console.log(explanation.matches);
+```
+
+The result contains:
+
+- the original input;
+- the normalized input used by the engine;
+- only final accepted matches after overlap resolution;
+- plugin identity;
+- rule id, name, category, severity, and priority;
+- a structured explanation reason;
+- summary information such as matched plugins and categories.
+
+Explain is built from the same debug-capable execution path as detection. It does not run a separate detection engine.
+
+## Debug API
+
+Use `filter.debug(text)` for low-level execution diagnostics:
+
+```ts
+const session = filter.debug("some input");
+
+session.getInput();
+session.getNormalizedInput();
+session.getMatches();
+session.getEvents();
+session.statistics();
+session.timeline();
+session.performance();
+session.report();
+```
+
+Debug events include rule execution and explicit match lifecycle events (`match:found`, `match:accepted`, and `match:rejected`).
+
+## Public filter API
+
+```ts
+filter.hasBadWord(text: string): boolean;
+filter.findBadWords(text: string): Match[];
+filter.filter(text: string): FilterResult;
+filter.debug(text: string): DebugSession;
+filter.explain(text: string): ExplainResult;
+filter.use(plugin: Plugin): void;
+```
+
+## Filter options
+
+```ts
+createFilter({
+  dictionaries,
+  customWords,
+  whitelist,
+  mask,
+  leetspeakMapping,
+  faLookalikesMapping,
+  plugins,
+});
+```
+
+## Design notes
+
+- Core does not depend on specific language or PII plugins.
+- Detection behavior belongs to `Rule` implementations.
+- Explain projects structured facts from `DebugSession`; it does not guess detector-specific reasons that rules do not expose.
+- The existing `Match` contract remains backward-compatible.
+
+## Related packages
+
+Official TextGuard packages include language plugins, structured-data detection plugins, `@textguard/plugin-pii`, and `@textguard/all`.
+
+## License
+
+MIT
