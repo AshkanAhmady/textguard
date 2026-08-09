@@ -56,9 +56,12 @@ try {
     throw new Error("init did not prepare the GitHub workflow");
   }
 
+  run("git", ["add", "package.json", "package-lock.json", ".husky", ".github"], consumerDir);
+  run("git", ["commit", "-m", "setup pii guard"], consumerDir);
+
   const blockedEmail = ["blocked", "example.com"].join("@");
   writeFileSync(join(consumerDir, "fixture.txt"), `contact=${blockedEmail}\n`);
-  run("git", ["add", "fixture.txt", ".husky", ".github"], consumerDir);
+  run("git", ["add", "fixture.txt"], consumerDir);
 
   const blockedCommit = runStatus("git", ["commit", "-m", "test blocked pii"], consumerDir);
   if (blockedCommit.status === 0) {
