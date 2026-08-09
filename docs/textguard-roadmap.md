@@ -8,7 +8,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **PII consumer integration / DX hardening.** Current focus. Build safe consumer setup, then policy configuration (allowlisted values, ignored paths/globs, narrow suppressions), then verify commit/PR blocking end-to-end.
+1. **PII consumer integration / DX hardening.** Current focus. Consumer init is merged; policy configuration is in progress; external commit/PR validation follows.
 2. **Package README standardization.** Audit all published package READMEs using the PII README as the quality reference.
 3. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` after PII DX and README cleanup.
 
@@ -24,10 +24,10 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 | --- | --- | --- |
 | M0.1 — Scope & Naming | ✅ Done | `@textguard/plugin-pii`; email, phone, credit card, IBAN. |
 | M0.2 — Scan Core | ✅ Done | `piiPreset`, `scanText()` and `scanMany()` implemented. |
-| M0.3 — Pre-commit Hook Mode | 🟡 Partial | Scanner blocks commits; consumer initialization is being automated. |
-| M0.4 — GitHub Action Mode | 🟡 Partial | CI scanner exists; consumer workflow setup is being automated. |
+| M0.3 — Pre-commit Hook Mode | 🟡 Partial | Scanner blocks commits; `init` wires consumer hooks and policy config is being added. |
+| M0.4 — GitHub Action Mode | 🟡 Partial | CI scanner exists; consumer workflow setup exists and policy config is being shared with CI. |
 | M0.5 — Reporting Output | ✅ Done | Console/markdown reporting exists. |
-| M0.6 — Consumer Setup / DX | 🟡 In progress | First step adds `npx textguard-pii init` to safely wire the pre-commit command and create the PII GitHub workflow without overwriting existing setup. Next: policy config + external end-to-end validation. |
+| M0.6 — Consumer Setup / DX | 🟡 In progress | `npx textguard-pii init` is merged. Current step adds `textguard-pii.config.json` policy with detector-specific allowlists, ignored paths/globs, and narrow suppressions. Next: external end-to-end validation. |
 | M0.7 — Paid Tier | ❌ Later | Only after open-source usage validates demand. |
 
 ### Epic 1 — Debug Engine ⭐⭐⭐⭐⭐
