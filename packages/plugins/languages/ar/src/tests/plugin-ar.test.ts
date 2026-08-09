@@ -19,6 +19,7 @@ describe("TextGuard Arabic language baseline", () => {
 
     expect(filter.hasBadWord("هذا كلام قحبة")).toBe(true);
     expect(filter.findBadWords("هذا كلام قحبة")).toHaveLength(1);
+    expect(filter.hasBadWord("هذا كلام قحبه")).toBe(true);
   });
 
   it("detects Arabic insults and filters them", () => {
@@ -27,6 +28,13 @@ describe("TextGuard Arabic language baseline", () => {
 
     expect(filter.hasBadWord("لا تكن غبي")).toBe(true);
     expect(result.filteredText).not.toContain("غبي");
+  });
+
+  it("handles alef variants through the core Arabic normalizer", () => {
+    const filter = createFilter({ dictionaries: [arDictionary] });
+
+    expect(filter.hasBadWord("أنت أحمق")).toBe(true);
+    expect(filter.hasBadWord("أنت احمق")).toBe(true);
   });
 
   it("does not flag ordinary Arabic text", () => {
