@@ -1,8 +1,19 @@
 # TextGuard Roadmap — Verified Status
 
-> Status below was checked against actual source code (not the older planning docs, which describe intent rather than current reality). Use this alongside `TEXTGUARD-PROJECT.md`. Ordering of "Not Started" items is left to the maintainer, except Epic 0, which has an explicit commercial-priority decision behind it (see below).
+> Status below was checked against actual source code (not the older planning docs, which describe intent rather than current reality). Use this alongside `TEXTGUARD-PROJECT.md`.
 
-Legend: ✅ Done &nbsp; 🟡 Partial &nbsp; ❌ Not started
+Legend: ✅ Done &nbsp; 🟡 Partial / in progress &nbsp; ❌ Not started
+
+---
+
+## Near-term execution order
+
+Follow this order unless the maintainer explicitly changes it:
+
+1. **Finish Epic 1 / M5 Explain API.** Complete the current Debug Engine hardening sequence first, then implement Explain as a projection of `DebugSession`.
+2. **PII consumer integration / DX hardening.** Validate `@textguard/plugin-pii` in a fresh external repository and make installation actually configure the consuming project. Preferred direction: `npx textguard-pii init` to set up pre-commit and/or CI integration rather than expecting users to manually copy TextGuard's own Husky/GitHub Action configuration.
+3. **Package README standardization.** Audit every package README. Empty, incomplete, or stale READMEs must be rewritten with a consistent structure and quality based on the current `@textguard/plugin-pii` README. All examples must match the shipped API and be copy/paste-ready.
+4. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` dictionaries/rules/tests after the items above; do not interrupt Explain/PII/README work for it.
 
 ---
 
@@ -15,90 +26,105 @@ All verified as substantially complete based on repo structure and published pac
 - ✅ Official language plugins: Persian, English (Arabic is thin — see below)
 - ✅ Official detection plugins: Email, URL, Phone, IP, UUID, Credit Card, IBAN
 - ✅ `@textguard/all` bundle package with presets, tree-shaking (ESM/CJS via tsup)
-- ✅ Tests present for all plugins (13 test files); coverage tooling configured
-- ✅ npm releases live for core, en, fa, ar, all detection plugins, and `@textguard/all` (all at v1.0.1)
+- ✅ Tests present across core/plugins; coverage tooling configured
+- ✅ npm releases exist for core/language/detection packages and `@textguard/all`
 
-**Caveat:** 🟡 Arabic (`@textguard/plugin-ar`) is published but functionally thin — a single `index.ts`, no dictionaries/rules/tests found. If "Phase 3 complete" implies parity across fa/en/ar, it isn't there yet for Arabic.
-
-**Correction:** ❌ No `.github/workflows` existed anywhere in the repo prior to M0.4 below, despite older planning docs listing "GitHub Actions" as done in Phase 5. There was no automated test/lint run on push or PR until the PII Scan workflow was added.
+**Caveat:** 🟡 Arabic (`@textguard/plugin-ar`) is published but functionally thin compared with Persian/English. Arabic parity is tracked, but intentionally lower priority than Explain API, PII consumer DX, and README cleanup.
 
 ---
 
 ## Phase 7 — Advanced Features
 
-### Epic 0 — PII / Compliance CI Guard ⭐⭐⭐⭐⭐ (commercial priority — confirmed)
+### Epic 0 — PII / Compliance CI Guard ⭐⭐⭐⭐⭐
 
-**Status: 🟡 In progress — M0.1–M0.5 done, only M0.6 (paid tier) remains.** Added after deciding this is the most direct path to a paying feature: it reuses existing, tested detection plugins (email, phone, credit card, IBAN) instead of requiring new detection logic, and targets a real, expensive problem (PII leaking into commits, logs, or production) that companies already pay to prevent under GDPR/PCI-DSS.
-
-**Naming (decided):** `@textguard/plugin-pii`. Distinct from `enterprisePreset` in `@textguard/all`, which remains an unrelated bundle (language dictionaries + general PII plugins).
+**Status: 🟡 Core capability exists; consumer integration still needs hardening.** The package detects email, phone, credit card, and IBAN and includes CLI/CI entry points, but installing the npm package in an external project does not automatically configure that project's Husky hook or GitHub workflow.
 
 Milestones:
 
-| Milestone                   | Status         | Detail                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| --------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| M0.1 — Scope & Naming       | ✅ Done        | Package name: `@textguard/plugin-pii`. v1 scope: email, phone, credit card, IBAN (UUID excluded).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| M0.2 — Scan Core            | ✅ Done        | `packages/plugins/pii/` created: `piiPreset` (composes the four existing detection plugins) + `scanText()`/`scanMany()` built on `filter.findBadWords()`. Tests written. Ships as v0.1.0 — not yet published to npm.                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| M0.3 — Pre-commit Hook Mode | ✅ Done        | `textguard-pii` CLI added to `packages/plugins/pii/src/cli.ts`, wired into the repo's `.husky/pre-commit` (runs after `lint-staged`/`pnpm lint`, blocks commit on any PII finding). Added `set -e` to the hook so any step failing actually blocks the commit — this wasn't guaranteed before (only the last command's exit code counted).                                                                                                                                                                                                                                                                                                                                                      |
-| M0.4 — GitHub Action Mode   | ✅ Done        | `.github/workflows/pii-scan.yml` — first CI workflow in this repo (there wasn't one, despite older docs listing "GitHub Actions" as done in Phase 5). Runs on every PR, diffs base..head, scans changed files via a new `src/ci.ts` entry, fails the check with inline annotations on any PII finding.                                                                                                                                                                                                                                                                                                                                                                                          |
-| M0.5 — Reporting Output     | ✅ Done        | New `report.ts`: `formatConsoleReport()` and `formatMarkdownReport()`, shared by both the pre-commit hook (console output) and the GitHub Action (inline annotations + a markdown summary written to `$GITHUB_STEP_SUMMARY`). `cli.ts` and `ci.ts` refactored to use this instead of duplicating formatting logic. Note: this ended up as a small dedicated formatter rather than reusing core's `ConsoleRenderer`/`MarkdownRenderer` — those are built around a full `DebugReport` (events/timeline/performance), which doesn't fit `scanText()`'s lighter `findBadWords()`-based output. Revisit if `scanText` is ever upgraded to use `debug()` for Explain API integration (see M0.2 note). |
-| M0.6 — Paid Tier (later)    | ❌ Not started | Multi-repo/org dashboard, historical reporting, alerting — only after M0.1–M0.5 validate with real usage. This is the actual monetizable layer; M0.1–M0.5 is the free/open-source foundation it sits on.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Milestone | Status | Detail |
+| --- | --- | --- |
+| M0.1 — Scope & Naming | ✅ Done | Package name: `@textguard/plugin-pii`; v1 detection scope: email, phone, credit card, IBAN. |
+| M0.2 — Scan Core | ✅ Done | `piiPreset`, `scanText()` and `scanMany()` implemented. |
+| M0.3 — Pre-commit Hook Mode | 🟡 Partial | Scanner/CLI can block a commit, and TextGuard's own repo wires it into Husky. External consumers still need an installation/setup flow. |
+| M0.4 — GitHub Action Mode | 🟡 Partial | TextGuard's own workflow scans PRs. External consumers still need a supported setup flow/template. |
+| M0.5 — Reporting Output | ✅ Done | Shared console/markdown reporting exists. |
+| M0.6 — Consumer Setup / DX | ❌ Not started | After Explain: validate from a clean external project and implement/document setup, preferably via `npx textguard-pii init`. Must verify commit blocking and PR blocking end-to-end. |
+| M0.7 — Paid Tier (later) | ❌ Not started | Multi-repo/org dashboard, history, alerting; only after open-source usage validates demand. |
 
-**Dependency to sequence around:** the quality of M0.2's findings (why this matched, how to fix it) improves a lot once Epic 1 / M5 (Explain API) exists. Worth building Explain API either just before or alongside this epic rather than long after.
+**Sequencing:** finish Explain first because PII findings become much more useful when they can say why something matched. Then return immediately to consumer integration before broad new feature work.
 
 ### Epic 1 — Debug Engine ⭐⭐⭐⭐⭐
 
-| Milestone                                                                   | Status         | Detail                                                                                                                |
-| --------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------- |
-| M1 — Debug Foundation                                                       | ✅ Done        | `DebugSession`, `DebugEvent` types, `DebugCollector`, `filter.debug()` all implemented and wired into `createEngine`. |
-| M2 — Renderers                                                              | 🟡 Partial     | Console ✅, Markdown ✅, JSON ✅. **HTML renderer ❌ not built.**                                                     |
-| M3 — Timeline                                                               | ✅ Done        | `TimelineBuilder` + `Timeline` model implemented.                                                                     |
-| M4 — Performance Diagnostics                                                | ✅ Done        | `PerformanceBuilder` + `PerformanceReport` implemented, exposed via `session.performance()`.                          |
-| M5 — Explain API                                                            | ❌ Not started | No `explain()` method or module found anywhere in `core/src`.                                                         |
-| M6 — Future Integrations (VS Code / Chrome / CLI / Website Playground / AI) | ❌ Not started | Expected — these are meant to consume the Debug Engine once finished.                                                 |
+| Milestone | Status | Detail |
+| --- | --- | --- |
+| M1 — Debug Foundation | ✅ Done | `DebugSession`, `DebugEvent`, `DebugCollector`, `filter.debug()` implemented. |
+| M2 — Renderers | 🟡 Partial | Console/JSON/Markdown exist; HTML renderer remains missing. |
+| M3 — Timeline | ✅ Done | Timeline builder/model implemented. |
+| M4 — Performance Diagnostics | ✅ Done | Performance builder/report exposed by `session.performance()`. |
+| M5 — Explain API | 🟡 In progress | Explain itself is not public yet. M5.0–M5.2 hardening PRs are merged; M5.3 preserves rule/plugin metadata; Explain domain/API follows next. |
+| M6 — Future Integrations | ❌ Not started | VS Code / Chrome / CLI / Playground / AI consumers come later. |
 
-**Real state of Epic 1: further along than the planning docs suggest for M1/M3/M4, but M2 is incomplete and M5 hasn't begun.** This is probably the most valuable epic to finish before moving on, since ADR-001 explicitly designs everything else (Explain API, future tools) to depend on it.
+Current M5 preparation sequence is tracked in `docs/DEVELOPMENT-WORKFLOW.md` and architecture ADRs. Do not skip ahead while that sequence is active.
 
 ### Epic 2 — Enterprise Preset (secrets/JWT/API keys/tokens/wallets/SSH keys) ⭐⭐⭐⭐
 
-❌ **Not started.** No plugin in the codebase detects any of these. Note: the name "enterprisePreset" is already used in `@textguard/all` for something unrelated (a bundle of language + PII plugins) — will need a naming decision before this epic starts.
+❌ Not started. The existing `enterprisePreset` name in `@textguard/all` already means something else, so naming must be resolved before implementation.
 
 ### Epic 3 — Benchmark Suite ⭐⭐⭐
 
-❌ Not started. No benchmark scripts or comparison infrastructure found.
+❌ Not started.
 
 ### Epic 4 — VS Code Extension ⭐⭐⭐⭐
 
-❌ Not started. Depends on Debug Engine (Epic 1) per ADR-001.
+❌ Not started. Depends on a stable Debug/Explain surface.
 
 ### Epic 5 — Chrome Extension ⭐⭐⭐
 
-❌ Not started. Depends on Debug Engine (Epic 1).
+❌ Not started. Depends on a stable Debug/Explain surface.
 
 ### Epic 6 — AI Platform (`@textguard/plugin-ai`) ⭐⭐⭐⭐⭐
 
-❌ Not started — consistent with the decision to pause the wider AI/ecosystem vision and focus on TextGuard fundamentals first.
+❌ Not started. Broader AI/ecosystem work remains deferred until TextGuard fundamentals and adoption improve.
 
 ---
 
-## Items Not on the Original Roadmap But Found During Review
+## Product-quality backlog
 
-Not new scope — these are fixes/cleanup surfaced by reading the actual code (full detail in `TEXTGUARD-PROJECT.md` §7):
+### Package README standardization — high priority after PII DX
 
-- Published npm READMEs (core, en, fa) show an API that doesn't match the shipped code.
-- `@textguard/all` has no README at all.
-- Production code logs to console unconditionally on every `createFilter()` call.
-- An unused `future/` folder exists in core (dead scaffolding, not imported anywhere).
-- `packages/presets/` and `packages/all/src/presets/` may be redundant with each other.
-- ADR-001's documented Debug API (`debug.toJSON()` etc.) doesn't match what was actually built (`session.report()` + separate renderer classes).
+Current README quality is inconsistent: some packages are incomplete, some are empty or too thin, and older examples may not match the current public API. Run a package-by-package documentation pass after Explain and PII consumer setup.
+
+Definition of Done:
+
+- every published package has a useful README;
+- use the current `@textguard/plugin-pii` README as the structural/quality reference;
+- installation, basic usage, API surface, examples, behavior/limitations, and related packages are clear where relevant;
+- examples are tested against current package exports/API;
+- no package ships an empty README.
+
+### Arabic language parity — lower priority
+
+`@textguard/plugin-ar` should eventually reach the same basic quality bar as Persian/English: real dictionaries/rules, tests, useful README, and explicit supported behavior. It is intentionally scheduled after Explain API, PII consumer DX, and README standardization.
+
+### Other technical debt still tracked
+
+- `packages/presets/` versus `packages/all/src/presets/` ownership/duplication.
+- ADR-001 documented renderer/API shape versus actual implementation.
+- overlap-resolution ranking remains order-dependent in some equal-span/equal-length cases; M5.2 makes decisions observable but does not change ranking semantics.
+- HTML Debug renderer remains missing.
 
 ---
 
-## Suggested Definition of Done (per original vision doc)
+## Suggested Definition of Done
 
-TextGuard is considered "Phase 7 complete" when PII/Compliance CI Guard, Debug Engine, Explain API, Enterprise (secrets) Preset, Benchmark Suite, VS Code Extension, Chrome Extension, and AI Platform are all finished. At current verified state, of those eight: **one is mostly done (Debug Engine), one has a concrete near-term plan and confirmed commercial intent (PII/Compliance CI Guard), one is fully missing its most commercially relevant piece (Explain API), and five haven't started.** Worth treating this as a very long-range definition rather than a near-term target — realistically each remaining un-started epic is its own multi-week-to-multi-month effort at evenings/weekends pace. Realistically, near-term effort should concentrate on Epic 0 and finishing Explain API (Epic 1 / M5) — the rest can stay dormant until those two prove the product can make money.
+Near-term success is not “finish every Phase 7 epic.” The current focus is:
+
+**reliable Debug/Explain → usable PII integration in real consumer repos → strong npm/package documentation → adoption feedback.**
+
+Only after those are stable should the roadmap expand aggressively into secrets presets, IDE/browser integrations, benchmarking, or AI features.
 
 ---
 
 ## Beyond TextGuard
 
-Guard Ecosystem (SchemaGuard, ApiGuard, ConfigGuard, FormGuard, GitGuard) remains vision-only — no code exists for any of them. Consistent with the earlier decision to defer this until TextGuard itself is validated.
+Guard Ecosystem (SchemaGuard, ApiGuard, ConfigGuard, FormGuard, GitGuard) remains vision-only. Defer it until TextGuard itself demonstrates stronger usage and product fit.
