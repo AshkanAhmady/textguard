@@ -6,7 +6,6 @@ export const arInsults: Dictionary = {
   version: "1.0.0",
   words: [
     { word: "غبي", severity: "medium", category: "insult" },
-    { word: "أحمق", severity: "medium", category: "insult" },
     { word: "احمق", severity: "medium", category: "insult" },
     { word: "حمار", severity: "medium", category: "insult" },
     { word: "كلب", severity: "medium", category: "insult" },
