@@ -1,38 +1,50 @@
 # TextGuard Package README Audit
 
-> Source of truth for the README standardization pass. Audit performed against the published package surface and updated as cleanup PRs land.
+> Source of truth for the completed README standardization pass. Audit performed against the published package surface and checked against shipped APIs/exports.
 
 ## Scope
 
 This audit covers published TextGuard packages only. Internal workspace packages such as `@repo/eslint-config` and `@repo/typescript-config` are private and are not part of the npm-facing README cleanup.
 
-Quality bar: use `@textguard/plugin-pii` as the reference for structure and developer usability: clear purpose, install command, copy/paste quick start, current API, options/limitations where relevant, and a short license section.
+Quality bar: use `@textguard/plugin-pii` as the reference for developer usability: clear purpose, install command, copy/paste quick start, current API, options/limitations where relevant, and a short license section.
 
-## Summary
+## Final status
 
-| Package | Current state | Priority | Main issue |
-| --- | --- | --- | --- |
-| `@textguard/all` | ✅ Rewritten | P0 | Main bundle README documents install, quick start, presets, exports, Explain/Debug, and current limitations. |
-| `@textguard/core` | ✅ Good | P2 | Current and useful; verify consistency in the final pass. |
-| `@textguard/plugin-pii` | ✅ Reference | P2 | Current quality reference; verify consistency in the final pass. |
-| `@textguard/plugin-fa` | ✅ Corrected | P0 | Current API and optional normalization mapping documented. |
-| `@textguard/plugin-en` | ✅ Corrected | P0 | Current API and optional leetspeak mapping documented. |
-| `@textguard/plugin-ar` | ✅ Accurate for current state | P2 | README now explicitly documents the published foundation state: empty dictionary/pack and real `arLanguage` export; implementation parity remains separate work. |
-| `@textguard/plugin-email` | ✅ Corrected | P1 | Standard structure, current API, safe copy/paste example, and detection limitation documented. |
-| `@textguard/plugin-url` | ✅ Corrected | P1 | Standard structure, current API, concise example, and detection limitation documented. |
-| `@textguard/plugin-phone` | ✅ Corrected | P0 | Detector-specific example and format-detection limitations documented. |
-| `@textguard/plugin-ip` | ✅ Corrected | P0 | Detector-specific example documented. |
-| `@textguard/plugin-uuid` | ✅ Corrected | P0 | Detector-specific example documented. |
-| `@textguard/plugin-credit-card` | ✅ Corrected | P0 | Real API and Luhn validation documented accurately. |
-| `@textguard/plugin-iban` | ✅ Corrected | P0 | IBAN detection and mod-97 validation documented accurately. |
+| Package | Status | Verification |
+| --- | --- | --- |
+| `@textguard/all` | ✅ Complete | Install, quick start, presets, exports, Explain/Debug, and current limitations documented. |
+| `@textguard/core` | ✅ Complete | Current filter API, plugin usage, Explain, Debug, options, and design boundaries documented. |
+| `@textguard/plugin-pii` | ✅ Complete / reference | Consumer setup, `init`, policy exceptions, CLI/CI, detection scope, and E2E validation documented. |
+| `@textguard/plugin-fa` | ✅ Complete | Current dictionary API and optional normalization mapping documented. |
+| `@textguard/plugin-en` | ✅ Complete | Current dictionary API and optional leetspeak mapping documented. |
+| `@textguard/plugin-ar` | ✅ Accurate for current state | Published foundation state and real exports documented without claiming implementation parity. |
+| `@textguard/plugin-email` | ✅ Complete | Current API, safe example, and detection limitation documented. |
+| `@textguard/plugin-url` | ✅ Complete | Current API, concise example, and detection limitation documented. |
+| `@textguard/plugin-phone` | ✅ Complete | Detector-specific example and format-detection limitations documented. |
+| `@textguard/plugin-ip` | ✅ Complete | Detector-specific example documented. |
+| `@textguard/plugin-uuid` | ✅ Complete | Detector-specific example documented. |
+| `@textguard/plugin-credit-card` | ✅ Complete | Current plugin API and Luhn validation documented. |
+| `@textguard/plugin-iban` | ✅ Complete | Current plugin API and mod-97 validation documented. |
 
-## Remaining work
+## Final consistency result
 
-Only the final package-wide consistency check remains. That pass should verify every published package README against the shipped exports/API, remove any remaining stale wording, and confirm the repository PII scan remains green.
+README standardization is **complete** for the current published package surface.
 
-## Standard README template
+The final pass confirms:
 
-Each published package should normally contain, in this order:
+- every published package has a non-empty developer-facing README;
+- package examples use shipped public APIs rather than stale interfaces;
+- detector claims match current validation behavior;
+- Core documents the current Debug and Explain surfaces;
+- PII documents explicit allowlist/ignore/suppression policy instead of encouraging broad scanner bypasses;
+- Arabic documentation accurately describes its current foundation-only implementation rather than implying Persian/English parity;
+- examples remain intentionally short and npm-consumer oriented.
+
+No runtime/API change is part of this documentation milestone.
+
+## Standard for future packages
+
+New published packages should normally contain, in this order:
 
 1. Package name + one-sentence purpose.
 2. Installation.
@@ -43,17 +55,17 @@ Each published package should normally contain, in this order:
 7. Related package/example links when they reduce onboarding friction.
 8. License.
 
-Keep examples short. Do not add architecture details that ordinary consumers do not need.
+Keep examples short. Do not add architecture details ordinary consumers do not need. Any future public API or behavior change must update its affected README in the same PR.
 
-## Rewrite sequence
+## Completed rewrite sequence
 
-1. ✅ `@textguard/all` — completed.
-2. ✅ `@textguard/plugin-fa` and `@textguard/plugin-en` — completed.
-3. ✅ Detection P0 group — Phone, IP, UUID, Credit Card, IBAN.
-4. ✅ Detection P1 group — Email and URL.
-5. ✅ Arabic README consistency pass — current implementation described accurately without expanding feature scope.
-6. **Next:** final consistency check across Core, PII, All, language, and detection packages.
+1. ✅ `@textguard/all`.
+2. ✅ `@textguard/plugin-fa` and `@textguard/plugin-en`.
+3. ✅ Detection P0 — Phone, IP, UUID, Credit Card, IBAN.
+4. ✅ Detection P1 — Email and URL.
+5. ✅ Arabic README consistency.
+6. ✅ Final package-wide consistency check — Core, PII, All, language, and detection packages.
 
-## Definition of done
+## Next product step
 
-README standardization is complete when every published TextGuard package has a non-empty README, every code sample matches shipped public APIs, detector descriptions match implementation/validation behavior, examples are simple enough for a normal npm consumer, and the repository PII scan remains green without hiding real documentation mistakes behind broad ignores.
+README cleanup is closed. The next planned product-quality milestone is **Arabic implementation parity**, kept separate from this documentation-only work.
