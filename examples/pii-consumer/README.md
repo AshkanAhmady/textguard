@@ -1,8 +1,10 @@
-# TextGuard PII Consumer Example
+# TextGuard PII Example
 
-This example shows how a normal application repository can install and use `@textguard/plugin-pii` for local commit protection and pull-request scanning.
+A simple example of using `@textguard/plugin-pii` in a normal project.
 
-## Install
+The main idea is simple: TextGuard checks your staged files before a commit. If it finds PII such as an email, phone number, credit card, or IBAN, the commit is stopped.
+
+## 1. Install
 
 ```bash
 npm install -D @textguard/plugin-pii husky
@@ -10,61 +12,59 @@ npx husky init
 npx textguard-pii init
 ```
 
-`textguard-pii init` adds the TextGuard command to the existing Husky pre-commit hook and creates a PII GitHub Actions workflow when one does not already exist.
+That's it for the basic setup. `textguard-pii init` connects TextGuard to your pre-commit hook and adds the GitHub Actions workflow used for pull requests.
 
-## Policy configuration
+## 2. Try it
 
-Create `textguard-pii.config.json` in the repository root when intentional test/demo values need an exception. A copyable template is included in this folder as `textguard-pii.config.example.json`.
+Create or edit a file and put an email address in it. Then stage and commit the file:
+
+```bash
+git add .
+git commit -m "test pii guard"
+```
+
+TextGuard should detect the email and stop the commit.
+
+## 3. Allow test data
+
+Sometimes a test or fixture intentionally contains something that looks like PII. Create `textguard-pii.config.json` in your project root and allow only that known value:
 
 ```json
 {
   "allowlist": {
-    "email": ["fixture-email"]
-  },
-  "ignorePaths": ["fixtures/**"],
-  "suppressions": [
-    {
-      "path": "docs/**",
-      "type": "email",
-      "matchedText": "fixture-email"
-    }
-  ]
+    "email": ["your-test-email"]
+  }
 }
 ```
 
-Use the narrowest exception possible. Prefer an exact detector-specific allowlist entry before ignoring an entire directory.
+There is also a ready-to-copy `textguard-pii.config.example.json` in this folder.
 
-## Library usage
+If an entire fixture folder should be ignored, you can use:
 
-```ts
-import { scanFile, scanText } from "@textguard/plugin-pii";
-
-const demoEmail = ["developer", "example.com"].join("@");
-
-const strictResult = scanText(`Contact: ${demoEmail}`);
-const policyAwareResult = scanFile(
-  "fixtures/example.txt",
-  `Contact: ${demoEmail}`,
-  {
-    ignorePaths: ["fixtures/**"],
-  },
-);
-
-console.log(strictResult.clean); // false
-console.log(policyAwareResult.clean); // true
+```json
+{
+  "ignorePaths": ["tests/fixtures/**"]
+}
 ```
 
-`scanText()` stays detection-only and strict. `scanFile()` applies repository policy after detection.
+Start with `allowlist` when possible. Ignore a whole path only when that is really what you want.
 
-## What CI validates
+## 4. Use it in code
 
-The `e2e.mjs` script in this folder is also executed by TextGuard's own CI. It packs the real npm package into a clean temporary repository and verifies that:
+You can also scan text directly:
 
-- `npx textguard-pii init` prepares the consumer setup;
-- non-allowlisted PII blocks a real Git commit;
-- allowlisted values are permitted;
-- ignored paths are permitted;
-- `textguard-pii-ci` passes policy-approved changes;
-- `textguard-pii-ci` fails when a new non-allowed PII value is committed.
+```ts
+import { scanText } from "@textguard/plugin-pii";
 
-That means this example doubles as executable documentation: if the documented consumer flow stops working, CI fails.
+const email = ["hello", "example.com"].join("@");
+const result = scanText(`Contact: ${email}`);
+
+console.log(result.clean); // false
+console.log(result.findings);
+```
+
+## What this example tests
+
+TextGuard's own CI runs `e2e.mjs` from this folder to make sure the real consumer flow keeps working: installation, `init`, blocked commits, allowed test data, ignored fixture paths, and pull-request scanning.
+
+You do not need to understand `e2e.mjs` to use the package. It exists so this simple documented setup cannot silently break.
