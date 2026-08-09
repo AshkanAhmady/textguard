@@ -29,7 +29,6 @@
     "build": "tsup",
     "check-types": "tsc --noEmit",
     "test": "vitest",
-    "test:e2e": "node scripts/e2e-consumer.mjs",
     "lint": "eslint ."
   },
   "repository": {
