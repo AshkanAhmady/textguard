@@ -9,7 +9,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 ## Near-term execution order
 
 1. **Package README standardization — ✅ complete.** Root README and every published package README have been reviewed and aligned with the current public surface.
-2. **Arabic language parity — 🟡 in progress.** First usable dictionary slice is implemented in the current branch; normalization and broader coverage remain separate follow-up work.
+2. **Arabic language parity — 🟡 in progress.** First usable dictionary slice is implemented in the current branch; the existing Core Arabic normalization path still needs a dedicated audit/coverage pass, then broader Arabic coverage follows.
 3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
 
 ---
@@ -51,12 +51,12 @@ The npm-facing README cleanup is complete. Future public API/behavior changes mu
 
 ### Arabic language parity — 🟡 in progress
 
-Keep Arabic parity incremental and isolated from Core refactors.
+Keep Arabic parity incremental and isolated from unrelated Core refactors.
 
 | Slice | Status | Scope |
 | --- | --- | --- |
-| AR1 — usable dictionary baseline | 🟡 Current PR | Add conservative profanity + insult dictionaries, populate `arDictionary`/`arPack`, integration tests, README, and release changeset. |
-| AR2 — Arabic normalization | ❌ Next | Decide and test normalization for Arabic letter variants/diacritics without introducing unsafe over-normalization. |
+| AR1 — usable dictionary baseline | 🟡 Current PR | Add conservative profanity + insult dictionaries, populate `arDictionary`/`arPack`, integration tests, README, and release changeset. Dictionary entries must follow the canonical text produced by the existing Core `ArabicNormalizer`. |
+| AR2 — Arabic normalization audit | ❌ Next | Audit the already-shipped Core `ArabicNormalizer`, add regression coverage for letter variants and diacritics, and only change normalization behavior if tests justify it. |
 | AR3 — coverage expansion | ❌ Later | Expand vocabulary/categories conservatively based on tests and real usage; evaluate spam/pattern resources separately. |
 | AR4 — bundle/preset parity | ❌ Later | Decide when Arabic should join higher-level presets/bundles after quality is sufficient. |
 
