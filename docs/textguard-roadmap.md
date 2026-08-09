@@ -8,7 +8,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **Package README standardization.** Current focus. Root README replacement and published-package audit are complete; next is package-by-package cleanup using `docs/PACKAGE-README-AUDIT.md` and the PII README as the quality reference.
+1. **Package README standardization.** Current focus. Root README, package audit, and `@textguard/all` README are complete; next is Persian/English README correction, followed by detector README cleanup.
 2. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` after README cleanup.
 3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
 
@@ -47,14 +47,13 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ### Package README standardization — current high priority
 
-- ✅ replace the obsolete root Turborepo-starter README with a real TextGuard project README;
-- ✅ audit every published package README; results are recorded in `docs/PACKAGE-README-AUDIT.md`;
-- 🟡 rewrite packages in audit priority order, starting with the empty `@textguard/all` README;
+- ✅ root README replaced;
+- ✅ published-package audit completed in `docs/PACKAGE-README-AUDIT.md`;
+- ✅ `@textguard/all` README rewritten with current APIs and honest preset limitations;
+- 🟡 next: fix obsolete Persian and English READMEs;
+- then correct P0 detector READMEs, standardize Email/URL, align Arabic README wording, and run a final consistency pass;
 - every published package needs a useful README;
-- use `@textguard/plugin-pii` as the structural/quality reference;
-- examples must match current APIs;
-- no empty README may ship;
-- prefer short, copy/paste-ready examples that ordinary package consumers can follow.
+- examples must match current APIs and remain simple for normal npm consumers.
 
 ### Arabic language parity — lower priority
 
