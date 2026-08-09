@@ -4,24 +4,24 @@ import type { Plugin } from "../domain/plugin";
 import type { Rule } from "../domain/rule";
 
 const rule: Rule = {
-  id: "pii.email",
-  name: "Email",
-  category: "pii",
+  id: "content.sample",
+  name: "Sample Content",
+  category: "test",
   severity: "high",
   priority: 7,
   supports: () => true,
   match: () => [
     {
-      word: "user@example.com",
-      matchedText: "user@example.com",
+      word: "sample-token",
+      matchedText: "sample-token",
       start: 0,
-      end: 16,
+      end: 12,
     },
   ],
 };
 
 const plugin: Plugin = {
-  name: "@textguard/plugin-email",
+  name: "debug-metadata-plugin",
   setup(context) {
     context.addRule(rule);
   },
@@ -29,7 +29,7 @@ const plugin: Plugin = {
 
 describe("Debug rule metadata", () => {
   it("preserves plugin and rule metadata on match lifecycle events", () => {
-    const session = createFilter({ plugins: [plugin] }).debug("user@example.com");
+    const session = createFilter({ plugins: [plugin] }).debug("sample-token");
     const matchEvents = session
       .getEvents()
       .filter(
@@ -42,12 +42,12 @@ describe("Debug rule metadata", () => {
     expect(matchEvents.length).toBeGreaterThan(0);
 
     for (const event of matchEvents) {
-      expect(event.plugin).toBe("@textguard/plugin-email");
-      expect(event.rule).toBe("Email");
+      expect(event.plugin).toBe("debug-metadata-plugin");
+      expect(event.rule).toBe("Sample Content");
       expect(event.ruleMetadata).toEqual({
-        id: "pii.email",
-        name: "Email",
-        category: "pii",
+        id: "content.sample",
+        name: "Sample Content",
+        category: "test",
         severity: "high",
         priority: 7,
       });
