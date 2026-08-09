@@ -24,29 +24,24 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 - relevant `examples/` projects
 - this file
 
-Prefer executable examples when a feature has a concrete consumer setup path. When practical, CI should exercise the same example developers are expected to follow so examples and product behavior cannot drift silently.
-
 ## Completed work sequence — Explain API
 
-Epic 1 / M5 Explain API is complete: Debug hardening, Explain domain/builder, public `filter.explain()`, integration tests, and core public docs are merged.
+Epic 1 / M5 Explain API is complete.
 
 ## Completed work sequence — PII Consumer DX Hardening
 
-1. **PII DX 1 — consumer init foundation — ✅ merged.**
-2. **PII DX 2 — policy/configuration layer — ✅ merged.**
-3. **PII DX 3 — external end-to-end validation — ✅ merged and green.**
-4. **PII DX 4 — final public docs — ✅ merged.**
+PII consumer init, shared policy configuration, external E2E validation, and final public docs are complete through M0.6.
 
 ## Current work sequence — README standardization
 
 Stay on this sequence before Arabic parity or broader roadmap features:
 
 1. **Root README — ✅ merged.**
-2. **Published package audit — ✅ merged.** Findings and priorities are in `docs/PACKAGE-README-AUDIT.md`.
+2. **Published package audit — ✅ merged.**
 3. **`@textguard/all` README — ✅ merged.**
-4. **Persian + English READMEs — 🟡 current PR.** Replace removed APIs, repair markdown, and document optional normalization mappings explicitly.
-5. **Detection P0 READMEs — next.** Fix Phone, IP, UUID, Credit Card, and IBAN correctness issues.
-6. **Detection P1 READMEs.** Standardize Email and URL.
+4. **Persian + English READMEs — ✅ merged.**
+5. **Detection P0 READMEs — ✅ current branch.** Phone, IP, UUID, Credit Card, and IBAN now have detector-specific examples and accurate validation notes.
+6. **Detection P1 READMEs — next.** Standardize Email and URL.
 7. **Arabic README consistency.** Keep scope documentation-only until Arabic parity work begins.
 8. **Final consistency pass.** Confirm every published package is current, non-empty, and easy to follow.
 
@@ -57,13 +52,13 @@ Stay on this sequence before Arabic parity or broader roadmap features:
 - Every code sample must match the current exported API.
 - Detector README claims must match actual validation behavior.
 - Avoid raw PII literals in repository docs when equivalent safe examples can be assembled without weakening PII enforcement.
-- Do not expand Arabic implementation scope during documentation cleanup; describe its current state accurately and leave parity work for its planned phase.
+- Do not expand Arabic implementation scope during documentation cleanup.
 
 ## Priorities after README standardization
 
-1. Arabic language parity at lower priority.
+1. Arabic language parity.
 2. Reassess adoption feedback and the broader roadmap before expanding feature breadth.
 
 ## Current branch note
 
-`agent/language-readmes` is documentation-only. It corrects the Persian and English package documentation and advances the next step to the P0 detection-plugin README group.
+`agent/detection-p0-readmes` is documentation-only. It corrects the remaining P0 detector READMEs and advances the next step to Email/URL standardization.
