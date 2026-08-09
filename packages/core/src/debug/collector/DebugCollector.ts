@@ -1,9 +1,22 @@
 import { DebugSession } from "../models/DebugSession";
+import type { DebugRuleMetadata } from "../models/DebugRuleMetadata";
 import type { DebugEvent } from "../events";
 import type { Match } from "../../domain/match";
 import type { ExecutionObserver } from "../observer/ExecutionObserver";
 import type { RegisteredRule } from "../../domain/registeredRule";
 import type { DistributiveOmit } from "../types/DistributiveOmit";
+
+function toRuleMetadata(registeredRule: RegisteredRule): DebugRuleMetadata {
+  const { rule } = registeredRule;
+
+  return {
+    id: rule.id,
+    name: rule.name,
+    category: rule.category,
+    severity: rule.severity,
+    priority: rule.priority,
+  };
+}
 
 export class DebugCollector implements ExecutionObserver {
   private readonly events: DebugEvent[] = [];
@@ -66,6 +79,7 @@ export class DebugCollector implements ExecutionObserver {
       type: "match:found",
       plugin: registeredRule.plugin,
       rule: registeredRule.rule.name,
+      ruleMetadata: toRuleMetadata(registeredRule),
       match,
       timestamp: Date.now(),
     });
@@ -76,6 +90,7 @@ export class DebugCollector implements ExecutionObserver {
       type: "match:accepted",
       plugin: registeredRule.plugin,
       rule: registeredRule.rule.name,
+      ruleMetadata: toRuleMetadata(registeredRule),
       match,
       timestamp: Date.now(),
     });
@@ -90,6 +105,7 @@ export class DebugCollector implements ExecutionObserver {
       type: "match:rejected",
       plugin: registeredRule.plugin,
       rule: registeredRule.rule.name,
+      ruleMetadata: toRuleMetadata(registeredRule),
       match,
       reason: "overlap",
       winner,
