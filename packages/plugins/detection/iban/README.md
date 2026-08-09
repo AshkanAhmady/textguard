@@ -1,6 +1,6 @@
 # @textguard/plugin-iban
 
-Official iban Detection Plugin for TextGuard.
+IBAN detection plugin for TextGuard.
 
 ## Installation
 
@@ -8,25 +8,36 @@ Official iban Detection Plugin for TextGuard.
 pnpm add @textguard/core @textguard/plugin-iban
 ```
 
-## Usage
+## Quick start
 
 ```ts
 import { createFilter } from "@textguard/core";
 import { ibanPlugin } from "@textguard/plugin-iban";
 
-const guard = createFilter();
+const filter = createFilter({
+  plugins: [ibanPlugin()],
+});
 
-guard.use(ibanPlugin());
+const iban = ["GB82", "WEST", "1234", "5698", "7654", "32"].join("");
+const matches = filter.findBadWords(`IBAN: ${iban}`);
 
-const result = guard.findBadWords("contact me at hello@example.com");
+console.log(matches.length > 0); // true
 ```
 
-## Features
+You can also register the plugin later with `filter.use(ibanPlugin())`.
 
-- iban detection
-- Regex based
-- Plugin architecture
-- TypeScript support
+## Validation behavior
+
+The detector validates IBAN candidates with the standard mod-97 checksum instead of relying only on shape matching.
+
+A valid checksum means the text is structurally consistent with an IBAN. It does not verify that the bank account exists, is active, or belongs to a particular person.
+
+## Filtering
+
+```ts
+const result = filter.filter(`IBAN: ${iban}`);
+console.log(result.filteredText);
+```
 
 ## License
 
