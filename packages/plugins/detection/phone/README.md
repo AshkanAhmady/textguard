@@ -1,12 +1,6 @@
 # @textguard/plugin-phone
 
-Official phone Detection Plugin for TextGuard.
-
-This plugin detects phones in text using a built-in regular expression and integrates seamlessly with the TextGuard plugin system.
-
-> **Status:** Stable
-
----
+Phone-number detection plugin for TextGuard.
 
 ## Installation
 
@@ -14,55 +8,36 @@ This plugin detects phones in text using a built-in regular expression and integ
 pnpm add @textguard/core @textguard/plugin-phone
 ```
 
----
-
-## Usage
+## Quick start
 
 ```ts
 import { createFilter } from "@textguard/core";
 import { phonePlugin } from "@textguard/plugin-phone";
 
-const filter = createFilter();
+const filter = createFilter({
+  plugins: [phonePlugin()],
+});
 
-filter.use(phonePlugin());
+const phone = ["+1", "202", "555", "0147"].join(" ");
+const matches = filter.findBadWords(`Call me at ${phone}`);
 
-const result = filter.findBadWords("Visit https://textguard.dev");
-
-console.log(result);
+console.log(matches.length > 0); // true
 ```
 
----
+You can also register the plugin later with `filter.use(phonePlugin())`.
 
-## Features
+## What it detects
 
-- HTTP phone detection
-- HTTPS phone detection
-- Plugin architecture
-- TypeScript support
+The current detector recognizes phone-like numeric patterns with optional country codes, spaces, dots, dashes, and parentheses.
 
----
+This is format detection rather than carrier/ownership verification. A match means the text looks like a phone number; TextGuard does not verify that the number is assigned or reachable.
 
-## Example
+## Filtering
 
 ```ts
-const filter = createFilter();
-
-filter.use(phonePlugin());
-
-const result = filter.filter("Visit https://google.com");
-
+const result = filter.filter(`Call me at ${phone}`);
 console.log(result.filteredText);
 ```
-
----
-
-## Compatibility
-
-| Package         | Version |
-| --------------- | ------- |
-| @textguard/core | ^1.x    |
-
----
 
 ## License
 
