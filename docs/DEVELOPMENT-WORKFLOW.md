@@ -40,10 +40,10 @@ Stay on this sequence before Arabic parity or broader roadmap features:
 2. **Published package audit — ✅ merged.**
 3. **`@textguard/all` README — ✅ merged.**
 4. **Persian + English READMEs — ✅ merged.**
-5. **Detection P0 READMEs — ✅ current branch.** Phone, IP, UUID, Credit Card, and IBAN now have detector-specific examples and accurate validation notes.
-6. **Detection P1 READMEs — next.** Standardize Email and URL.
-7. **Arabic README consistency.** Keep scope documentation-only until Arabic parity work begins.
-8. **Final consistency pass.** Confirm every published package is current, non-empty, and easy to follow.
+5. **Detection P0 READMEs — ✅ merged.**
+6. **Detection P1 READMEs — ✅ merged.** Email and URL now use the current API and standard package structure.
+7. **Arabic README consistency — ✅ current branch.** Document the exact current exports and foundation-only capability without expanding implementation scope.
+8. **Final consistency pass — next.** Confirm every published package README is current, non-empty, easy to follow, and aligned with shipped exports.
 
 ## README rewrite rules
 
@@ -61,4 +61,4 @@ Stay on this sequence before Arabic parity or broader roadmap features:
 
 ## Current branch note
 
-`agent/detection-p0-readmes` is documentation-only. It corrects the remaining P0 detector READMEs and advances the next step to Email/URL standardization.
+`agent/arabic-readme-consistency` is documentation-only. It fixes the Arabic README/export drift and makes the package's current empty dictionary/pack state explicit. The next branch is the final package-wide README consistency pass.

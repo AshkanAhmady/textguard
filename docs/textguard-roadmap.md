@@ -8,7 +8,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **Package README standardization.** Current focus. Root README, package audit, `@textguard/all`, Persian/English, and all detection README corrections are complete; next is Arabic README consistency, then the final package-wide pass.
+1. **Package README standardization.** Root README, package audit, `@textguard/all`, Persian/English, all detection READMEs, and Arabic README consistency are complete; only the final package-wide consistency pass remains.
 2. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` after README cleanup.
 3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
 
@@ -53,13 +53,14 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 - ✅ Persian and English READMEs corrected;
 - ✅ P0 detector READMEs corrected — Phone, IP, UUID, Credit Card, IBAN;
 - ✅ P1 detector READMEs standardized — Email and URL;
-- 🟡 next: align Arabic README wording, then run a final consistency pass;
+- ✅ Arabic README now matches the actual foundation-only implementation state;
+- 🟡 next: final package-wide consistency pass;
 - every published package needs a useful README;
 - examples must match current APIs and remain simple for normal npm consumers.
 
 ### Arabic language parity — lower priority
 
-Bring `@textguard/plugin-ar` to the Persian/English quality bar after README standardization.
+`@textguard/plugin-ar` is currently a published foundation: `arDictionary` has no words and `arPack` is empty. Bring it to the Persian/English quality bar only after README standardization is closed.
 
 ### Other technical debt
 
@@ -72,4 +73,4 @@ Bring `@textguard/plugin-ar` to the Persian/English quality bar after README sta
 
 ## Current product-quality focus
 
-**strong npm/package documentation → simpler onboarding → adoption feedback.**
+**finish README consistency → Arabic parity → adoption feedback.**

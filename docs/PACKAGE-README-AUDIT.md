@@ -13,11 +13,11 @@ Quality bar: use `@textguard/plugin-pii` as the reference for structure and deve
 | Package | Current state | Priority | Main issue |
 | --- | --- | --- | --- |
 | `@textguard/all` | ✅ Rewritten | P0 | Main bundle README documents install, quick start, presets, exports, Explain/Debug, and current limitations. |
-| `@textguard/core` | ✅ Good | P2 | Current and useful; only consistency polish may be needed later. |
-| `@textguard/plugin-pii` | ✅ Reference | P2 | Current quality reference; no rewrite needed now. |
+| `@textguard/core` | ✅ Good | P2 | Current and useful; verify consistency in the final pass. |
+| `@textguard/plugin-pii` | ✅ Reference | P2 | Current quality reference; verify consistency in the final pass. |
 | `@textguard/plugin-fa` | ✅ Corrected | P0 | Current API and optional normalization mapping documented. |
 | `@textguard/plugin-en` | ✅ Corrected | P0 | Current API and optional leetspeak mapping documented. |
-| `@textguard/plugin-ar` | 🟡 Usable but thin | P2 | Next documentation step: align wording with its current capabilities without expanding implementation scope. |
+| `@textguard/plugin-ar` | ✅ Accurate for current state | P2 | README now explicitly documents the published foundation state: empty dictionary/pack and real `arLanguage` export; implementation parity remains separate work. |
 | `@textguard/plugin-email` | ✅ Corrected | P1 | Standard structure, current API, safe copy/paste example, and detection limitation documented. |
 | `@textguard/plugin-url` | ✅ Corrected | P1 | Standard structure, current API, concise example, and detection limitation documented. |
 | `@textguard/plugin-phone` | ✅ Corrected | P0 | Detector-specific example and format-detection limitations documented. |
@@ -28,15 +28,7 @@ Quality bar: use `@textguard/plugin-pii` as the reference for structure and deve
 
 ## Remaining work
 
-### P1 — corrected
-
-- ✅ Email README now follows the standard package structure and avoids a raw email literal in repository source.
-- ✅ URL README now follows the same concise detector structure.
-
-### P2 — next
-
-- Arabic README is usable for the current thin package, but capability/status wording should match implementation without implying Persian/English parity.
-- Core and PII are already good references and only need verification in the final consistency pass.
+Only the final package-wide consistency check remains. That pass should verify every published package README against the shipped exports/API, remove any remaining stale wording, and confirm the repository PII scan remains green.
 
 ## Standard README template
 
@@ -59,8 +51,8 @@ Keep examples short. Do not add architecture details that ordinary consumers do 
 2. ✅ `@textguard/plugin-fa` and `@textguard/plugin-en` — completed.
 3. ✅ Detection P0 group — Phone, IP, UUID, Credit Card, IBAN.
 4. ✅ Detection P1 group — Email and URL.
-5. **Next:** Arabic README consistency pass without expanding Arabic implementation scope.
-6. Final consistency check across Core, PII, All, language, and detection packages.
+5. ✅ Arabic README consistency pass — current implementation described accurately without expanding feature scope.
+6. **Next:** final consistency check across Core, PII, All, language, and detection packages.
 
 ## Definition of done
 

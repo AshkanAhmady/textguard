@@ -6,7 +6,7 @@
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI. The core stays plugin-oriented so new detectors can be added without coupling them into the engine.
 
-Current product focus is **package README quality and simpler npm onboarding**, then lower-priority Arabic parity.
+Current product focus is **finish package README consistency**, then Arabic implementation parity.
 
 ## 2. Repository and architecture
 
@@ -56,18 +56,11 @@ Architecture decisions are recorded under `docs/architecture/`.
 
 - Persian: established/full relative to the current language architecture. README uses the current `faDictionary` API and optional `faLookalikesMapping`.
 - English: established/full relative to the current language architecture. README uses the current `enDictionary` API and optional `enLeetspeakMapping`.
-- Arabic: published but intentionally thinner; parity work is tracked after README cleanup.
+- Arabic: published foundation only. Current source exports `arDictionary`, `arPack`, and `arLanguage`; `arDictionary.words` is empty and `arPack` is empty. The README now states this explicitly. Arabic parity remains separate implementation work after documentation cleanup.
 
 ### Structured-data detection
 
-Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist.
-
-Current documentation status:
-
-- Phone, IP, and UUID READMEs now demonstrate their actual detector behavior with current plugin APIs.
-- Credit Card README uses `creditCardPlugin()` and documents Luhn validation.
-- IBAN README documents mod-97 validation.
-- Email and URL remain the next documentation-standardization step.
+Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist. Their package READMEs now use current APIs and detector-specific examples; Credit Card documents Luhn validation and IBAN documents mod-97 validation.
 
 ### PII package
 
@@ -90,15 +83,15 @@ Completed:
 - ✅ published package audit;
 - ✅ `@textguard/all` README;
 - ✅ Persian and English README correctness pass;
-- ✅ P0 detector README fixes: Phone, IP, UUID, Credit Card, IBAN.
+- ✅ P0 detector READMEs: Phone, IP, UUID, Credit Card, IBAN;
+- ✅ P1 detector READMEs: Email and URL;
+- ✅ Arabic README consistency pass reflecting the actual foundation-only state.
 
 Remaining sequence:
 
-1. Email and URL README standardization.
-2. Conservative Arabic README consistency pass.
-3. Final package-wide consistency check.
-4. Arabic implementation parity.
-5. Reassess adoption and broader roadmap priorities.
+1. Final package-wide README consistency check.
+2. Arabic implementation parity.
+3. Reassess adoption and broader roadmap priorities.
 
 Examples must stay short, copy/paste-ready, compatible with shipped public APIs, and safe for the repository PII scan without broad ignore rules.
 
