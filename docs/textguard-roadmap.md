@@ -8,7 +8,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **Package README standardization.** Current focus. Root README replacement is implemented; next is a published-package README audit, followed by package-by-package cleanup using the PII README as the quality reference.
+1. **Package README standardization.** Current focus. Root README replacement and published-package audit are complete; next is package-by-package cleanup using `docs/PACKAGE-README-AUDIT.md` and the PII README as the quality reference.
 2. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` after README cleanup.
 3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
 
@@ -48,7 +48,8 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 ### Package README standardization — current high priority
 
 - ✅ replace the obsolete root Turborepo-starter README with a real TextGuard project README;
-- 🟡 audit every published package README;
+- ✅ audit every published package README; results are recorded in `docs/PACKAGE-README-AUDIT.md`;
+- 🟡 rewrite packages in audit priority order, starting with the empty `@textguard/all` README;
 - every published package needs a useful README;
 - use `@textguard/plugin-pii` as the structural/quality reference;
 - examples must match current APIs;
