@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process";
 import { scanText } from "./scan";
 import { toFileResult, formatConsoleReport, type FileResult } from "./report";
+import { initializeConsumer, printInitResult } from "./init";
 
 function getStagedFiles(): string[] {
   const output = execSync("git diff --cached --name-only --diff-filter=ACM", {
@@ -19,7 +20,7 @@ function getStagedContent(path: string): string | null {
   }
 }
 
-function main(): void {
+function scanStagedFiles(): void {
   const files = getStagedFiles();
   const results: FileResult[] = [];
 
@@ -45,6 +46,17 @@ function main(): void {
   }
 
   process.exit(0);
+}
+
+function main(): void {
+  const command = process.argv[2];
+
+  if (command === "init") {
+    printInitResult(initializeConsumer());
+    process.exit(0);
+  }
+
+  scanStagedFiles();
 }
 
 main();
