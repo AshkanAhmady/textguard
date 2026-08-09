@@ -6,7 +6,7 @@
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI. The core stays plugin-oriented so new detectors can be added without coupling them into the engine.
 
-Package README standardization is complete. Current product-quality feature work is **Arabic implementation parity**.
+Current product-quality feature work is **Arabic implementation parity**.
 
 ## 2. Repository and architecture
 
@@ -20,13 +20,7 @@ Key packages:
 - detection plugins: Email, URL, Phone, IP, UUID, Credit Card, IBAN
 - `packages/plugins/pii` → `@textguard/plugin-pii`
 
-Core architecture:
-
-- `createFilter()` / `createEngine()` — public instance creation
-- `EnginePipeline` — normalization and rule execution
-- `PluginManager` / `RuleCollection` — extension registration
-- `DebugCollector` / `DebugSession` — authoritative execution diagnostics
-- `ExplainBuilder` — structured projection of DebugSession; no second detection engine
+Core architecture remains plugin-oriented. Arabic parity uses the existing `Dictionary` contract and the existing normalization pipeline; no Arabic-specific Core API is being introduced.
 
 ## 3. Current public core API
 
@@ -44,68 +38,62 @@ filter.use(plugin: Plugin): void;
 ## 4. Debug and Explain architecture
 
 - DebugSession stores original input, normalized input, final overlap-resolved matches, and events.
-- Match lifecycle is explicit: `match:found` is a candidate, then `match:accepted` or `match:rejected` records final resolution.
-- Explain only projects final accepted matches and uses the same debug-capable execution path.
-- Explain reasons remain intentionally generic (`rule-match`) until rules expose richer structured facts.
-
-Architecture decisions are recorded under `docs/architecture/`.
+- Explain projects final accepted matches from the same debug-capable execution path.
+- Explain does not introduce a second detection engine.
 
 ## 5. Plugin state
 
 ### Language plugins
 
-- Persian: established/full relative to the current language architecture. README uses the current `faDictionary` API and optional `faLookalikesMapping`.
-- English: established/full relative to the current language architecture. README uses the current `enDictionary` API and optional `enLeetspeakMapping`.
-- Arabic: parity is now in progress. AR1 adds conservative `arProfanity` and `arInsults` resources and populates the existing `arDictionary` and `arPack` exports without changing Core or removing existing Arabic exports. Dictionary entries follow the canonical text produced by Core's already-shipped `ArabicNormalizer`.
+- Persian: established/full relative to the current language architecture.
+- English: established/full relative to the current language architecture.
+- Arabic: parity is in progress. AR1 established usable profanity/insult dictionaries. AR2 hardens the already-existing Core Arabic normalization and expands high-confidence vocabulary while retaining the same public exports.
 
 ### Structured-data detection
 
-Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist. Their package READMEs use current APIs and detector-specific examples; Credit Card documents Luhn validation and IBAN documents mod-97 validation.
+Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist. Credit Card uses Luhn validation and IBAN uses mod-97 validation.
 
 ### PII package
 
-`@textguard/plugin-pii` combines the relevant PII detectors and provides scanning/CLI/CI surfaces. Consumer capabilities through M0.6 are complete, including `init`, shared policy configuration, executable consumer examples, and external E2E validation.
+`@textguard/plugin-pii` provides strict scanning plus consumer policy for commits/CI. Consumer DX is complete through M0.6.
 
 ## 6. Completed milestone — PII Consumer DX Hardening
 
-1. Consumer init foundation — ✅ merged.
-2. Shared policy/configuration layer — ✅ merged.
-3. External end-to-end validation — ✅ merged and green.
-4. Final public documentation — ✅ merged.
-
-M0.7 (paid tier) remains intentionally later until open-source usage validates demand.
+Consumer init, shared policy configuration, external E2E validation, and final public documentation are complete through M0.6. M0.7 remains intentionally later until usage validates demand.
 
 ## 7. Completed milestone — Package README standardization
 
-The npm-facing documentation cleanup is complete. The permanent rule remains: public behavior/API changes update affected documentation in the same PR.
+The npm-facing documentation cleanup is complete. Public behavior/API changes must continue updating affected documentation in the same PR.
 
 ## 8. Current milestone — Arabic implementation parity
 
-Arabic parity is intentionally incremental and should not trigger unrelated Core refactors.
+Arabic parity stays incremental and reviewable.
 
-### AR1 — usable dictionary baseline — current PR
+### AR1 — usable dictionary baseline — ✅ merged
 
-- add `arProfanity` and `arInsults` dictionaries;
-- populate the existing `arDictionary` from those resources;
-- populate the existing `arPack` while preserving its export name;
-- retain `arLanguage` unchanged;
-- keep dictionary entries compatible with the canonical output of the current Core `ArabicNormalizer`;
-- add integration tests through the public `createFilter()` API, including normalized Arabic variants;
-- update the package README and add a Changesets minor release entry.
+- `arProfanity` and `arInsults` added;
+- existing `arDictionary`, `arPack`, and `arLanguage` preserved;
+- public `createFilter()` integration tests added;
+- package README and release metadata updated.
 
-### AR2 — normalization audit — next
+### AR2 — normalization + coverage hardening — current PR
 
-Core already ships `ArabicNormalizer`, including mappings such as `أ/إ/آ → ا` and `ة → ه`. AR2 should audit that existing behavior rather than introduce a second normalization path. Add explicit regression tests for letter variants and diacritics, then change Core normalization only when a concrete failing case justifies it. Avoid transformations that create broad false positives.
+- audit the existing Core `ArabicNormalizer` instead of adding a second normalization path;
+- remove common Arabic diacritics before matching;
+- normalize Alef Maqsura (`ى`) consistently with the current shared Yeh canonical form;
+- retain existing normalization for Alef/Hamza variants and Taa Marbuta;
+- expand Arabic profanity/insult dictionaries with common, high-confidence terms;
+- add public API regression tests for diacritics, letter variants, expanded vocabulary, and ordinary benign Arabic text.
+
+Arabic vocabulary is not considered a finite “complete list.” Dialect, spelling, and context vary substantially, so further expansion must be driven by tested coverage and false-positive evidence rather than bulk word imports.
 
 ### AR3 / AR4 — later
 
-Expand Arabic coverage/categories conservatively, then decide whether quality is sufficient for bundle/preset inclusion. Spam/pattern resources should not be copied mechanically from other languages.
+AR3 may add dialect-specific coverage and evaluate spam/pattern resources. AR4 decides whether Arabic quality is sufficient for bundle/preset inclusion.
 
 ## 9. Known technical debt
 
-Still tracked:
-
-- Arabic parity beyond AR1.
+- Arabic parity beyond AR2.
 - `packages/presets/` vs `packages/all/src/presets/` ownership/duplication.
 - existing `enterprisePreset` naming collides conceptually with the future secrets/JWT/API-key roadmap feature.
 - ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
@@ -119,11 +107,12 @@ Every coherent change-set should:
 1. start from latest `main` on its own branch;
 2. include relevant tests when behavior changes;
 3. update stale roadmap/project/ADR/README/example documentation in the same branch;
-4. open a PR for maintainer review;
-5. merge only with required checks green;
-6. delete the feature branch after merge.
+4. include Changesets when published package behavior changes;
+5. open a PR for maintainer review;
+6. merge only with required checks green;
+7. delete the feature branch after merge.
 
-See `docs/DEVELOPMENT-WORKFLOW.md` for the persistent execution sequence.
+When a merged Changeset means an npm package should be released, explicitly remind the maintainer which package(s) and release level are pending.
 
 ## 11. Long-term roadmap guardrail
 

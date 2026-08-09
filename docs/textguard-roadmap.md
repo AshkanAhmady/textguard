@@ -8,8 +8,8 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **Package README standardization — ✅ complete.** Root README and every published package README have been reviewed and aligned with the current public surface.
-2. **Arabic language parity — 🟡 in progress.** First usable dictionary slice is implemented in the current branch; the existing Core Arabic normalization path still needs a dedicated audit/coverage pass, then broader Arabic coverage follows.
+1. **Package README standardization — ✅ complete.**
+2. **Arabic language parity — 🟡 in progress.** AR1 is merged. AR2 now audits normalization and expands high-confidence vocabulary in one reviewable slice.
 3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
 
 ---
@@ -27,7 +27,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 | M0.3 — Pre-commit Hook Mode | ✅ Done | Scanner blocks real commits; `npx textguard-pii init` wires Husky safely and shared policy configuration is enforced. |
 | M0.4 — GitHub Action Mode | ✅ Done | CI scanner and generated consumer workflow exist; packaged E2E verifies CI pass/fail behavior using the shared policy. |
 | M0.5 — Reporting Output | ✅ Done | Console/markdown reporting exists. |
-| M0.6 — Consumer Setup / DX | ✅ Done | Copy/paste setup, `init`, shared config (`allowlist`, `ignorePaths`, suppressions), executable consumer example, and packaged external E2E validation are complete. |
+| M0.6 — Consumer Setup / DX | ✅ Done | Copy/paste setup, `init`, shared config, executable consumer example, and packaged external E2E validation are complete. |
 | M0.7 — Paid Tier | ❌ Later | Only after open-source usage validates demand. |
 
 ### Epic 1 — Debug Engine ⭐⭐⭐⭐⭐
@@ -47,18 +47,18 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ### Package README standardization — ✅ complete
 
-The npm-facing README cleanup is complete. Future public API/behavior changes must update affected READMEs in the same PR.
+Future public API/behavior changes must update affected READMEs in the same PR.
 
 ### Arabic language parity — 🟡 in progress
 
-Keep Arabic parity incremental and isolated from unrelated Core refactors.
-
 | Slice | Status | Scope |
 | --- | --- | --- |
-| AR1 — usable dictionary baseline | 🟡 Current PR | Add conservative profanity + insult dictionaries, populate `arDictionary`/`arPack`, integration tests, README, and release changeset. Dictionary entries must follow the canonical text produced by the existing Core `ArabicNormalizer`. |
-| AR2 — Arabic normalization audit | ❌ Next | Audit the already-shipped Core `ArabicNormalizer`, add regression coverage for letter variants and diacritics, and only change normalization behavior if tests justify it. |
-| AR3 — coverage expansion | ❌ Later | Expand vocabulary/categories conservatively based on tests and real usage; evaluate spam/pattern resources separately. |
+| AR1 — usable dictionary baseline | ✅ Done | Conservative profanity + insult dictionaries, populated `arDictionary`/`arPack`, public API tests, README, and release metadata. |
+| AR2 — normalization + coverage hardening | 🟡 Current PR | Audit the existing Core normalizer, add diacritic/Alef-Maqsura coverage, expand common high-confidence profanity/insults, and add benign regression cases. |
+| AR3 — dialect/coverage expansion | ❌ Later | Expand dialect-specific vocabulary only with evidence and false-positive tests; evaluate spam/pattern resources separately. |
 | AR4 — bundle/preset parity | ❌ Later | Decide when Arabic should join higher-level presets/bundles after quality is sufficient. |
+
+Arabic profanity coverage is intentionally not treated as a finite “complete list”; dialect and spelling variation require incremental, tested expansion.
 
 ### Other technical debt
 
