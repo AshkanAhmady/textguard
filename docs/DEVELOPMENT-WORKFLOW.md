@@ -38,10 +38,10 @@ Root, package audit, All, language, detector, Arabic consistency, and final pack
 
 ## Current work sequence — Arabic implementation parity
 
-Keep Arabic parity incremental and do not broaden it into Core refactors.
+Keep Arabic parity incremental and do not broaden it into unrelated Core refactors.
 
-1. **AR1 — usable dictionary baseline — 🟡 current PR.** Add conservative profanity and insult dictionaries, populate existing `arDictionary`/`arPack`, test through `createFilter()`, update README, and include a Changesets minor entry.
-2. **AR2 — Arabic normalization — next.** Decide and test Arabic letter/diacritic normalization separately. Avoid unsafe transformations that create broad false positives.
+1. **AR1 — usable dictionary baseline — 🟡 current PR.** Add conservative profanity and insult dictionaries, populate existing `arDictionary`/`arPack`, keep dictionary entries compatible with Core's canonical Arabic normalization, test through `createFilter()`, update README, and include a Changesets minor entry.
+2. **AR2 — Arabic normalization audit — next.** Core already ships `ArabicNormalizer`; audit its current mappings and add focused regression coverage for Arabic letter variants and diacritics before changing behavior.
 3. **AR3 — coverage expansion.** Expand vocabulary/categories conservatively; evaluate spam/pattern resources independently rather than copying them from Persian/English.
 4. **AR4 — bundle/preset parity.** Only include Arabic in broader presets/bundles after coverage and normalization quality are sufficient.
 
@@ -49,8 +49,9 @@ Keep Arabic parity incremental and do not broaden it into Core refactors.
 
 - Preserve existing exports (`arDictionary`, `arPack`, `arLanguage`) where practical.
 - New resources should use the existing `Dictionary` contract instead of adding language-specific Core APIs.
+- Arabic dictionary entries must align with the canonical text produced by the current Core normalization pipeline.
 - Test user-visible behavior through the public `createFilter()` API, not only raw arrays.
-- Separate vocabulary expansion from normalization changes so false-positive regressions are reviewable.
+- Treat normalization changes separately from vocabulary expansion so false-positive regressions are reviewable.
 - Keep README and release metadata aligned with each runtime slice.
 
 ## README maintenance rules
@@ -67,4 +68,4 @@ Reassess adoption feedback and the broader roadmap before expanding feature brea
 
 ## Current branch note
 
-`agent/arabic-usable-baseline` is the first runtime Arabic parity slice. It intentionally limits scope to a usable profanity/insult baseline and leaves normalization and broader coverage for separate reviewable PRs.
+`agent/arabic-usable-baseline` is the first runtime Arabic parity slice. It intentionally limits scope to a usable profanity/insult baseline. The next PR audits the already-existing Arabic normalizer instead of adding a second normalization path.
