@@ -45,6 +45,7 @@ try {
   run("git", ["config", "user.name", "TextGuard E2E"], consumerDir);
   run("git", ["config", "user.email", "textguard-e2e@example.invalid"], consumerDir);
   run("npm", ["init", "-y"], consumerDir);
+  writeFileSync(join(consumerDir, ".gitignore"), "node_modules/\n");
   run("npm", ["install", "-D", tarball, "husky@9"], consumerDir);
   run("npx", ["husky", "init"], consumerDir);
   run("npx", ["textguard-pii", "init"], consumerDir);
