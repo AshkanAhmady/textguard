@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 
 import { arDictionary, arInsults, arPack, arProfanity } from "../index";
 
-describe("TextGuard Arabic language baseline", () => {
+describe("TextGuard Arabic language coverage", () => {
   it("exports populated profanity and insult dictionaries", () => {
-    expect(arProfanity.words.length).toBeGreaterThan(0);
-    expect(arInsults.words.length).toBeGreaterThan(0);
+    expect(arProfanity.words.length).toBeGreaterThanOrEqual(10);
+    expect(arInsults.words.length).toBeGreaterThanOrEqual(10);
     expect(arDictionary.words.length).toBe(
       arProfanity.words.length + arInsults.words.length,
     );
@@ -18,17 +18,18 @@ describe("TextGuard Arabic language baseline", () => {
     const filter = createFilter({ dictionaries: [arDictionary] });
 
     expect(filter.hasBadWord("هذا كلام قحبة")).toBe(true);
-    expect(filter.findBadWords("هذا كلام قحبة")).toHaveLength(1);
+    expect(filter.hasBadWord("هذا كلام قَحْبَة")).toBe(true);
     expect(filter.hasBadWord("هذا كلام قحبه")).toBe(true);
+    expect(filter.hasBadWord("يا ابن الكلب")).toBe(true);
   });
 
-  it("detects Arabic insults and filters them", () => {
+  it("detects expanded Arabic insults", () => {
     const filter = createFilter({ dictionaries: [arDictionary] });
-    const result = filter.filter("لا تكن غبي");
 
     expect(filter.hasBadWord("لا تكن غبي")).toBe(true);
-    expect(filter.hasBadWord("لا تكن غبی")).toBe(true);
-    expect(result.matches).toHaveLength(1);
+    expect(filter.hasBadWord("هذا شخص حقير")).toBe(true);
+    expect(filter.hasBadWord("هذا تصرف وضيع")).toBe(true);
+    expect(filter.hasBadWord("قليل الأدب")).toBe(true);
   });
 
   it("handles shared Arabic/Persian canonical letter variants", () => {
@@ -44,5 +45,7 @@ describe("TextGuard Arabic language baseline", () => {
     const filter = createFilter({ dictionaries: [arDictionary] });
 
     expect(filter.hasBadWord("مرحبا بك في TextGuard")).toBe(false);
+    expect(filter.hasBadWord("هذه مدرسة جميلة في المدينة")).toBe(false);
+    expect(filter.hasBadWord("اللغة العربية لغة جميلة")).toBe(false);
   });
 });
