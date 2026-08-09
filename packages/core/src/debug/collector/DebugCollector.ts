@@ -70,4 +70,30 @@ export class DebugCollector implements ExecutionObserver {
       timestamp: Date.now(),
     });
   }
+
+  public onMatchAccepted(registeredRule: RegisteredRule, match: Match): void {
+    this.addEvent({
+      type: "match:accepted",
+      plugin: registeredRule.plugin,
+      rule: registeredRule.rule.name,
+      match,
+      timestamp: Date.now(),
+    });
+  }
+
+  public onMatchRejected(
+    registeredRule: RegisteredRule,
+    match: Match,
+    winner: Match,
+  ): void {
+    this.addEvent({
+      type: "match:rejected",
+      plugin: registeredRule.plugin,
+      rule: registeredRule.rule.name,
+      match,
+      reason: "overlap",
+      winner,
+      timestamp: Date.now(),
+    });
+  }
 }
