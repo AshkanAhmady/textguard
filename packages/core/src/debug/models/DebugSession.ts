@@ -1,5 +1,6 @@
 import { PerformanceBuilder } from "../builders";
 import type { DebugEvent } from "../events";
+import type { Match } from "../../domain/match";
 import type { DebugStatistics } from "./DebugStatistics";
 import type { PerformanceReport } from "./PerformanceReport";
 import { TimelineBuilder } from "../builders/TimelineBuilder";
@@ -8,8 +9,48 @@ import { DebugReportBuilder } from "../builders/DebugReportBuilder";
 import type { Timeline } from "./Timeline";
 import type { DebugReport } from "./DebugReport";
 
+export interface DebugSessionData {
+  readonly input: string;
+  readonly normalizedInput: string;
+  readonly matches: readonly Match[];
+  readonly events: readonly DebugEvent[];
+}
+
 export class DebugSession {
-  public constructor(private readonly events: readonly DebugEvent[]) {}
+  private readonly input: string;
+  private readonly normalizedInput: string;
+  private readonly matches: readonly Match[];
+  private readonly events: readonly DebugEvent[];
+
+  public constructor(events: readonly DebugEvent[]);
+  public constructor(data: DebugSessionData);
+  public constructor(dataOrEvents: DebugSessionData | readonly DebugEvent[]) {
+    if (Array.isArray(dataOrEvents)) {
+      this.input = "";
+      this.normalizedInput = "";
+      this.matches = Object.freeze([]);
+      this.events = dataOrEvents;
+      return;
+    }
+
+    const data = dataOrEvents as DebugSessionData;
+    this.input = data.input;
+    this.normalizedInput = data.normalizedInput;
+    this.matches = Object.freeze([...data.matches]);
+    this.events = data.events;
+  }
+
+  public getInput(): string {
+    return this.input;
+  }
+
+  public getNormalizedInput(): string {
+    return this.normalizedInput;
+  }
+
+  public getMatches(): readonly Match[] {
+    return this.matches;
+  }
 
   public getEvents(): readonly DebugEvent[] {
     return this.events;
