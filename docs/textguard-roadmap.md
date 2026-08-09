@@ -10,8 +10,8 @@ Legend: ✅ Done &nbsp; 🟡 Partial / in progress &nbsp; ❌ Not started
 
 Follow this order unless the maintainer explicitly changes it:
 
-1. **Finish Epic 1 / M5 Explain API.** Complete the current Debug Engine hardening sequence first, then implement Explain as a projection of `DebugSession`.
-2. **PII consumer integration / DX hardening.** Validate `@textguard/plugin-pii` in a fresh external repository and make installation actually configure the consuming project. Preferred direction: `npx textguard-pii init` to set up pre-commit and/or CI integration rather than expecting users to manually copy TextGuard's own Husky/GitHub Action configuration.
+1. **Finish Epic 1 / M5 Explain API.** Complete the current Explain implementation sequence before moving to later roadmap features.
+2. **PII consumer integration / DX hardening.** Validate `@textguard/plugin-pii` in a fresh external repository and make installation actually configure the consuming project. Preferred direction: `npx textguard-pii init` to set up pre-commit and/or CI integration. Add a policy/configuration layer for intentional findings: allowlisted values, ignored paths/globs, and narrowly scoped suppressions without weakening detection itself.
 3. **Package README standardization.** Audit every package README. Empty, incomplete, or stale READMEs must be rewritten with a consistent structure and quality based on the current `@textguard/plugin-pii` README. All examples must match the shipped API and be copy/paste-ready.
 4. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` dictionaries/rules/tests after the items above; do not interrupt Explain/PII/README work for it.
 
@@ -48,7 +48,7 @@ Milestones:
 | M0.3 — Pre-commit Hook Mode | 🟡 Partial | Scanner/CLI can block a commit, and TextGuard's own repo wires it into Husky. External consumers still need an installation/setup flow. |
 | M0.4 — GitHub Action Mode | 🟡 Partial | TextGuard's own workflow scans PRs. External consumers still need a supported setup flow/template. |
 | M0.5 — Reporting Output | ✅ Done | Shared console/markdown reporting exists. |
-| M0.6 — Consumer Setup / DX | ❌ Not started | After Explain: validate from a clean external project and implement/document setup, preferably via `npx textguard-pii init`. Must verify commit blocking and PR blocking end-to-end. |
+| M0.6 — Consumer Setup / DX | ❌ Not started | After Explain: validate from a clean external project and implement/document setup, preferably via `npx textguard-pii init`. Verify commit/PR blocking end-to-end and add policy configuration for allowlisted values, ignored paths/globs, and narrow suppressions. |
 | M0.7 — Paid Tier (later) | ❌ Not started | Multi-repo/org dashboard, history, alerting; only after open-source usage validates demand. |
 
 **Sequencing:** finish Explain first because PII findings become much more useful when they can say why something matched. Then return immediately to consumer integration before broad new feature work.
@@ -61,10 +61,10 @@ Milestones:
 | M2 — Renderers | 🟡 Partial | Console/JSON/Markdown exist; HTML renderer remains missing. |
 | M3 — Timeline | ✅ Done | Timeline builder/model implemented. |
 | M4 — Performance Diagnostics | ✅ Done | Performance builder/report exposed by `session.performance()`. |
-| M5 — Explain API | 🟡 In progress | Explain itself is not public yet. M5.0–M5.2 hardening PRs are merged; M5.3 preserves rule/plugin metadata; Explain domain/API follows next. |
+| M5 — Explain API | 🟡 In progress | M5.0–M5.3 Debug hardening are merged. M5.4 now introduces structured Explain models and `ExplainBuilder` as a projection of accepted `DebugSession` matches. Public `filter.explain()` and final integration/docs remain next. |
 | M6 — Future Integrations | ❌ Not started | VS Code / Chrome / CLI / Playground / AI consumers come later. |
 
-Current M5 preparation sequence is tracked in `docs/DEVELOPMENT-WORKFLOW.md` and architecture ADRs. Do not skip ahead while that sequence is active.
+Current M5 sequence is tracked in `docs/DEVELOPMENT-WORKFLOW.md` and architecture ADRs. Do not skip ahead while that sequence is active.
 
 ### Epic 2 — Enterprise Preset (secrets/JWT/API keys/tokens/wallets/SSH keys) ⭐⭐⭐⭐
 
