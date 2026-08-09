@@ -51,4 +51,9 @@ Each item should normally ship as its own branch and pull request unless two ste
 
 `agent/debug-engine-hardening` establishes the M5.0 baseline only. It adds Debug Engine contract tests and intentionally does not change production runtime behavior or the public API. The overlap test documents the current known gap: `match:found` represents a discovered candidate before overlap resolution and therefore is not necessarily a final match.
 
-This branch also fixes two CI issues discovered by its PR validation: the Debug Engine test now asserts event order without relying on an `id` field that is not present on every `DebugEvent` union member, and the PII workflow now lets the repository's `packageManager` field provide the pnpm version instead of configuring a second version in the action.
+This branch also hardens CI issues uncovered by PR validation:
+
+- the Debug Engine contract test asserts event ordering without assuming every `DebugEvent` union member exposes an `id` field;
+- the PII workflow uses the repository `packageManager` declaration as the single pnpm version source;
+- the PII workflow builds the package together with its workspace dependency graph before executing the compiled CI scanner, so runtime imports such as `@textguard/core/dist/index.js` exist;
+- the PII package now declares the small Node runtime surface used by its CLI/CI TypeScript sources so repository-wide type checking covers those entry points instead of failing on missing Node globals.
