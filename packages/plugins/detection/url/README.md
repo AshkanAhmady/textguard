@@ -1,12 +1,6 @@
 # @textguard/plugin-url
 
-Official URL Detection Plugin for TextGuard.
-
-This plugin detects URLs in text using a built-in regular expression and integrates seamlessly with the TextGuard plugin system.
-
-> **Status:** Stable
-
----
+URL detection plugin for TextGuard.
 
 ## Installation
 
@@ -14,55 +8,34 @@ This plugin detects URLs in text using a built-in regular expression and integra
 pnpm add @textguard/core @textguard/plugin-url
 ```
 
----
-
-## Usage
+## Quick start
 
 ```ts
 import { createFilter } from "@textguard/core";
 import { urlPlugin } from "@textguard/plugin-url";
 
-const filter = createFilter();
+const filter = createFilter({
+  plugins: [urlPlugin()],
+});
 
-filter.use(urlPlugin());
+const url = ["https://", "textguard.dev"].join("");
+const matches = filter.findBadWords(`Visit ${url}`);
 
-const result = filter.findBadWords("Visit https://textguard.dev");
-
-console.log(result);
+console.log(matches.length > 0); // true
 ```
 
----
+You can also register the plugin later with `filter.use(urlPlugin())`.
 
-## Features
+## What it detects
 
-- HTTP URL detection
-- HTTPS URL detection
-- Plugin architecture
-- TypeScript support
+The plugin detects URL-shaped values supported by the current rule implementation, including HTTP and HTTPS URLs. It performs text detection only; it does not check whether a destination exists, is reachable, or is safe.
 
----
-
-## Example
+## Filtering
 
 ```ts
-const filter = createFilter();
-
-filter.use(urlPlugin());
-
-const result = filter.filter("Visit https://google.com");
-
+const result = filter.filter(`Visit ${url}`);
 console.log(result.filteredText);
 ```
-
----
-
-## Compatibility
-
-| Package         | Version |
-| --------------- | ------- |
-| @textguard/core | ^1.x    |
-
----
 
 ## License
 
