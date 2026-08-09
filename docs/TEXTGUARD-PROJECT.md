@@ -78,7 +78,7 @@ Current consumer capabilities:
 - both pre-commit and CI scanners use the same policy layer;
 - detection stays strict and policy decides whether a finding should block.
 
-The current PII DX step validates these behaviors against a packed package installed into a clean consumer-style git repository. The automated E2E scenario verifies a real blocked commit, an allowlisted/ignored-path commit, and CI pass/fail behavior.
+`examples/pii-consumer` is the executable consumer reference. Developers can inspect the same setup path that CI executes. Its E2E harness packs the real package into a clean temporary git repository and verifies a blocked commit, allowlisted/ignored-path behavior, and CI pass/fail behavior. This keeps examples and product behavior aligned.
 
 Husky still needs to be installed/initialized in the consuming project before the generated `.husky/pre-commit` hook can execute; the README must state this clearly until setup handling changes.
 
@@ -88,7 +88,7 @@ Execution sequence:
 
 1. Consumer init foundation — merged.
 2. Shared policy/configuration layer — merged.
-3. External end-to-end validation — current.
+3. External end-to-end validation — current, implemented as the executable `examples/pii-consumer` walkthrough plus CI harness.
 4. Final public documentation — next after E2E is green.
 
 M0.6 must not be marked complete until the external E2E check is green and the final copy/paste-ready documentation pass is merged.
@@ -96,6 +96,8 @@ M0.6 must not be marked complete until the external E2E check is green and the f
 ## 7. Documentation backlog
 
 Package README quality is inconsistent. After PII DX, audit every published package and use the current `@textguard/plugin-pii` README as the reference format/quality bar.
+
+For workflows with meaningful consumer setup, prefer examples under `examples/` that developers can inspect and CI can execute. Executable examples are part of the public documentation surface.
 
 No published package should ship with an empty or obsolete README.
 
@@ -117,7 +119,7 @@ Every coherent change-set should:
 
 1. start from latest `main` on its own branch;
 2. include relevant tests;
-3. update stale roadmap/project/ADR/README documentation in the same branch;
+3. update stale roadmap/project/ADR/README/example documentation in the same branch;
 4. open a PR for maintainer review;
 5. merge only with required checks green;
 6. delete the feature branch after merge.
