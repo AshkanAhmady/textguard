@@ -31,9 +31,9 @@ Epic 1 / M5 Explain API is complete: Debug hardening, Explain domain/builder, pu
 
 Stay on this sequence before broad roadmap work:
 
-1. **PII DX 1 — consumer init foundation — 🟡 current PR.** Add `npx textguard-pii init` to safely wire the existing pre-commit scanner and GitHub workflow. Existing hook commands are preserved; an existing workflow file is never overwritten.
-2. **PII DX 2 — policy/configuration layer — next.** Add allowlisted values, ignored paths/globs, and narrowly scoped suppressions. Keep policy outside the underlying detectors.
-3. **PII DX 3 — external end-to-end validation.** Verify install/init, real commit blocking, and real PR blocking in a clean consumer-style project; fix remaining setup gaps such as Husky initialization.
+1. **PII DX 1 — consumer init foundation — ✅ merged.** `npx textguard-pii init` safely wires the existing pre-commit scanner and GitHub workflow without overwriting existing setup.
+2. **PII DX 2 — policy/configuration layer — 🟡 current PR.** Add detector-specific allowlisted values, ignored paths/globs, and narrowly scoped suppressions. CLI and CI must use the same policy; detectors remain unchanged.
+3. **PII DX 3 — external end-to-end validation — next.** Verify install/init, real commit blocking, policy exceptions, and real PR blocking in a clean consumer-style project; fix remaining setup gaps such as Husky initialization.
 4. **PII DX 4 — final public docs.** Make the README/setup path copy/paste-ready and mark M0.6 complete only after end-to-end validation passes.
 
 ## Priorities after PII DX
@@ -43,4 +43,4 @@ Stay on this sequence before broad roadmap work:
 
 ## Current branch note
 
-`agent/pii-init-foundation` implements only the first PII Consumer DX step. It does not yet add allowlist/ignore policy and does not claim full end-to-end consumer validation.
+`agent/pii-readme-whitelist` implements PII DX 2 only. It adds policy configuration and documentation, but does not yet claim external end-to-end consumer validation.
