@@ -12,7 +12,7 @@ npx husky init
 npx textguard-pii init
 ```
 
-That's it for the basic setup. `textguard-pii init` connects TextGuard to your pre-commit hook and adds the GitHub Actions workflow used for pull requests.
+That's it for the basic setup. `textguard-pii init` connects TextGuard to your pre-commit hook and adds the GitHub Actions workflow used for pull requests. If Husky created its default `npm test` placeholder hook, TextGuard replaces only that placeholder; any real custom hook commands are preserved.
 
 ## 2. Try it
 
