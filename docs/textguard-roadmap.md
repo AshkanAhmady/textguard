@@ -8,8 +8,8 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **Package README standardization.** Root README, package audit, `@textguard/all`, Persian/English, all detection READMEs, and Arabic README consistency are complete; only the final package-wide consistency pass remains.
-2. **Arabic language parity — lower priority.** Complete `@textguard/plugin-ar` after README cleanup.
+1. **Package README standardization — ✅ complete.** Root README and every published package README have been reviewed and aligned with the current public surface.
+2. **Arabic language parity — next, lower priority feature work.** Bring `@textguard/plugin-ar` from its published foundation state toward the Persian/English quality bar.
 3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
 
 ---
@@ -45,22 +45,22 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Product-quality backlog
 
-### Package README standardization — current high priority
+### Package README standardization — ✅ complete
 
 - ✅ root README replaced;
 - ✅ published-package audit completed in `docs/PACKAGE-README-AUDIT.md`;
 - ✅ `@textguard/all` README rewritten;
 - ✅ Persian and English READMEs corrected;
-- ✅ P0 detector READMEs corrected — Phone, IP, UUID, Credit Card, IBAN;
-- ✅ P1 detector READMEs standardized — Email and URL;
-- ✅ Arabic README now matches the actual foundation-only implementation state;
-- 🟡 next: final package-wide consistency pass;
-- every published package needs a useful README;
-- examples must match current APIs and remain simple for normal npm consumers.
+- ✅ Phone, IP, UUID, Credit Card, and IBAN READMEs corrected;
+- ✅ Email and URL READMEs standardized;
+- ✅ Arabic README aligned with its actual foundation-only implementation;
+- ✅ final consistency check completed across Core, PII, All, language, and detection packages.
 
-### Arabic language parity — lower priority
+Future public API/behavior changes must continue updating affected READMEs in the same PR.
 
-`@textguard/plugin-ar` is currently a published foundation: `arDictionary` has no words and `arPack` is empty. Bring it to the Persian/English quality bar only after README standardization is closed.
+### Arabic language parity — next
+
+`@textguard/plugin-ar` is currently a published foundation: `arDictionary` has no words and `arPack` is empty. The next feature milestone should define and implement a conservative Arabic parity scope without disturbing Core architecture or existing package APIs.
 
 ### Other technical debt
 
@@ -73,4 +73,4 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Current product-quality focus
 
-**finish README consistency → Arabic parity → adoption feedback.**
+**Arabic parity → adoption feedback → roadmap reassessment.**
