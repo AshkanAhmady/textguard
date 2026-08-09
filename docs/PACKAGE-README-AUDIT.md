@@ -20,23 +20,23 @@ Quality bar: use `@textguard/plugin-pii` as the reference for structure and deve
 | `@textguard/plugin-ar` | 🟡 Usable but thin | P2 | Current API shape is closer to reality, but package status/capability wording needs alignment with the lower-priority Arabic parity plan. |
 | `@textguard/plugin-email` | 🟡 Minimal | P1 | Valid basic usage, but too thin and includes literal PII-like sample data that can conflict with repository scans. |
 | `@textguard/plugin-url` | 🟡 Mostly usable | P1 | Better than most detection READMEs, but needs standardized structure and examples. |
-| `@textguard/plugin-phone` | ❌ Misleading | P0 | Copy/paste errors: URL examples and HTTP/HTTPS feature bullets are presented as phone behavior. |
-| `@textguard/plugin-ip` | ❌ Misleading | P0 | Email sample is copied into IP usage; documentation does not demonstrate IP behavior. |
-| `@textguard/plugin-uuid` | ❌ Misleading | P0 | Email sample is copied into UUID usage; documentation does not demonstrate UUID behavior. |
-| `@textguard/plugin-credit-card` | ❌ Invalid | P0 | Example import/function name is syntactically invalid (`credit-cardPlugin`) and claims regex-only behavior although validation includes Luhn. |
-| `@textguard/plugin-iban` | ❌ Misleading | P0 | Email sample is copied into IBAN usage and README says regex-only although validation includes mod-97. |
+| `@textguard/plugin-phone` | ✅ Corrected | P0 | Now demonstrates phone detection with the current plugin API and documents format-detection limitations. |
+| `@textguard/plugin-ip` | ✅ Corrected | P0 | Now demonstrates IP detection instead of copied email examples. |
+| `@textguard/plugin-uuid` | ✅ Corrected | P0 | Now demonstrates UUID detection instead of copied email examples. |
+| `@textguard/plugin-credit-card` | ✅ Corrected | P0 | Uses the real `creditCardPlugin()` API and documents Luhn validation accurately. |
+| `@textguard/plugin-iban` | ✅ Corrected | P0 | Demonstrates IBAN detection and documents mod-97 validation accurately. |
 
 ## Confirmed problems
 
-### P0 — must fix first
+### P0 — corrected
 
 1. ✅ `@textguard/all` no longer ships an empty README.
 2. ✅ Persian and English READMEs now use current APIs and valid markdown.
-3. Phone, IP, UUID, Credit Card, and IBAN READMEs still contain copied examples unrelated to their actual detector.
-4. Credit Card documentation contains an invalid JavaScript identifier in the import/example and understates validator behavior.
-5. IBAN documentation understates validator behavior by presenting it as regex-only.
+3. ✅ Phone, IP, UUID, Credit Card, and IBAN READMEs now use detector-specific examples.
+4. ✅ Credit Card documentation now uses the valid `creditCardPlugin()` export and explains Luhn validation.
+5. ✅ IBAN documentation now explains mod-97 validation instead of describing the detector as regex-only.
 
-### P1 — standardize after correctness issues
+### P1 — next
 
 - Email README works as a minimal example but lacks the standard package structure.
 - URL README is usable but should be normalized to the same concise format as the rest of the package family.
@@ -66,9 +66,9 @@ Keep examples short. Do not add architecture details that ordinary consumers do 
 ## Rewrite sequence
 
 1. ✅ `@textguard/all` — completed.
-2. ✅ `@textguard/plugin-fa` and `@textguard/plugin-en` — current APIs and markdown corrected.
-3. **Next:** Detection P0 group — Phone, IP, UUID, Credit Card, IBAN.
-4. Detection P1 group — Email and URL.
+2. ✅ `@textguard/plugin-fa` and `@textguard/plugin-en` — completed.
+3. ✅ Detection P0 group — Phone, IP, UUID, Credit Card, IBAN.
+4. **Next:** Detection P1 group — Email and URL.
 5. Arabic README consistency pass without expanding Arabic implementation scope.
 6. Final consistency check across Core, PII, All, language, and detection packages.
 

@@ -1,6 +1,6 @@
 # @textguard/plugin-credit-card
 
-Official credit-card Detection Plugin for TextGuard.
+Credit-card number detection plugin for TextGuard.
 
 ## Installation
 
@@ -8,25 +8,36 @@ Official credit-card Detection Plugin for TextGuard.
 pnpm add @textguard/core @textguard/plugin-credit-card
 ```
 
-## Usage
+## Quick start
 
 ```ts
 import { createFilter } from "@textguard/core";
-import { credit-cardPlugin } from "@textguard/plugin-credit-card";
+import { creditCardPlugin } from "@textguard/plugin-credit-card";
 
-const guard = createFilter();
+const filter = createFilter({
+  plugins: [creditCardPlugin()],
+});
 
-guard.use(credit-cardPlugin());
+const card = ["4242", "4242", "4242", "4242"].join(" ");
+const matches = filter.findBadWords(`Card: ${card}`);
 
-const result = guard.findBadWords("contact me at hello@example.com");
+console.log(matches.length > 0); // true
 ```
 
-## Features
+You can also register the plugin later with `filter.use(creditCardPlugin())`.
 
-- credit-card detection
-- Regex based
-- Plugin architecture
-- TypeScript support
+## Validation behavior
+
+The detector does not accept every number-shaped value. Candidate card numbers are checked with the Luhn checksum before being returned as matches.
+
+Luhn validation reduces obvious false positives, but it does not prove that a card exists, is active, or belongs to a particular person.
+
+## Filtering
+
+```ts
+const result = filter.filter(`Card: ${card}`);
+console.log(result.filteredText);
+```
 
 ## License
 

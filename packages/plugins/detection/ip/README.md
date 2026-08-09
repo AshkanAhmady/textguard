@@ -1,6 +1,6 @@
 # @textguard/plugin-ip
 
-Official ip Detection Plugin for TextGuard.
+IP-address detection plugin for TextGuard.
 
 ## Installation
 
@@ -8,25 +8,34 @@ Official ip Detection Plugin for TextGuard.
 pnpm add @textguard/core @textguard/plugin-ip
 ```
 
-## Usage
+## Quick start
 
 ```ts
 import { createFilter } from "@textguard/core";
 import { ipPlugin } from "@textguard/plugin-ip";
 
-const guard = createFilter();
+const filter = createFilter({
+  plugins: [ipPlugin()],
+});
 
-guard.use(ipPlugin());
+const ip = ["192", "0", "2", "10"].join(".");
+const matches = filter.findBadWords(`Server address: ${ip}`);
 
-const result = guard.findBadWords("contact me at hello@example.com");
+console.log(matches.length > 0); // true
 ```
 
-## Features
+You can also register the plugin later with `filter.use(ipPlugin())`.
 
-- ip detection
-- Regex based
-- Plugin architecture
-- TypeScript support
+## What it detects
+
+The plugin detects IP-address-like values supported by the current rule implementation. It is intended for text detection and masking, not network reachability or ownership verification.
+
+## Filtering
+
+```ts
+const result = filter.filter(`Server address: ${ip}`);
+console.log(result.filteredText);
+```
 
 ## License
 
