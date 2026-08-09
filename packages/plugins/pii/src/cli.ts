@@ -1,5 +1,6 @@
 import { execSync } from "node:child_process";
-import { scanText } from "./scan";
+import { scanFile } from "./scan";
+import { loadPiiConfig } from "./config";
 import { toFileResult, formatConsoleReport, type FileResult } from "./report";
 import { initializeConsumer, printInitResult } from "./init";
 
@@ -7,7 +8,6 @@ function getStagedFiles(): string[] {
   const output = execSync("git diff --cached --name-only --diff-filter=ACM", {
     encoding: "utf-8",
   });
-
   return output.split("\n").filter(Boolean);
 }
 
@@ -15,32 +15,29 @@ function getStagedContent(path: string): string | null {
   try {
     return execSync(`git show ":${path}"`, { encoding: "utf-8" });
   } catch {
-    // Binary file, or git couldn't read it as text — skip rather than crash.
     return null;
   }
 }
 
 function scanStagedFiles(): void {
   const files = getStagedFiles();
+  const config = loadPiiConfig();
   const results: FileResult[] = [];
 
   for (const file of files) {
     const content = getStagedContent(file);
-
     if (content === null) continue;
 
-    const result = scanText(content);
-    results.push(toFileResult(file, content, result));
+    results.push(toFileResult(file, content, scanFile(file, content, config)));
   }
 
   const report = formatConsoleReport(results);
-  const hasFindings = results.some((r) => r.findings.length > 0);
+  const hasFindings = results.some((result) => result.findings.length > 0);
 
   if (hasFindings) {
     console.error(`\n${report}`);
     console.error(
-      "\ntextguard-pii: commit blocked — remove the PII above, or run " +
-        "`git commit --no-verify` to bypass (not recommended).\n",
+      "\ntextguard-pii: commit blocked — remove the PII above or configure an explicit policy exception.\n",
     );
     process.exit(1);
   }
@@ -49,9 +46,7 @@ function scanStagedFiles(): void {
 }
 
 function main(): void {
-  const command = process.argv[2];
-
-  if (command === "init") {
+  if (process.argv[2] === "init") {
     printInitResult(initializeConsumer());
     process.exit(0);
   }
