@@ -9,11 +9,12 @@ This file is part of the project's persistent working memory. It records the dev
 3. Update or add tests for the behavior being changed.
 4. Update every affected documentation source in the same branch before the PR is considered complete.
 5. Open a pull request to `main` for maintainer review. Do not merge automatically.
-6. After the maintainer merges the PR, delete the feature branch and start the next change from the new latest `main`.
+6. Treat required CI checks as part of the change-set's Definition of Done. Do not merge while required checks are failing; investigate and fix the root cause first.
+7. After the maintainer merges the PR, delete the feature branch and start the next change from the new latest `main`.
 
 ## Documentation is project memory
 
-Whenever implementation changes product behavior, public APIs, architecture, milestone status, package usage, or developer-facing behavior, review the following documentation and update every file that became stale:
+Whenever implementation changes product behavior, public APIs, architecture, milestone status, package usage, CI/developer workflow, or developer-facing behavior, review the following documentation and update every file that became stale:
 
 - `docs/textguard-roadmap.md` — implementation/milestone status and sequencing.
 - `docs/TEXTGUARD-PROJECT.md` — verified current capabilities, package state, technical debt, and repository ground truth.
@@ -49,3 +50,5 @@ Each item should normally ship as its own branch and pull request unless two ste
 ## Current branch note
 
 `agent/debug-engine-hardening` establishes the M5.0 baseline only. It adds Debug Engine contract tests and intentionally does not change production runtime behavior or the public API. The overlap test documents the current known gap: `match:found` represents a discovered candidate before overlap resolution and therefore is not necessarily a final match.
+
+This branch also fixes two CI issues discovered by its PR validation: the Debug Engine test now asserts event order without relying on an `id` field that is not present on every `DebugEvent` union member, and the PII workflow now lets the repository's `packageManager` field provide the pnpm version instead of configuring a second version in the action.
