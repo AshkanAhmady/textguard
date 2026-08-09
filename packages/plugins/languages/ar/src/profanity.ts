@@ -5,11 +5,10 @@ export const arProfanity: Dictionary = {
   language: "ar",
   version: "1.0.0",
   words: [
-    { word: "قحبة", severity: "high", category: "profanity" },
+    { word: "قحبه", severity: "high", category: "profanity" },
     { word: "شرموط", severity: "high", category: "profanity" },
-    { word: "شرموطة", severity: "high", category: "profanity" },
+    { word: "شرموطه", severity: "high", category: "profanity" },
     { word: "كس امك", severity: "high", category: "profanity" },
-    { word: "كس أمك", severity: "high", category: "profanity" },
-    { word: "ابن القحبة", severity: "high", category: "profanity" },
+    { word: "ابن القحبه", severity: "high", category: "profanity" },
   ],
 };
