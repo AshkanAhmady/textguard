@@ -12,6 +12,8 @@ import { DictionaryPlugin } from "../plugins/dictionaryPlugin";
 import { EnginePipeline } from "../core/EnginePipeline";
 import { DebugCollector } from "../debug";
 import type { DebugSession } from "../debug";
+import { ExplainBuilder } from "../explain";
+import type { ExplainResult } from "../explain";
 
 export function createEngine(options: FilterOptions): TextGuardInstance {
   const state = createEngineState(options);
@@ -78,17 +80,24 @@ export function createEngine(options: FilterOptions): TextGuardInstance {
     };
   }
 
+  function debug(text: string): DebugSession {
+    const collector = new DebugCollector();
+
+    enginePipeline.executeWithDebug(text, collector);
+
+    return collector.build();
+  }
+
+  function explain(text: string): ExplainResult {
+    return new ExplainBuilder().build(debug(text));
+  }
+
   return {
     filter,
     hasBadWord,
     findBadWords,
-    debug(text: string): DebugSession {
-      const collector = new DebugCollector();
-
-      enginePipeline.executeWithDebug(text, collector);
-
-      return collector.build();
-    },
+    debug,
+    explain,
     use(plugin) {
       pluginManager.register(plugin);
     },

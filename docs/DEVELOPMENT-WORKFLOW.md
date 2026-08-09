@@ -41,9 +41,9 @@ Follow this sequence unless the maintainer explicitly changes it. Do not jump ah
 2. **M5.1 — DebugSession authoritative state — ✅ merged.** Original input, normalized input, and final matches are preserved. See `ADR-002`.
 3. **M5.2 — Match lifecycle events — ✅ merged.** Candidate/accepted/rejected decisions are explicit. See `ADR-003`.
 4. **M5.3 — Rule/plugin metadata preservation — ✅ merged.** Match lifecycle events preserve structured rule metadata and plugin identity. See `ADR-004`.
-5. **M5.4 — Explain domain models + builder — 🟡 current PR.** Add structured Explain result models and project accepted matches from `DebugSession` without re-running rules. See `ADR-005`.
-6. **M5.5 — Public `filter.explain()` — next.** Add the convenience method to `TextGuardInstance`, implemented through the existing debug-capable execution path and `ExplainBuilder`.
-7. **M5.6 — Explain integration/edge-case tests + public docs.** Cover overlap, normalization, empty/no-match behavior, plugin combinations, and README/API examples before marking M5 complete.
+5. **M5.4 — Explain domain models + builder — ✅ merged.** Structured Explain models and `ExplainBuilder` project accepted matches from `DebugSession`. See `ADR-005`.
+6. **M5.5 — Public `filter.explain()` — 🟡 current PR.** Add the convenience method to `TextGuardInstance`, implemented through the existing debug-capable execution path and `ExplainBuilder`.
+7. **M5.6 — Explain integration/edge-case tests + public docs — next.** Cover overlap, normalization, empty/no-match behavior, plugin combinations, and README/API examples before marking M5 complete.
 
 Each item should normally ship as its own branch and pull request.
 
@@ -59,6 +59,6 @@ These priorities are part of project memory and must remain reflected in `docs/t
 
 ## Current branch note
 
-`agent/explain-domain` implements M5.4 only.
+`agent/explain-public-api` implements M5.5 only.
 
-It introduces structured Explain models and `ExplainBuilder`. The builder consumes `DebugSession` and only explains final `match:accepted` events. It does not re-run detection and does not yet add `filter.explain()`.
+It exposes `filter.explain(text)` on `TextGuardInstance`. The method reuses the existing debug-capable execution path and `ExplainBuilder`; it does not introduce a second detection engine or change detection semantics. M5 remains in progress until M5.6 integration/edge-case coverage and public documentation are complete.

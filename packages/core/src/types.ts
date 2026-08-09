@@ -2,6 +2,7 @@ import { Match } from "./domain/match";
 import type { Dictionary, DictionaryEntry } from "./domain/dictionary";
 import type { Plugin } from "./domain/plugin";
 import type { DebugSession } from "./debug";
+import type { ExplainResult } from "./explain";
 
 export interface FilterOptions {
   dictionaries?: Dictionary[];
@@ -24,6 +25,7 @@ export interface TextGuardInstance {
   findBadWords(text: string): Match[];
   filter(text: string): FilterResult;
   debug(text: string): DebugSession;
+  explain(text: string): ExplainResult;
   use(plugin: Plugin): void;
 }
 
