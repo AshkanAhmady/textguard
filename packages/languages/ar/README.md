@@ -1,4 +1,4 @@
-# @textguard/plugin-ar 🇸🇦
+# @textguard/ar 🇸🇦
 
 Arabic language moderation resources for TextGuard.
 
@@ -9,21 +9,20 @@ The package ships built-in profanity and insult dictionaries that work through t
 ## Installation
 
 ```bash
-pnpm add @textguard/core @textguard/plugin-ar
+pnpm add @textguard/core @textguard/ar
 ```
 
 ## Quick start
 
 ```ts
 import { createFilter } from "@textguard/core";
-import { arDictionary } from "@textguard/plugin-ar";
+import { arDictionary } from "@textguard/ar";
 
 const filter = createFilter({
   dictionaries: [arDictionary],
 });
 
 const result = filter.filter("لا تكن غبي");
-
 console.log(result.filteredText);
 ```
 
@@ -36,7 +35,7 @@ import {
   arInsults,
   arPack,
   arLanguage,
-} from "@textguard/plugin-ar";
+} from "@textguard/ar";
 ```
 
 - `arDictionary` — combined Arabic dictionary used by `createFilter()`.
@@ -49,19 +48,19 @@ import {
 
 TextGuard Core normalizes Arabic text before dictionary matching. The current pipeline handles common Alef/Hamza variants, `ة`, `ى`, and common Arabic diacritics. Core also canonicalizes Arabic `ي` / `ك` through the shared normalization pipeline.
 
-That means common written variants such as diacritized profanity and `أحمق` / `احمق` can resolve to the same dictionary form.
-
 ## Coverage policy
 
 There is no practical "complete" Arabic profanity list: vocabulary varies across regions, dialects, spelling, and context. TextGuard therefore expands Arabic coverage in reviewable slices.
-
-Current policy:
 
 - prioritize common, high-confidence profanity and insults;
 - test additions through the public `createFilter()` API;
 - keep benign Arabic sentences in regression tests;
 - avoid mechanically importing large dialect/slang lists without false-positive evidence;
 - keep spam/pattern resources separate from profanity vocabulary.
+
+## Migration from `@textguard/plugin-ar`
+
+`@textguard/ar` is the canonical Arabic language package. Existing users of `@textguard/plugin-ar` should replace the dependency and import path; the exported Arabic APIs keep the same names.
 
 ## Current limitations
 
