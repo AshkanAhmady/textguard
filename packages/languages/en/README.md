@@ -1,4 +1,4 @@
-# @textguard/plugin-en 🇺🇸🇬🇧
+# @textguard/en 🇺🇸🇬🇧
 
 Official English language package for TextGuard.
 
@@ -7,17 +7,14 @@ It provides an English dictionary, profanity/insult/spam entries, pattern data, 
 ## Install
 
 ```bash
-npm install @textguard/core @textguard/plugin-en
+npm install @textguard/core @textguard/en
 ```
 
 ## Quick start
 
 ```ts
 import { createFilter } from "@textguard/core";
-import {
-  enDictionary,
-  enLeetspeakMapping,
-} from "@textguard/plugin-en";
+import { enDictionary, enLeetspeakMapping } from "@textguard/en";
 
 const filter = createFilter({
   dictionaries: [enDictionary],
