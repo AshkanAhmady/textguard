@@ -45,13 +45,14 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 - Package README standardization — ✅ complete.
 - Arabic AR1 usable baseline — ✅ merged.
 - Arabic AR2 normalization + high-confidence coverage hardening — ✅ merged and released.
+- Arabic AR3 first dialect coverage slice — ✅ merged.
 - Release hardening and canonical package-taxonomy migration — ✅ complete.
 
 ## Current work sequence
 
-1. **AR3 — dialect coverage slice 1 — current PR.** Add only a small high-confidence dialect vocabulary slice with public API coverage and conservative negative tests.
-2. **AR4 — bundle/preset evaluation.** Consider only after Arabic coverage is stable enough.
-3. **Adoption validation.** Reassess broader roadmap based on external usage.
+1. **AR4 — bundle/preset parity — current PR.** Add Arabic moderation to the higher-level `strictPreset` and `enterprisePreset` with preset-level regression tests and no Core API changes.
+2. **Adoption validation.** Reassess broader roadmap based on external usage after Arabic parity closeout.
+3. **Broader roadmap reassessment.** Pick the next product milestone from evidence rather than adding scope automatically.
 
 ## Arabic parity rules
 
