@@ -11,17 +11,17 @@
   "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
   "scripts": { "build": "tsup", "lint": "eslint .", "test": "vitest" },
   "dependencies": {
-    "@textguard/core": "workspace:*",
-    "@textguard/fa": "workspace:*",
-    "@textguard/en": "workspace:*",
-    "@textguard/ar": "workspace:*",
-    "@textguard/plugin-email": "workspace:*",
-    "@textguard/plugin-url": "workspace:*",
-    "@textguard/plugin-phone": "workspace:*",
-    "@textguard/plugin-ip": "workspace:*",
-    "@textguard/plugin-uuid": "workspace:*",
-    "@textguard/plugin-credit-card": "workspace:*",
-    "@textguard/plugin-iban": "workspace:*"
+    "@textguard/core": "workspace:^",
+    "@textguard/fa": "workspace:^",
+    "@textguard/en": "workspace:^",
+    "@textguard/ar": "workspace:^",
+    "@textguard/plugin-email": "workspace:^",
+    "@textguard/plugin-url": "workspace:^",
+    "@textguard/plugin-phone": "workspace:^",
+    "@textguard/plugin-ip": "workspace:^",
+    "@textguard/plugin-uuid": "workspace:^",
+    "@textguard/plugin-credit-card": "workspace:^",
+    "@textguard/plugin-iban": "workspace:^"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
