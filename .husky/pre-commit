@@ -2,4 +2,4 @@ set -e
 
 pnpm exec lint-staged
 pnpm lint
-node packages/plugins/pii/dist/cli.js
+node packages/guards/pii/dist/cli.js
