@@ -4,7 +4,7 @@ Arabic language moderation resources for TextGuard.
 
 > **Current status:** usable baseline with normalization-aware coverage. Arabic parity is still in progress.
 
-The package ships built-in profanity and insult dictionaries that work through the normal TextGuard dictionary API. Coverage is intentionally conservative: it focuses on common, high-confidence terms and avoids broad dialect-heavy expansion that would increase false positives.
+The package ships built-in profanity and insult dictionaries that work through the normal TextGuard dictionary API. Coverage is intentionally conservative: it focuses on common, high-confidence terms and expands dialectal vocabulary in small tested slices.
 
 ## Installation
 
@@ -18,10 +18,7 @@ pnpm add @textguard/core @textguard/ar
 import { createFilter } from "@textguard/core";
 import { arDictionary } from "@textguard/ar";
 
-const filter = createFilter({
-  dictionaries: [arDictionary],
-});
-
+const filter = createFilter({ dictionaries: [arDictionary] });
 const result = filter.filter("لا تكن غبي");
 console.log(result.filteredText);
 ```
@@ -46,17 +43,19 @@ import {
 
 ## Normalization
 
-TextGuard Core normalizes Arabic text before dictionary matching. The current pipeline handles common Alef/Hamza variants, `ة`, `ى`, and common Arabic diacritics. Core also canonicalizes Arabic `ي` / `ك` through the shared normalization pipeline.
+TextGuard Core normalizes Arabic text before dictionary matching. The current pipeline handles common Alef/Hamza variants, `ة`, `ى`, common Arabic diacritics, and the shared Arabic/Persian Yeh/Kaf canonical forms.
 
 ## Coverage policy
 
 There is no practical "complete" Arabic profanity list: vocabulary varies across regions, dialects, spelling, and context. TextGuard therefore expands Arabic coverage in reviewable slices.
 
 - prioritize common, high-confidence profanity and insults;
-- test additions through the public `createFilter()` API;
+- add dialect vocabulary only with public API tests;
 - keep benign Arabic sentences in regression tests;
-- avoid mechanically importing large dialect/slang lists without false-positive evidence;
+- avoid mechanically importing large slang lists without false-positive evidence;
 - keep spam/pattern resources separate from profanity vocabulary.
+
+The current dialect slice adds a small set of common vulgar forms while keeping the existing public API unchanged.
 
 ## Migration from `@textguard/plugin-ar`
 
@@ -64,7 +63,7 @@ There is no practical "complete" Arabic profanity list: vocabulary varies across
 
 ## Current limitations
 
-Arabic coverage is still smaller than the mature Persian and English packages. Dialect-specific vocabulary, spam/pattern resources, and bundle/preset inclusion remain later parity work.
+Arabic coverage is still smaller than the mature Persian and English packages. More dialect-specific coverage, spam/pattern resources, and bundle/preset inclusion remain later parity work.
 
 ## License
 

@@ -3,7 +3,7 @@ import type { Dictionary } from "@textguard/core";
 export const arProfanity: Dictionary = {
   name: "ar-profanity",
   language: "ar",
-  version: "1.1.0",
+  version: "1.2.0",
   words: [
     { word: "قحبه", severity: "high", category: "profanity" },
     { word: "شرموط", severity: "high", category: "profanity" },
@@ -16,5 +16,9 @@ export const arProfanity: Dictionary = {
     { word: "ابن الحمار", severity: "high", category: "profanity" },
     { word: "منیوک", severity: "high", category: "profanity" },
     { word: "متناک", severity: "high", category: "profanity" },
+    { word: "طیز", severity: "high", category: "profanity" },
+    { word: "زبی", severity: "high", category: "profanity" },
+    { word: "خرا", severity: "high", category: "profanity" },
+    { word: "عرص", severity: "high", category: "profanity" },
   ],
 };
