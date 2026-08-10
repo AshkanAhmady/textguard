@@ -2,4 +2,5 @@ set -e
 
 pnpm exec lint-staged
 pnpm lint
+pnpm --filter @textguard/plugin-pii... build
 node packages/guards/pii/dist/cli.js
