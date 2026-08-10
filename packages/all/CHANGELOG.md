@@ -1,5 +1,14 @@
 # @textguard/all
 
+## 1.0.3
+
+### Patch Changes
+
+- 63a4b48: Switch the all-in-one bundle to the canonical language package names: `@textguard/fa`, `@textguard/en`, and `@textguard/ar`.
+- Updated dependencies [5b1b7b6]
+- Updated dependencies [5b1b7b6]
+  - @textguard/ar@1.1.0
+
 ## 1.0.2
 
 ### Patch Changes
