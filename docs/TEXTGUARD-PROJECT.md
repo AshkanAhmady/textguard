@@ -4,9 +4,9 @@
 
 ## 1. Product
 
-TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI. The core stays plugin-oriented so new detectors can be added without coupling them into the engine.
+TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI.
 
-Current product-quality feature work is **Arabic implementation parity**.
+Current product-quality feature work is **Arabic implementation parity**, with release safety being hardened before the next Arabic slice is merged.
 
 ## 2. Repository and architecture
 
@@ -20,7 +20,7 @@ Key packages:
 - detection plugins: Email, URL, Phone, IP, UUID, Credit Card, IBAN
 - `packages/plugins/pii` → `@textguard/plugin-pii`
 
-Core architecture remains plugin-oriented. Arabic parity uses the existing `Dictionary` contract and the existing normalization pipeline; no Arabic-specific Core API is being introduced.
+Core remains plugin-oriented. Arabic parity uses the existing `Dictionary` contract and shared normalization pipeline; no Arabic-specific Core API is being introduced.
 
 ## 3. Current public core API
 
@@ -47,7 +47,7 @@ filter.use(plugin: Plugin): void;
 
 - Persian: established/full relative to the current language architecture.
 - English: established/full relative to the current language architecture.
-- Arabic: parity is in progress. AR1 established usable profanity/insult dictionaries. AR2 hardens the already-existing Core Arabic normalization and expands high-confidence vocabulary while retaining the same public exports.
+- Arabic: parity is in progress. AR1 established usable profanity/insult dictionaries. AR2 is merged and adds normalization hardening plus broader high-confidence vocabulary. AR3 dialect coverage slice 1 is open separately in PR #22.
 
 ### Structured-data detection
 
@@ -76,31 +76,48 @@ Arabic parity stays incremental and reviewable.
 - public `createFilter()` integration tests added;
 - package README and release metadata updated.
 
-### AR2 — normalization + coverage hardening — current PR
+### AR2 — normalization + coverage hardening — ✅ merged
 
-- audit the existing Core `ArabicNormalizer` instead of adding a second normalization path;
-- remove common Arabic diacritics before matching;
-- normalize Alef Maqsura (`ى`) consistently with the current shared Yeh canonical form;
-- retain existing normalization for Alef/Hamza variants and Taa Marbuta;
-- expand Arabic profanity/insult dictionaries with common, high-confidence terms;
-- add public API regression tests for diacritics, letter variants, expanded vocabulary, and ordinary benign Arabic text.
+- existing Core `ArabicNormalizer` audited instead of introducing a second normalization path;
+- common Arabic diacritics removed before matching;
+- Alef Maqsura normalized consistently;
+- high-confidence profanity/insult coverage expanded;
+- public regression coverage added for variants and benign Arabic text.
 
-Arabic vocabulary is not considered a finite “complete list.” Dialect, spelling, and context vary substantially, so further expansion must be driven by tested coverage and false-positive evidence rather than bulk word imports.
+### AR3 — dialect coverage slice 1 — 🟡 open in PR #22
 
-### AR3 / AR4 — later
+AR3 adds only a small high-confidence dialect vocabulary slice and remains separate from release hardening.
 
-AR3 may add dialect-specific coverage and evaluate spam/pattern resources. AR4 decides whether Arabic quality is sufficient for bundle/preset inclusion.
+### AR4 — later
 
-## 9. Known technical debt
+Evaluate bundle/preset inclusion only after Arabic coverage and false-positive behavior are stable enough.
 
-- Arabic parity beyond AR2.
+Arabic vocabulary is not treated as a finite “complete list.” Dialect, spelling, and context require incremental tested expansion.
+
+## 9. Release safety
+
+The repository uses Changesets, but package publishing must not be treated as a blind monorepo operation.
+
+Current release-hardening work:
+
+- restores the pending AR1/AR2 Changesets after an unintended generated multi-package version wave;
+- sets `updateInternalDependencies` to `minor` to reduce unnecessary patch propagation;
+- adds `pnpm release:plan` before versioning;
+- adds an npm-registry candidate check before `changeset publish`;
+- documents the canonical procedure in `docs/RELEASING.md`.
+
+Never run `npm publish` from the repository root. Review the release plan and final npm candidate list before every publish.
+
+## 10. Known technical debt
+
+- Arabic parity beyond AR3.
 - `packages/presets/` vs `packages/all/src/presets/` ownership/duplication.
 - existing `enterprisePreset` naming collides conceptually with the future secrets/JWT/API-key roadmap feature.
 - ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
 - overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases.
 - HTML Debug renderer remains missing.
 
-## 10. Development discipline
+## 11. Development discipline
 
 Every coherent change-set should:
 
@@ -108,16 +125,19 @@ Every coherent change-set should:
 2. include relevant tests when behavior changes;
 3. update stale roadmap/project/ADR/README/example documentation in the same branch;
 4. include Changesets when published package behavior changes;
-5. open a PR for maintainer review;
-6. merge only with required checks green;
-7. delete the feature branch after merge.
+5. follow `docs/RELEASING.md` for npm releases;
+6. open a PR for maintainer review;
+7. merge only with required checks green;
+8. delete the feature branch after merge.
 
 When a merged Changeset means an npm package should be released, explicitly remind the maintainer which package(s) and release level are pending.
 
-## 11. Long-term roadmap guardrail
+## 12. Guard Ecosystem memory
+
+A dedicated documentation PR is queued to add the canonical Guard Ecosystem master document to Git. It will remain separate from TextGuard's fast-changing technical roadmap and will serve as stable business/vision context.
+
+## 13. Long-term roadmap guardrail
 
 Near-term sequence is:
 
-**Explain complete → PII consumer DX complete → package README cleanup complete → Arabic parity → reassess adoption and broader roadmap.**
-
-Secrets presets, benchmark suite, VS Code/Chrome integrations, AI work, and the paid PII tier remain later roadmap items.
+**release hardening → publish pending AR1/AR2 packages safely → AR3 → Arabic parity closeout → adoption validation → broader roadmap reassessment.**
