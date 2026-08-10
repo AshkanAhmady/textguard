@@ -24,7 +24,7 @@ This file is part of the project's persistent working memory. It records the dev
 - Run tests/type-check/build before publishing.
 - `pnpm release` first runs `scripts/release-check.mjs`, which compares local public package versions with npm and requires explicit confirmation of the candidate count.
 - If the candidate list contains any unexpected package, cancel the release.
-- Changesets uses `updateInternalDependencies: "minor"` to avoid unnecessary patch-release propagation while still updating internal ranges when required.
+- Changesets uses semver-compatible workspace ranges for public runtime dependencies to avoid unnecessary patch-release waves.
 
 ## Documentation is project memory
 
@@ -44,14 +44,14 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 - PII Consumer DX through M0.6 — ✅ complete.
 - Package README standardization — ✅ complete.
 - Arabic AR1 usable baseline — ✅ merged.
-- Arabic AR2 normalization + high-confidence coverage hardening — ✅ merged.
+- Arabic AR2 normalization + high-confidence coverage hardening — ✅ merged and released.
+- Release hardening and canonical package-taxonomy migration — ✅ complete.
 
 ## Current work sequence
 
-1. **Release hardening — current PR.** Reset the unintended generated release wave, reduce internal patch propagation, add release preview/publish guards, and document the safe npm procedure.
-2. **AR3 — dialect coverage slice 1 — open separately in PR #22.** Keep it isolated from release hardening until the pending AR1/AR2 release is completed safely.
-3. **AR4 — bundle/preset evaluation.** Consider only after Arabic coverage is stable enough.
-4. **Adoption validation.** Reassess broader roadmap based on external usage.
+1. **AR3 — dialect coverage slice 1 — current PR.** Add only a small high-confidence dialect vocabulary slice with public API coverage and conservative negative tests.
+2. **AR4 — bundle/preset evaluation.** Consider only after Arabic coverage is stable enough.
+3. **Adoption validation.** Reassess broader roadmap based on external usage.
 
 ## Arabic parity rules
 
@@ -64,4 +64,4 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 
 ## Queued project-memory task
 
-After the active release/Arabic PR flow is stable, add the canonical Guard Ecosystem master document to Git in a dedicated documentation PR so business/vision context is persistent without mixing it into TextGuard's per-commit roadmap.
+After the active Arabic PR flow is stable, add the canonical Guard Ecosystem master document to Git in a dedicated documentation PR so business/vision context is persistent without mixing it into TextGuard's per-commit roadmap.
