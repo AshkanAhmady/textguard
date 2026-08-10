@@ -32,29 +32,36 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 
 - `docs/textguard-roadmap.md`
 - `docs/TEXTGUARD-PROJECT.md`
+- `docs/GUARD-ECOSYSTEM.md` when stable product/business vision changes
 - `docs/architecture/*.md`
 - package/root `README.md` files
 - relevant `examples/` projects
 - `docs/RELEASING.md`
 - this file
 
+`GUARD-ECOSYSTEM.md` is intentionally more stable than the TextGuard delivery docs. Do not update it for ordinary implementation churn unless the wider product principles, business model, or ecosystem direction actually change.
+
 ## Completed work sequences
 
 - Epic 1 / M5 Explain API — ✅ complete.
 - PII Consumer DX through M0.6 — ✅ complete.
 - Package README standardization — ✅ complete.
-- Arabic AR1 usable baseline — ✅ merged.
-- Arabic AR2 normalization + high-confidence coverage hardening — ✅ merged and released.
-- Arabic AR3 first dialect coverage slice — ✅ merged.
+- Arabic AR1 usable baseline — ✅ complete.
+- Arabic AR2 normalization + high-confidence coverage hardening — ✅ complete and released.
+- Arabic AR3 first dialect coverage slice — ✅ complete.
+- Arabic AR4 bundle/preset parity — ✅ complete.
 - Release hardening and canonical package-taxonomy migration — ✅ complete.
+- Guard Ecosystem canonical project-memory document — ✅ added.
 
 ## Current work sequence
 
-1. **AR4 — bundle/preset parity — current PR.** Add Arabic moderation to the higher-level `strictPreset` and `enterprisePreset` with preset-level regression tests and no Core API changes.
-2. **Adoption validation.** Reassess broader roadmap based on external usage after Arabic parity closeout.
-3. **Broader roadmap reassessment.** Pick the next product milestone from evidence rather than adding scope automatically.
+1. **Complete the pending AR3/AR4 release.** Review the Changesets release plan and publish only the expected `@textguard/ar` / `@textguard/all` candidates and any intentional dependency propagation.
+2. **Adoption validation.** Collect real usage, issues, install/DX friction, false-positive/false-negative reports, and developer feedback.
+3. **Broader roadmap reassessment.** Pick the next product milestone from evidence and the Guard Ecosystem Decision Filter rather than adding scope automatically.
 
 ## Arabic parity rules
+
+Arabic parity is complete for the current architecture, but future maintenance should preserve these rules:
 
 - Preserve existing exports (`arDictionary`, `arPack`, `arLanguage`) where practical.
 - Use the existing `Dictionary` contract instead of adding Arabic-specific Core APIs.
@@ -63,6 +70,6 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 - Treat Arabic profanity coverage as iterative, not exhaustive.
 - Prefer high-confidence additions and benign negative tests over bulk dialect/slang imports.
 
-## Queued project-memory task
+## Guard Ecosystem guardrail
 
-After the active Arabic PR flow is stable, add the canonical Guard Ecosystem master document to Git in a dedicated documentation PR so business/vision context is persistent without mixing it into TextGuard's per-commit roadmap.
+The wider Guard Ecosystem remains vision-stage beyond TextGuard. Do not start SchemaGuard, ApiGuard, ConfigGuard, FormGuard, GitGuard, AI-platform work, or a multi-product SaaS merely because Arabic parity is finished. First validate TextGuard adoption and use `docs/GUARD-ECOSYSTEM.md` as the decision filter for what, if anything, deserves to be built next.

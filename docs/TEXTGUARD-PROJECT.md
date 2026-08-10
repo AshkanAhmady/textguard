@@ -1,12 +1,12 @@
 # TextGuard — Project Documentation
 
-> Persistent ground-truth orientation for contributors and AI assistants. Implementation/tests are the runtime source of truth; `textguard-roadmap.md` is delivery-status truth; ADRs are architecture-decision truth.
+> Persistent ground-truth orientation for contributors and AI assistants. Implementation/tests are the runtime source of truth; `textguard-roadmap.md` is delivery-status truth; ADRs are architecture-decision truth; `GUARD-ECOSYSTEM.md` is stable product/business vision.
 
 ## 1. Product
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI.
 
-Current product-quality feature work is **Arabic implementation parity**, now in AR4 bundle/preset parity after completing AR1-AR3.
+Arabic implementation parity is complete for the current architecture. The current product focus is **adoption validation and evidence-driven roadmap reassessment** rather than automatic feature expansion.
 
 ## 2. Repository and architecture
 
@@ -20,7 +20,7 @@ Key packages:
 - detection plugins: Email, URL, Phone, IP, UUID, Credit Card, IBAN
 - `packages/guards/pii` → `@textguard/plugin-pii`
 
-Core remains plugin-oriented. Arabic parity uses the existing `Dictionary` contract and shared normalization pipeline; no Arabic-specific Core API is being introduced.
+Core remains plugin-oriented. Language packages use the shared `Dictionary` contract and normalization pipeline; no Arabic-specific Core API was introduced.
 
 ## 3. Current public core API
 
@@ -41,13 +41,13 @@ filter.use(plugin: Plugin): void;
 - Explain projects final accepted matches from the same debug-capable execution path.
 - Explain does not introduce a second detection engine.
 
-## 5. Plugin state
+## 5. Package state
 
 ### Language packages
 
 - Persian: established/full relative to the current language architecture.
 - English: established/full relative to the current language architecture.
-- Arabic: AR1-AR3 provide baseline dictionaries, normalization hardening, high-confidence coverage, dialect coverage, and public API regression tests. AR4 integrates Arabic into the higher-level bundle presets.
+- Arabic: AR1-AR4 provide baseline dictionaries, normalization hardening, high-confidence coverage, a first tested dialect slice, and inclusion in `strictPreset` / `enterprisePreset`.
 
 ### Structured-data detection
 
@@ -65,18 +65,18 @@ Consumer init, shared policy configuration, external E2E validation, and final p
 
 The npm-facing documentation cleanup is complete. Public behavior/API changes must continue updating affected documentation in the same PR.
 
-## 8. Current milestone — Arabic implementation parity
+## 8. Completed milestone — Arabic implementation parity
 
-Arabic parity stays incremental and reviewable.
+Arabic parity was delivered incrementally and without a second language-specific Core path.
 
-### AR1 — usable dictionary baseline — ✅ merged
+### AR1 — usable dictionary baseline — ✅ complete
 
 - `arProfanity` and `arInsults` added;
 - existing `arDictionary`, `arPack`, and `arLanguage` preserved;
 - public `createFilter()` integration tests added;
 - package README and release metadata updated.
 
-### AR2 — normalization + coverage hardening — ✅ merged and released
+### AR2 — normalization + coverage hardening — ✅ complete and released
 
 - existing Core `ArabicNormalizer` audited instead of introducing a second normalization path;
 - common Arabic diacritics removed before matching;
@@ -84,26 +84,28 @@ Arabic parity stays incremental and reviewable.
 - high-confidence profanity/insult coverage expanded;
 - public regression coverage added for variants and benign Arabic text.
 
-### AR3 — dialect coverage slice 1 — ✅ merged
+### AR3 — dialect coverage slice 1 — ✅ complete
 
-AR3 added a small high-confidence dialect vocabulary slice while preserving the existing public API and conservative false-positive policy.
+AR3 added a small high-confidence dialect vocabulary slice while preserving the public API and conservative false-positive policy.
 
-### AR4 — bundle/preset parity — 🟡 current PR
+### AR4 — bundle/preset parity — ✅ complete
 
-- include `arDictionary` in `strictPreset` and `enterprisePreset`;
-- verify Arabic moderation through preset-level tests;
-- keep `socialMediaPreset` unchanged because it is still an unrelated placeholder;
-- avoid Core changes or a second Arabic configuration path.
+- `arDictionary` is included in `strictPreset` and `enterprisePreset`;
+- Arabic moderation is verified through preset-level tests;
+- `socialMediaPreset` remains unchanged because it is an unrelated placeholder;
+- no Core changes or second Arabic configuration path were introduced.
 
-Arabic vocabulary is not treated as a finite “complete list.” Dialect, spelling, and context require incremental tested expansion.
+Arabic vocabulary is not treated as a finite “complete list.” Further coverage work should be driven by real false negatives, user reports, or other evidence rather than permanent roadmap expansion.
 
 ## 9. Release safety
 
-Release hardening is complete. The repository now uses Changesets with release planning, explicit npm candidate checks, bounded registry lookup, canonical package taxonomy, and a documented procedure in `docs/RELEASING.md`.
+Release hardening is complete. The repository uses Changesets with release planning, explicit npm candidate checks, bounded registry lookup, canonical package taxonomy, and a documented procedure in `docs/RELEASING.md`.
 
-The latest published language/core release includes `@textguard/core@1.0.3`, `@textguard/all@1.0.3`, `@textguard/ar@1.1.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2`.
+The latest published baseline includes `@textguard/core@1.0.3`, `@textguard/all@1.0.3`, `@textguard/ar@1.1.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2`.
 
 Never run `npm publish` from the repository root. Review the release plan and final npm candidate list before every publish.
+
+AR3 and AR4 have merged Changesets, so the next release cycle should include the resulting `@textguard/ar` and `@textguard/all` version bumps after the normal release-plan review.
 
 ## 10. Known technical debt
 
@@ -130,10 +132,12 @@ When a merged Changeset means an npm package should be released, explicitly remi
 
 ## 12. Guard Ecosystem memory
 
-A dedicated documentation PR is queued to add the canonical Guard Ecosystem master document to Git. It will remain separate from TextGuard's fast-changing technical roadmap and will serve as stable business/vision context.
+`docs/GUARD-ECOSYSTEM.md` is the canonical stable document for the wider product/business vision. It intentionally stays separate from this file and `textguard-roadmap.md`, which track TextGuard's changing implementation state.
+
+The wider ecosystem remains vision-stage. TextGuard should earn adoption and validate developer/business demand before implementation starts on additional Guard products.
 
 ## 13. Long-term roadmap guardrail
 
 Near-term sequence is:
 
-**AR4 parity closeout → adoption validation → broader roadmap reassessment.**
+**complete pending AR3/AR4 release → adoption validation → evidence-driven roadmap reassessment.**

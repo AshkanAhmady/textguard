@@ -1,6 +1,6 @@
 # TextGuard Roadmap — Verified Status
 
-> Status below is checked against actual source code. Use this alongside `TEXTGUARD-PROJECT.md`.
+> Status below is checked against actual source code. Use this alongside `TEXTGUARD-PROJECT.md` and the stable wider-product vision in `GUARD-ECOSYSTEM.md`.
 
 Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
@@ -10,8 +10,8 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 1. **Release hardening — ✅ complete.** Safe Changesets planning, bounded npm candidate checks, release docs, and canonical package taxonomy are in place.
 2. **AR1/AR2 package release — ✅ complete.** `@textguard/core@1.0.3`, `@textguard/all@1.0.3`, `@textguard/ar@1.1.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2` are published.
-3. **Arabic language parity — 🟡 in progress.** AR1-AR3 are complete; AR4 now brings Arabic into the higher-level bundle presets with regression coverage.
-4. **Adoption feedback / roadmap reassessment.** Use external package usage and feedback before expanding broader feature scope.
+3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
+4. **Adoption validation / roadmap reassessment — 🟡 current focus.** Use real package usage, issues, feedback, and developer friction to choose the next product milestone instead of expanding scope automatically.
 
 ---
 
@@ -50,16 +50,16 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 Future public API/behavior changes must update affected READMEs in the same PR.
 
-### Arabic language parity — 🟡 in progress
+### Arabic language parity — ✅ complete for the current architecture
 
 | Slice | Status | Scope |
 | --- | --- | --- |
 | AR1 — usable dictionary baseline | ✅ Done | Conservative profanity + insult dictionaries, populated `arDictionary`/`arPack`, public API tests, README, and release metadata. |
 | AR2 — normalization + coverage hardening | ✅ Done | Existing Arabic normalization audited/hardened, diacritic/Alef-Maqsura coverage added, vocabulary expanded, and benign regression cases added. |
 | AR3 — dialect/coverage expansion slice 1 | ✅ Done | Small high-confidence dialect additions with public API and benign regression tests. |
-| AR4 — bundle/preset parity | 🟡 Current PR | Include `arDictionary` in `strictPreset` and `enterprisePreset`, add preset-level Arabic regression tests, and document the bundle behavior. |
+| AR4 — bundle/preset parity | ✅ Done | `arDictionary` is included in `strictPreset` and `enterprisePreset` with preset-level Arabic regression coverage. |
 
-Arabic profanity coverage is intentionally not treated as a finite “complete list”; dialect and spelling variation require incremental, tested expansion.
+Arabic profanity coverage is intentionally not treated as a finite “complete list”; future vocabulary changes should be evidence-driven rather than treated as a standing roadmap obligation.
 
 ### Release safety — ✅ hardened
 
@@ -81,4 +81,4 @@ Arabic profanity coverage is intentionally not treated as a finite “complete l
 
 ## Current product-quality focus
 
-**Arabic AR4 parity closeout → adoption feedback → roadmap reassessment.**
+**adoption validation → evidence-driven roadmap reassessment.**
