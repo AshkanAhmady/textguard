@@ -2,6 +2,7 @@ import type { FilterOptions } from "@textguard/core";
 
 import { faDictionary } from "@textguard/fa";
 import { enDictionary } from "@textguard/en";
+import { arDictionary } from "@textguard/ar";
 
 import { emailPlugin } from "@textguard/plugin-email";
 import { urlPlugin } from "@textguard/plugin-url";
@@ -12,7 +13,7 @@ import { creditCardPlugin } from "@textguard/plugin-credit-card";
 import { ibanPlugin } from "@textguard/plugin-iban";
 
 export const enterprisePreset: FilterOptions = {
-  dictionaries: [faDictionary, enDictionary],
+  dictionaries: [faDictionary, enDictionary, arDictionary],
 
   plugins: [
     emailPlugin(),
