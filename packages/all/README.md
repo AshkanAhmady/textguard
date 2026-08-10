@@ -22,7 +22,7 @@ console.log(result.filteredText);
 console.log(result.matches);
 ```
 
-`strictPreset` currently combines the Persian and English dictionaries with the official Email, URL, Phone, IP, UUID, Credit Card, and IBAN detection plugins. Arabic is exported by this package, but it is intentionally not yet included in `strictPreset` until the AR4 bundle/preset parity decision.
+`strictPreset` combines the Persian, English, and Arabic dictionaries with the official Email, URL, Phone, IP, UUID, Credit Card, and IBAN detection plugins.
 
 ## Explain and debug
 
@@ -59,11 +59,11 @@ The bundle also re-exports the public API from `@textguard/core`.
 
 ### `strictPreset`
 
-The recommended ready-made preset for broad detection. It includes Persian and English dictionaries plus the current structured-data detection plugins.
+The recommended ready-made preset for broad detection. It includes Persian, English, and Arabic moderation dictionaries plus the current structured-data detection plugins.
 
 ### `enterprisePreset`
 
-Currently has the same practical detector/dictionary composition as `strictPreset`. Its future role remains tracked as technical debt.
+Currently has the same practical detector/dictionary composition as `strictPreset`, including Arabic moderation. Its future role remains tracked as technical debt.
 
 ### `socialMediaPreset`
 
