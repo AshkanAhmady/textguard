@@ -1,4 +1,4 @@
-# @textguard/plugin-fa 🇮🇷
+# @textguard/fa 🇮🇷
 
 پکیج رسمی زبان فارسی برای TextGuard.
 
@@ -7,17 +7,14 @@
 ## نصب
 
 ```bash
-npm install @textguard/core @textguard/plugin-fa
+npm install @textguard/core @textguard/fa
 ```
 
 ## شروع سریع
 
 ```ts
 import { createFilter } from "@textguard/core";
-import {
-  faDictionary,
-  faLookalikesMapping,
-} from "@textguard/plugin-fa";
+import { faDictionary, faLookalikesMapping } from "@textguard/fa";
 
 const filter = createFilter({
   dictionaries: [faDictionary],
