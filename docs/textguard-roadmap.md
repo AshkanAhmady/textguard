@@ -8,9 +8,10 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **Package README standardization — ✅ complete.**
-2. **Arabic language parity — 🟡 in progress.** AR1 is merged. AR2 now audits normalization and expands high-confidence vocabulary in one reviewable slice.
-3. **Adoption feedback / next roadmap reassessment.** Use real package usage and feedback before expanding into broader integrations or paid features.
+1. **Release hardening — 🟡 current PR.** Restore the intended pending release state, reduce unnecessary Changesets propagation, add release preview/publish guards, and document the safe npm flow.
+2. **Publish pending AR1/AR2 package releases safely.** Review the release plan and candidate list before publishing.
+3. **Arabic language parity — 🟡 in progress.** AR1 and AR2 are merged; AR3 dialect coverage slice 1 remains open separately in PR #22.
+4. **Adoption feedback / roadmap reassessment.** Use external package usage and feedback before expanding broader feature scope.
 
 ---
 
@@ -54,11 +55,20 @@ Future public API/behavior changes must update affected READMEs in the same PR.
 | Slice | Status | Scope |
 | --- | --- | --- |
 | AR1 — usable dictionary baseline | ✅ Done | Conservative profanity + insult dictionaries, populated `arDictionary`/`arPack`, public API tests, README, and release metadata. |
-| AR2 — normalization + coverage hardening | 🟡 Current PR | Audit the existing Core normalizer, add diacritic/Alef-Maqsura coverage, expand common high-confidence profanity/insults, and add benign regression cases. |
-| AR3 — dialect/coverage expansion | ❌ Later | Expand dialect-specific vocabulary only with evidence and false-positive tests; evaluate spam/pattern resources separately. |
+| AR2 — normalization + coverage hardening | ✅ Done | Existing Arabic normalization audited/hardened, diacritic/Alef-Maqsura coverage added, vocabulary expanded, and benign regression cases added. |
+| AR3 — dialect/coverage expansion slice 1 | 🟡 Open PR #22 | Small high-confidence dialect additions with public API and benign regression tests. Keep separate from release hardening. |
 | AR4 — bundle/preset parity | ❌ Later | Decide when Arabic should join higher-level presets/bundles after quality is sufficient. |
 
 Arabic profanity coverage is intentionally not treated as a finite “complete list”; dialect and spelling variation require incremental, tested expansion.
+
+### Release safety — 🟡 current hardening
+
+- never run root `npm publish`;
+- preview Changesets with `pnpm release:plan` before versioning;
+- review generated version/changelog diff before commit;
+- compare local public package versions with npm before `changeset publish`;
+- require explicit confirmation of the exact candidate count;
+- keep `docs/RELEASING.md` as the canonical procedure.
 
 ### Other technical debt
 
@@ -71,4 +81,4 @@ Arabic profanity coverage is intentionally not treated as a finite “complete l
 
 ## Current product-quality focus
 
-**Arabic parity → adoption feedback → roadmap reassessment.**
+**safe release flow → Arabic parity → adoption feedback → roadmap reassessment.**
