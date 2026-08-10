@@ -1,6 +1,6 @@
 packages:
   - "packages/*"
-  - "packages/plugins/*"
-  - "packages/plugins/languages/*"
-  - "packages/plugins/detection/*"
+  - "packages/languages/*"
+  - "packages/detection/*"
+  - "packages/guards/*"
   - "examples/*"
