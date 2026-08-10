@@ -47,12 +47,13 @@ Do not publish when the diff contains an unexpected package bump.
 ## 4. Validate the repository
 
 ```bash
+pnpm install --frozen-lockfile
 pnpm test
 pnpm check-types
 pnpm build
 ```
 
-Commit the generated release changes only after the release set and checks are correct.
+A release PR is not ready to merge unless `pnpm install --frozen-lockfile` succeeds from the committed lockfile. Commit the generated release changes only after the release set and checks are correct.
 
 ## 5. Publish with the guard
 
