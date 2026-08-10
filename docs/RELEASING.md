@@ -68,7 +68,7 @@ Example:
 Packages that changeset publish can publish:
 
 - @textguard/core: npm 1.0.2 -> local 1.0.3
-- @textguard/plugin-ar: npm 1.0.2 -> local 1.1.0
+- @textguard/ar: npm 1.0.2 -> local 1.1.0
 
 Type "publish 2" to continue:
 ```
@@ -79,7 +79,21 @@ Non-interactive publishing is blocked by default. A trusted release automation m
 
 ## Internal dependency policy
 
-Changesets uses:
+Published TextGuard packages should use semver-compatible workspace ranges for public runtime dependencies:
+
+```json
+{
+  "dependencies": {
+    "@textguard/core": "workspace:^"
+  }
+}
+```
+
+`workspace:^` keeps local workspace resolution during development, while pnpm publishes a caret range such as `^1.0.2`. This lets a compatible Core patch remain inside the consumer package's dependency range instead of forcing an unrelated patch release across every dependent workspace.
+
+Use `workspace:*` only where exact workspace coupling is intentional, such as private repository tooling/dev dependencies. Do not use it for normal public runtime dependencies when semver compatibility is intended.
+
+Changesets also uses:
 
 ```json
 {
@@ -87,7 +101,7 @@ Changesets uses:
 }
 ```
 
-A patch release of a shared package should not automatically rewrite internal dependency references merely to chase the latest patch when existing ranges remain valid. Changesets still updates dependencies when the existing range would no longer be valid.
+Together, the caret workspace ranges and this Changesets setting avoid unnecessary patch-release propagation while still allowing dependency metadata to update when an existing semver range is no longer valid.
 
 ## Release rule
 
