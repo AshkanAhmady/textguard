@@ -1,0 +1,61 @@
+{
+  "name": "@textguard/plugin-pii",
+  "version": "0.2.0",
+  "description": "PII / Compliance detection bundle for TextGuard — email, phone, credit card and IBAN detection with a scan() helper for CI and pre-commit use.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "textguard-pii": "./dist/cli.js",
+    "textguard-pii-ci": "./dist/ci.js"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "check-types": "tsc --noEmit",
+    "test": "vitest",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AshkanAhmady/textguard.git"
+  },
+  "keywords": [
+    "pii",
+    "compliance",
+    "gdpr",
+    "pci-dss",
+    "secret-scanning",
+    "ci",
+    "pre-commit",
+    "textguard"
+  ],
+  "dependencies": {
+    "@textguard/core": "workspace:*",
+    "@textguard/plugin-email": "workspace:*",
+    "@textguard/plugin-phone": "workspace:*",
+    "@textguard/plugin-credit-card": "workspace:*",
+    "@textguard/plugin-iban": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.8"
+  }
+}

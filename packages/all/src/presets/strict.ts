@@ -1,10 +1,9 @@
 import type { FilterOptions } from "@textguard/core";
 
-import { faDictionary } from "@textguard/plugin-fa";
-import { enDictionary } from "@textguard/plugin-en";
-// TODO(v1.1):
-// Add arDictionary when Arabic language package is implemented.
-// import { arDictionary } from "@textguard/plugin-ar";
+import { faDictionary } from "@textguard/fa";
+import { enDictionary } from "@textguard/en";
+// Arabic is intentionally excluded until the AR4 bundle/preset parity decision.
+// import { arDictionary } from "@textguard/ar";
 
 import { emailPlugin } from "@textguard/plugin-email";
 import { urlPlugin } from "@textguard/plugin-url";

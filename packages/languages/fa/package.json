@@ -1,0 +1,41 @@
+{
+  "name": "@textguard/fa",
+  "version": "1.0.2",
+  "description": "Official Persian Language Plugin with Dictionaries, Patterns and Lookalike Character Support for TextGuard",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint .",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@textguard/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.8"
+  },
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AshkanAhmady/textguard.git"
+  },
+  "keywords": ["persian", "farsi", "profanity", "bad-words", "moderation", "textguard"]
+}

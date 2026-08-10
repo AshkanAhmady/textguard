@@ -34,5 +34,8 @@ jobs:
       - name: Test
         run: pnpm vitest run --coverage
 
+      - name: Validate release guard
+        run: node --check scripts/release-check.mjs
+
       - name: PII external consumer example E2E
         run: node examples/pii-consumer/e2e.mjs

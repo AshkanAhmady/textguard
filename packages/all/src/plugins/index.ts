@@ -1,6 +1,6 @@
-export * from "@textguard/plugin-fa";
-export * from "@textguard/plugin-en";
-export * from "@textguard/plugin-ar";
+export * from "@textguard/fa";
+export * from "@textguard/en";
+export * from "@textguard/ar";
 
 export * from "@textguard/plugin-email";
 export * from "@textguard/plugin-url";

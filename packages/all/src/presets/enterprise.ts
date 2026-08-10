@@ -1,7 +1,7 @@
 import type { FilterOptions } from "@textguard/core";
 
-import { faDictionary } from "@textguard/plugin-fa";
-import { enDictionary } from "@textguard/plugin-en";
+import { faDictionary } from "@textguard/fa";
+import { enDictionary } from "@textguard/en";
 
 import { emailPlugin } from "@textguard/plugin-email";
 import { urlPlugin } from "@textguard/plugin-url";

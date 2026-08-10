@@ -1,0 +1,24 @@
+{
+  "name": "@textguard/en",
+  "version": "1.0.2",
+  "description": "Official English Language Plugin with Dictionaries, Patterns and Leetspeak Support for TextGuard",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "publishConfig": { "access": "public" },
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
+  "files": ["dist"],
+  "scripts": { "build": "tsup", "lint": "eslint .", "test": "vitest" },
+  "dependencies": { "@textguard/core": "workspace:*" },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.8"
+  },
+  "sideEffects": false,
+  "repository": { "type": "git", "url": "git+https://github.com/AshkanAhmady/textguard.git" },
+  "keywords": ["english", "profanity", "bad-words", "moderation", "textguard"]
+}

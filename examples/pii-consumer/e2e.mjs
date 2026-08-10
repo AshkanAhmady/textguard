@@ -28,7 +28,7 @@ function runStatus(command, args, cwd) {
   });
 }
 
-const packageDir = resolve(import.meta.dirname, "../../packages/plugins/pii");
+const packageDir = resolve(import.meta.dirname, "../../packages/guards/pii");
 const tempRoot = mkdtempSync(join(tmpdir(), "textguard-pii-e2e-"));
 const consumerDir = join(tempRoot, "consumer");
 mkdirSync(consumerDir, { recursive: true });
@@ -65,54 +65,30 @@ try {
   writeFileSync(join(consumerDir, "fixture.txt"), `contact: ${blockedEmail}\n`);
   run("git", ["add", "fixture.txt"], consumerDir);
 
-  const blockedCommit = runStatus(
-    "git",
-    ["commit", "-m", "test blocked pii"],
-    consumerDir,
-  );
+  const blockedCommit = runStatus("git", ["commit", "-m", "test blocked pii"], consumerDir);
   if (blockedCommit.status === 0) {
     throw new Error("pre-commit hook allowed non-allowlisted PII");
   }
 
   const policy = {
-    allowlist: {
-      email: [blockedEmail],
-    },
+    allowlist: { email: [blockedEmail] },
     ignorePaths: ["fixtures/**"],
   };
-  writeFileSync(
-    join(consumerDir, "textguard-pii.config.json"),
-    `${JSON.stringify(policy, null, 2)}\n`,
-  );
+  writeFileSync(join(consumerDir, "textguard-pii.config.json"), `${JSON.stringify(policy, null, 2)}\n`);
   mkdirSync(join(consumerDir, "fixtures"), { recursive: true });
   const ignoredEmail = ["ignored", "example.com"].join("@");
-  writeFileSync(
-    join(consumerDir, "fixtures", "sample.txt"),
-    `contact: ${ignoredEmail}\n`,
-  );
+  writeFileSync(join(consumerDir, "fixtures", "sample.txt"), `contact: ${ignoredEmail}\n`);
   run("git", ["add", "."], consumerDir);
   run("git", ["commit", "-m", "allow intentional test pii"], consumerDir);
 
-  run(
-    "npx",
-    ["textguard-pii-ci", "--base", "HEAD~1", "--head", "HEAD"],
-    consumerDir,
-  );
+  run("npx", ["textguard-pii-ci", "--base", "HEAD~1", "--head", "HEAD"], consumerDir);
 
   const rejectedEmail = ["rejected", "example.com"].join("@");
   writeFileSync(join(consumerDir, "leak.txt"), `contact: ${rejectedEmail}\n`);
   run("git", ["add", "leak.txt"], consumerDir);
-  run(
-    "git",
-    ["commit", "--no-verify", "-m", "seed ci rejection"],
-    consumerDir,
-  );
+  run("git", ["commit", "--no-verify", "-m", "seed ci rejection"], consumerDir);
 
-  const rejectedCi = runStatus(
-    "npx",
-    ["textguard-pii-ci", "--base", "HEAD~1", "--head", "HEAD"],
-    consumerDir,
-  );
+  const rejectedCi = runStatus("npx", ["textguard-pii-ci", "--base", "HEAD~1", "--head", "HEAD"], consumerDir);
   if (rejectedCi.status === 0) {
     throw new Error("CI scanner allowed non-allowlisted PII");
   }
