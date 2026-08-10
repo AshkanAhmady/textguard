@@ -4,26 +4,17 @@
     "baseUrl": ".",
     "paths": {
       "@textguard/core": ["packages/core/src/index.ts"],
-      "@textguard/plugin-fa": ["packages/plugins/languages/fa/src/index.ts"],
-      "@textguard/plugin-en": ["packages/plugins/languages/en/src/index.ts"],
-      "@textguard/plugin-ar": ["packages/plugins/languages/ar/src/index.ts"],
-      "@textguard/plugin-email": [
-        "packages/plugins/detection/email/src/index.ts"
-      ],
-      "@textguard/plugin-url": ["packages/plugins/detection/url/src/index.ts"],
-      "@textguard/plugin-phone": [
-        "packages/plugins/detection/phone/src/index.ts"
-      ],
-      "@textguard/plugin-ip": ["packages/plugins/detection/ip/src/index.ts"],
-      "@textguard/plugin-uuid": [
-        "packages/plugins/detection/uuid/src/index.ts"
-      ],
-      "@textguard/plugin-credit-card": [
-        "packages/plugins/detection/creditCard/src/index.ts"
-      ],
-      "@textguard/plugin-iban": [
-        "packages/plugins/detection/iban/src/index.ts"
-      ],
+      "@textguard/fa": ["packages/languages/fa/src/index.ts"],
+      "@textguard/en": ["packages/languages/en/src/index.ts"],
+      "@textguard/ar": ["packages/languages/ar/src/index.ts"],
+      "@textguard/plugin-email": ["packages/detection/email/src/index.ts"],
+      "@textguard/plugin-url": ["packages/detection/url/src/index.ts"],
+      "@textguard/plugin-phone": ["packages/detection/phone/src/index.ts"],
+      "@textguard/plugin-ip": ["packages/detection/ip/src/index.ts"],
+      "@textguard/plugin-uuid": ["packages/detection/uuid/src/index.ts"],
+      "@textguard/plugin-credit-card": ["packages/detection/credit-card/src/index.ts"],
+      "@textguard/plugin-iban": ["packages/detection/iban/src/index.ts"],
+      "@textguard/plugin-pii": ["packages/guards/pii/src/index.ts"],
       "@textguard/all": ["packages/all/src/index.ts"]
     }
   }
