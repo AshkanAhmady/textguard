@@ -1,11 +1,10 @@
-import { execFileSync } from "node:child_process";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 
 const packagesRoot = join(process.cwd(), "packages");
-const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+const npmRegistryBaseUrl = "https://registry.npmjs.org";
 
 function findPackageJsonFiles(directory) {
   const result = [];
@@ -56,24 +55,31 @@ function compareVersions(left, right) {
   return a.prerelease.localeCompare(b.prerelease);
 }
 
-function getRegistryVersion(name) {
-  try {
-    const raw = execFileSync(
-      npmCommand,
-      ["view", name, "version", "--json"],
-      { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
-    ).trim();
+async function getRegistryVersion(name) {
+  const response = await fetch(`${npmRegistryBaseUrl}/${encodeURIComponent(name)}`, {
+    headers: {
+      accept: "application/vnd.npm.install-v1+json",
+    },
+  });
 
-    return JSON.parse(raw);
-  } catch (error) {
-    const stderr = error?.stderr?.toString?.() ?? "";
-
-    if (stderr.includes("E404") || stderr.includes("404 Not Found")) {
-      return null;
-    }
-
-    throw error;
+  if (response.status === 404) {
+    return null;
   }
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to read npm registry metadata for ${name}: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const metadata = await response.json();
+  const latestVersion = metadata?.["dist-tags"]?.latest;
+
+  if (typeof latestVersion !== "string") {
+    throw new Error(`npm registry metadata for ${name} does not contain a latest dist-tag`);
+  }
+
+  return latestVersion;
 }
 
 const candidates = [];
@@ -86,7 +92,7 @@ for (const packageJsonPath of findPackageJsonFiles(packagesRoot)) {
     continue;
   }
 
-  const registryVersion = getRegistryVersion(packageJson.name);
+  const registryVersion = await getRegistryVersion(packageJson.name);
 
   if (registryVersion === null) {
     candidates.push({
