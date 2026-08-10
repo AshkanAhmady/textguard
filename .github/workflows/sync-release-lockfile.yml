@@ -1,0 +1,46 @@
+name: Sync release lockfile
+
+on:
+  push:
+    branches:
+      - chore/release-arabic-taxonomy
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: chore/release-arabic-taxonomy
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+          run_install: false
+
+      - name: Regenerate lockfile only
+        run: pnpm install --lockfile-only
+
+      - name: Commit synchronized lockfile and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pnpm-lock.yaml
+          git rm .github/workflows/sync-release-lockfile.yml
+          if git diff --cached --quiet; then
+            echo "No lockfile changes were needed."
+            exit 0
+          fi
+          git commit -m "chore(release): sync lockfile with workspace ranges"
+          git push origin HEAD:chore/release-arabic-taxonomy
