@@ -12,7 +12,7 @@
   "files": ["dist"],
   "sideEffects": false,
   "scripts": { "build": "tsup", "lint": "eslint .", "test": "vitest" },
-  "dependencies": { "@textguard/core": "workspace:*" },
+  "dependencies": { "@textguard/core": "workspace:^" },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "tsup": "^8.5.1",
