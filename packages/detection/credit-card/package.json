@@ -25,7 +25,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@textguard/core": "workspace:*"
+    "@textguard/core": "workspace:^"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

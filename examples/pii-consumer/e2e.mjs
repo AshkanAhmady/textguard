@@ -28,25 +28,36 @@ function runStatus(command, args, cwd) {
   });
 }
 
-const packageDir = resolve(import.meta.dirname, "../../packages/guards/pii");
+function packWorkspacePackage(packageDir, tempRoot, packageName) {
+  const before = new Set(readdirSync(tempRoot));
+  run("pnpm", ["pack", "--pack-destination", tempRoot], packageDir);
+
+  const tarball = readdirSync(tempRoot)
+    .filter((name) => name.endsWith(".tgz") && !before.has(name))
+    .map((name) => join(tempRoot, name))[0];
+
+  if (!tarball) throw new Error(`${packageName} package tarball was not created`);
+  return tarball;
+}
+
+const corePackageDir = resolve(import.meta.dirname, "../../packages/core");
+const piiPackageDir = resolve(import.meta.dirname, "../../packages/guards/pii");
 const tempRoot = mkdtempSync(join(tmpdir(), "textguard-pii-e2e-"));
 const consumerDir = join(tempRoot, "consumer");
 mkdirSync(consumerDir, { recursive: true });
 
 try {
-  run("pnpm", ["pack", "--pack-destination", tempRoot], packageDir);
-  const tarball = readdirSync(tempRoot)
-    .filter((name) => name.endsWith(".tgz"))
-    .map((name) => join(tempRoot, name))[0];
-
-  if (!tarball) throw new Error("PII package tarball was not created");
+  // Pack Core alongside PII so release PRs can validate an external consumer
+  // before the new Core version exists on npm.
+  const coreTarball = packWorkspacePackage(corePackageDir, tempRoot, "Core");
+  const piiTarball = packWorkspacePackage(piiPackageDir, tempRoot, "PII");
 
   run("git", ["init"], consumerDir);
   run("git", ["config", "user.name", "TextGuard E2E"], consumerDir);
   run("git", ["config", "user.email", "textguard-e2e@example.invalid"], consumerDir);
   run("npm", ["init", "-y"], consumerDir);
   writeFileSync(join(consumerDir, ".gitignore"), "node_modules/\n");
-  run("npm", ["install", "-D", tarball, "husky@9"], consumerDir);
+  run("npm", ["install", "-D", coreTarball, piiTarball, "husky@9"], consumerDir);
   run("npx", ["husky", "init"], consumerDir);
   run("npx", ["textguard-pii", "init"], consumerDir);
 

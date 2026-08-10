@@ -1,27 +1,41 @@
 {
   "name": "@textguard/all",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Complete TextGuard bundle",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
-  "publishConfig": { "access": "public" },
-  "files": ["dist"],
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
-  "scripts": { "build": "tsup", "lint": "eslint .", "test": "vitest" },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint .",
+    "test": "vitest"
+  },
   "dependencies": {
-    "@textguard/core": "workspace:*",
-    "@textguard/fa": "workspace:*",
-    "@textguard/en": "workspace:*",
-    "@textguard/ar": "workspace:*",
-    "@textguard/plugin-email": "workspace:*",
-    "@textguard/plugin-url": "workspace:*",
-    "@textguard/plugin-phone": "workspace:*",
-    "@textguard/plugin-ip": "workspace:*",
-    "@textguard/plugin-uuid": "workspace:*",
-    "@textguard/plugin-credit-card": "workspace:*",
-    "@textguard/plugin-iban": "workspace:*"
+    "@textguard/core": "workspace:^",
+    "@textguard/fa": "workspace:^",
+    "@textguard/en": "workspace:^",
+    "@textguard/ar": "workspace:^",
+    "@textguard/plugin-email": "workspace:^",
+    "@textguard/plugin-url": "workspace:^",
+    "@textguard/plugin-phone": "workspace:^",
+    "@textguard/plugin-ip": "workspace:^",
+    "@textguard/plugin-uuid": "workspace:^",
+    "@textguard/plugin-credit-card": "workspace:^",
+    "@textguard/plugin-iban": "workspace:^"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

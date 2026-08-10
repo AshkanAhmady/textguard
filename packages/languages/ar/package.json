@@ -1,24 +1,49 @@
 {
   "name": "@textguard/ar",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Official Arabic Language Plugin for TextGuard",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "publishConfig": { "access": "public" },
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
-  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
-  "scripts": { "build": "tsup", "lint": "eslint .", "test": "vitest" },
-  "dependencies": { "@textguard/core": "workspace:*" },
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint .",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@textguard/core": "workspace:^"
+  },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "tsup": "^8.5.1",
     "typescript": "^5.9.2",
     "vitest": "^4.1.8"
   },
-  "repository": { "type": "git", "url": "git+https://github.com/AshkanAhmady/textguard.git" },
-  "keywords": ["arabic", "profanity", "bad-words", "moderation", "textguard"]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AshkanAhmady/textguard.git"
+  },
+  "keywords": [
+    "arabic",
+    "profanity",
+    "bad-words",
+    "moderation",
+    "textguard"
+  ]
 }

@@ -1,4 +1,11 @@
-# @textguard/plugin-fa
+# @textguard/ar
+
+## 1.1.0
+
+### Minor Changes
+
+- 5b1b7b6: Improve Arabic normalization for common diacritics and Alef Maqsura, and expand the Arabic moderation dictionaries with conservative high-confidence profanity and insult coverage.
+- 5b1b7b6: Add the first usable Arabic moderation baseline with profanity and insult dictionaries, a populated `arDictionary`, and a populated `arPack`.
 
 ## 1.0.2
 

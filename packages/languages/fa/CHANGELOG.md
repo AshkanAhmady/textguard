@@ -1,4 +1,4 @@
-# @textguard/plugin-fa
+# @textguard/fa
 
 ## 1.0.2
 

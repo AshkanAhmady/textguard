@@ -46,11 +46,11 @@
     "textguard"
   ],
   "dependencies": {
-    "@textguard/core": "workspace:*",
-    "@textguard/plugin-email": "workspace:*",
-    "@textguard/plugin-phone": "workspace:*",
-    "@textguard/plugin-credit-card": "workspace:*",
-    "@textguard/plugin-iban": "workspace:*"
+    "@textguard/core": "workspace:^",
+    "@textguard/plugin-email": "workspace:^",
+    "@textguard/plugin-phone": "workspace:^",
+    "@textguard/plugin-credit-card": "workspace:^",
+    "@textguard/plugin-iban": "workspace:^"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
