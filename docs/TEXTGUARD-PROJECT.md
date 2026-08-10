@@ -6,7 +6,7 @@
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI.
 
-Current product-quality feature work is **Arabic implementation parity**, with release safety being hardened before the next Arabic slice is merged.
+Current product-quality feature work is **Arabic implementation parity**, now that release hardening and the pending AR1/AR2 package release have been completed.
 
 ## 2. Repository and architecture
 
@@ -16,9 +16,9 @@ Key packages:
 
 - `packages/core` → `@textguard/core`
 - `packages/all` → `@textguard/all`
-- language plugins: Persian, English, Arabic
+- language packages: `@textguard/fa`, `@textguard/en`, `@textguard/ar`
 - detection plugins: Email, URL, Phone, IP, UUID, Credit Card, IBAN
-- `packages/plugins/pii` → `@textguard/plugin-pii`
+- `packages/guards/pii` → `@textguard/plugin-pii`
 
 Core remains plugin-oriented. Arabic parity uses the existing `Dictionary` contract and shared normalization pipeline; no Arabic-specific Core API is being introduced.
 
@@ -43,11 +43,11 @@ filter.use(plugin: Plugin): void;
 
 ## 5. Plugin state
 
-### Language plugins
+### Language packages
 
 - Persian: established/full relative to the current language architecture.
 - English: established/full relative to the current language architecture.
-- Arabic: parity is in progress. AR1 established usable profanity/insult dictionaries. AR2 is merged and adds normalization hardening plus broader high-confidence vocabulary. AR3 dialect coverage slice 1 is open separately in PR #22.
+- Arabic: parity is in progress. AR1 established usable profanity/insult dictionaries. AR2 added normalization hardening plus broader high-confidence vocabulary. AR3 dialect coverage slice 1 is the active work.
 
 ### Structured-data detection
 
@@ -76,7 +76,7 @@ Arabic parity stays incremental and reviewable.
 - public `createFilter()` integration tests added;
 - package README and release metadata updated.
 
-### AR2 — normalization + coverage hardening — ✅ merged
+### AR2 — normalization + coverage hardening — ✅ merged and released
 
 - existing Core `ArabicNormalizer` audited instead of introducing a second normalization path;
 - common Arabic diacritics removed before matching;
@@ -84,9 +84,9 @@ Arabic parity stays incremental and reviewable.
 - high-confidence profanity/insult coverage expanded;
 - public regression coverage added for variants and benign Arabic text.
 
-### AR3 — dialect coverage slice 1 — 🟡 open in PR #22
+### AR3 — dialect coverage slice 1 — 🟡 current PR
 
-AR3 adds only a small high-confidence dialect vocabulary slice and remains separate from release hardening.
+AR3 adds only a small high-confidence dialect vocabulary slice, preserves the current public API, and includes public `createFilter()` regression coverage plus benign Arabic negative tests.
 
 ### AR4 — later
 
@@ -96,15 +96,9 @@ Arabic vocabulary is not treated as a finite “complete list.” Dialect, spell
 
 ## 9. Release safety
 
-The repository uses Changesets, but package publishing must not be treated as a blind monorepo operation.
+Release hardening is complete. The repository now uses Changesets with release planning, explicit npm candidate checks, bounded registry lookup, canonical package taxonomy, and a documented procedure in `docs/RELEASING.md`.
 
-Current release-hardening work:
-
-- restores the pending AR1/AR2 Changesets after an unintended generated multi-package version wave;
-- sets `updateInternalDependencies` to `minor` to reduce unnecessary patch propagation;
-- adds `pnpm release:plan` before versioning;
-- adds an npm-registry candidate check before `changeset publish`;
-- documents the canonical procedure in `docs/RELEASING.md`.
+The latest published language/core release includes `@textguard/core@1.0.3`, `@textguard/all@1.0.3`, `@textguard/ar@1.1.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2`.
 
 Never run `npm publish` from the repository root. Review the release plan and final npm candidate list before every publish.
 
@@ -140,4 +134,4 @@ A dedicated documentation PR is queued to add the canonical Guard Ecosystem mast
 
 Near-term sequence is:
 
-**release hardening → publish pending AR1/AR2 packages safely → AR3 → Arabic parity closeout → adoption validation → broader roadmap reassessment.**
+**AR3 → Arabic parity closeout → adoption validation → broader roadmap reassessment.**
