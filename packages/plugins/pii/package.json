@@ -1,6 +1,6 @@
 {
   "name": "@textguard/plugin-pii",
-  "version": "0.2.1",
+  "version": "0.2.0",
   "description": "PII / Compliance detection bundle for TextGuard — email, phone, credit card and IBAN detection with a scan() helper for CI and pre-commit use.",
   "license": "MIT",
   "type": "module",

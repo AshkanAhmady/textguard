@@ -1,6 +1,6 @@
 {
   "name": "@textguard/plugin-ip",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "description": "Official IP Detection Plugin for TextGuard",
   "type": "module",
   "main": "./dist/index.cjs",

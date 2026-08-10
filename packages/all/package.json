@@ -1,6 +1,6 @@
 {
   "name": "@textguard/all",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "description": "Complete TextGuard bundle",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
