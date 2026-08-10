@@ -6,7 +6,7 @@
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI.
 
-Current product-quality feature work is **Arabic implementation parity**, now that release hardening and the pending AR1/AR2 package release have been completed.
+Current product-quality feature work is **Arabic implementation parity**, now in AR4 bundle/preset parity after completing AR1-AR3.
 
 ## 2. Repository and architecture
 
@@ -47,7 +47,7 @@ filter.use(plugin: Plugin): void;
 
 - Persian: established/full relative to the current language architecture.
 - English: established/full relative to the current language architecture.
-- Arabic: parity is in progress. AR1 established usable profanity/insult dictionaries. AR2 added normalization hardening plus broader high-confidence vocabulary. AR3 dialect coverage slice 1 is the active work.
+- Arabic: AR1-AR3 provide baseline dictionaries, normalization hardening, high-confidence coverage, dialect coverage, and public API regression tests. AR4 integrates Arabic into the higher-level bundle presets.
 
 ### Structured-data detection
 
@@ -84,13 +84,16 @@ Arabic parity stays incremental and reviewable.
 - high-confidence profanity/insult coverage expanded;
 - public regression coverage added for variants and benign Arabic text.
 
-### AR3 — dialect coverage slice 1 — 🟡 current PR
+### AR3 — dialect coverage slice 1 — ✅ merged
 
-AR3 adds only a small high-confidence dialect vocabulary slice, preserves the current public API, and includes public `createFilter()` regression coverage plus benign Arabic negative tests.
+AR3 added a small high-confidence dialect vocabulary slice while preserving the existing public API and conservative false-positive policy.
 
-### AR4 — later
+### AR4 — bundle/preset parity — 🟡 current PR
 
-Evaluate bundle/preset inclusion only after Arabic coverage and false-positive behavior are stable enough.
+- include `arDictionary` in `strictPreset` and `enterprisePreset`;
+- verify Arabic moderation through preset-level tests;
+- keep `socialMediaPreset` unchanged because it is still an unrelated placeholder;
+- avoid Core changes or a second Arabic configuration path.
 
 Arabic vocabulary is not treated as a finite “complete list.” Dialect, spelling, and context require incremental tested expansion.
 
@@ -104,7 +107,6 @@ Never run `npm publish` from the repository root. Review the release plan and fi
 
 ## 10. Known technical debt
 
-- Arabic parity beyond AR3.
 - `packages/presets/` vs `packages/all/src/presets/` ownership/duplication.
 - existing `enterprisePreset` naming collides conceptually with the future secrets/JWT/API-key roadmap feature.
 - ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
@@ -134,4 +136,4 @@ A dedicated documentation PR is queued to add the canonical Guard Ecosystem mast
 
 Near-term sequence is:
 
-**AR3 → Arabic parity closeout → adoption validation → broader roadmap reassessment.**
+**AR4 parity closeout → adoption validation → broader roadmap reassessment.**
