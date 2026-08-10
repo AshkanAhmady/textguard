@@ -5,11 +5,17 @@ import { stdin as input, stdout as output } from "node:process";
 
 const packagesRoot = join(process.cwd(), "packages");
 const npmRegistryBaseUrl = "https://registry.npmjs.org";
+const registryTimeoutMs = 5000;
+const ignoredDirectories = new Set(["node_modules", "dist", "coverage", ".turbo"]);
 
 function findPackageJsonFiles(directory) {
   const result = [];
 
   for (const entry of readdirSync(directory)) {
+    if (ignoredDirectories.has(entry)) {
+      continue;
+    }
+
     const path = join(directory, entry);
     const stats = statSync(path);
 
@@ -56,11 +62,22 @@ function compareVersions(left, right) {
 }
 
 async function getRegistryVersion(name) {
-  const response = await fetch(`${npmRegistryBaseUrl}/${encodeURIComponent(name)}`, {
-    headers: {
-      accept: "application/vnd.npm.install-v1+json",
-    },
-  });
+  let response;
+
+  try {
+    response = await fetch(`${npmRegistryBaseUrl}/${encodeURIComponent(name)}`, {
+      headers: {
+        accept: "application/vnd.npm.install-v1+json",
+      },
+      signal: AbortSignal.timeout(registryTimeoutMs),
+    });
+  } catch (error) {
+    if (error?.name === "TimeoutError" || error?.name === "AbortError") {
+      throw new Error(`Timed out reading npm registry metadata for ${name} after ${registryTimeoutMs}ms`);
+    }
+
+    throw new Error(`Failed to read npm registry metadata for ${name}: ${error?.message ?? error}`);
+  }
 
   if (response.status === 404) {
     return null;
@@ -82,18 +99,22 @@ async function getRegistryVersion(name) {
   return latestVersion;
 }
 
+const packageJsonFiles = findPackageJsonFiles(packagesRoot);
+const packages = packageJsonFiles
+  .map((packageJsonPath) => JSON.parse(readFileSync(packageJsonPath, "utf8")))
+  .filter((packageJson) => !packageJson.private && packageJson.name && packageJson.version);
+
+const registryResults = await Promise.all(
+  packages.map(async (packageJson) => ({
+    packageJson,
+    registryVersion: await getRegistryVersion(packageJson.name),
+  })),
+);
+
 const candidates = [];
 const invalid = [];
 
-for (const packageJsonPath of findPackageJsonFiles(packagesRoot)) {
-  const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
-
-  if (packageJson.private || !packageJson.name || !packageJson.version) {
-    continue;
-  }
-
-  const registryVersion = await getRegistryVersion(packageJson.name);
-
+for (const { packageJson, registryVersion } of registryResults) {
   if (registryVersion === null) {
     candidates.push({
       name: packageJson.name,
