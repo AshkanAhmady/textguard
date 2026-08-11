@@ -81,6 +81,19 @@ session.report();
 
 Debug events include rule execution and explicit match lifecycle events (`match:found`, `match:accepted`, and `match:rejected`).
 
+## Editor diagnostics adapter
+
+Editor integrations can convert final TextGuard matches into a small editor-neutral diagnostic contract without coupling Core to VS Code or another editor API:
+
+```ts
+import { toEditorDiagnostics } from "@textguard/core";
+
+const result = filter.filter("contains blocked-token");
+const diagnostics = toEditorDiagnostics(result.matches);
+```
+
+Each diagnostic preserves the match offsets and matched text and adds a stable `TextGuard` source, warning severity, and display message. Editor-specific packages are responsible for translating these offsets into their own range/diagnostic objects.
+
 ## Public filter API
 
 ```ts
@@ -112,9 +125,10 @@ When two matches overlap, TextGuard prefers the longer match. If their lengths a
 
 ## Design notes
 
-- Core does not depend on specific language or PII plugins.
+- Core does not depend on specific language, PII, or editor APIs.
 - Detection behavior belongs to `Rule` implementations.
 - Explain projects structured facts from `DebugSession`; it does not guess detector-specific reasons that rules do not expose.
+- Editor integrations adapt the editor-neutral diagnostic contract at their boundary.
 - The existing `Match` contract remains backward-compatible.
 
 ## Related packages
