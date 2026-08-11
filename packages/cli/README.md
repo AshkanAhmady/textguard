@@ -2,6 +2,15 @@
 
 Command line interface for TextGuard.
 
+## CLI metadata
+
+```bash
+textguard --help
+textguard --version
+```
+
+`--help` (also `help` and `-h`) prints the available commands and input modes. `--version` (also `version` and `-v`) prints the CLI package version. Running `textguard` without a command prints help and exits successfully.
+
 ## Input
 
 Commands accept inline text, stdin via `-`, or a UTF-8 file via `--file=<path>`. File input is mutually exclusive with inline text/stdin.
