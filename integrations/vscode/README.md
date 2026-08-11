@@ -1,6 +1,6 @@
 # TextGuard for VS Code
 
-Initial VS Code integration for TextGuard.
+VS Code integration for TextGuard.
 
 ## Current capability
 
@@ -10,7 +10,7 @@ The extension also scans documents automatically when they are saved. This behav
 
 Choose the scanning policy with `textguard.preset`. Supported values are `strict` (default), `enterprise`, and `socialMedia`. Changing the preset refreshes diagnostics for currently open file documents, and the same preset is used by Explain so diagnostics and explanations stay consistent.
 
-Use `textguard.whitelist` for project-specific allowed words that should not produce diagnostics. The setting is a unique string array and is applied on top of the selected preset. Updating it refreshes currently open file documents immediately.
+Use `textguard.whitelist` for project-specific allowed words that should not produce diagnostics. Updating it refreshes currently open file documents immediately.
 
 ```json
 {
@@ -20,14 +20,26 @@ Use `textguard.whitelist` for project-specific allowed words that should not pro
 
 For a TextGuard diagnostic, open VS Code Quick Fix actions and choose **Explain TextGuard match**. The extension reuses the Core Explain API and shows the matched text, source, and structured reason without duplicating detection logic in the extension.
 
-Diagnostics for a document are removed when that document is closed.
+## Package and install locally
 
-## Local development
+The extension remains outside the root pnpm workspace, so its Marketplace tooling does not affect the library workspace lockfile. The current `@vscode/vsce` release requires Node.js 22 or newer for packaging.
 
-This integration intentionally lives outside the root pnpm workspace during the initial Marketplace shell milestone. That prevents extension-only VS Code tooling from changing the library workspace lockfile or CI dependency graph.
+From `integrations/vscode`:
 
-From this directory, install dependencies and run the build/type-check scripts independently.
+```bash
+npm install
+npm run check-types
+npm run package:vsix
+```
+
+This produces `textguard-vscode-0.1.0.vsix`. Install it from VS Code using **Extensions → … → Install from VSIX…**, or from the command line:
+
+```bash
+code --install-extension textguard-vscode-0.1.0.vsix
+```
+
+The `.vscodeignore` file keeps TypeScript sources and build-only files out of the installable VSIX.
 
 ## Marketplace status
 
-Not published yet. Searching `TextGuard` in the VS Code Extensions view will only work after a later Marketplace publishing milestone. Until then this source is for repository development/testing only.
+The extension is now package-ready but is **not published yet**. Marketplace publication still requires a valid Visual Studio Marketplace publisher matching the `publisher` field and an explicit release step. Until that happens, searching `TextGuard` in the VS Code Extensions view will not install this repository's extension.
