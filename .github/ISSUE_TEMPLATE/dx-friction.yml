@@ -1,0 +1,40 @@
+name: Developer experience friction
+description: Report install, setup, documentation, API ergonomics, CI, or release-consumer friction.
+title: "[DX]: "
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Installation / package setup
+        - Documentation / examples
+        - TypeScript types / API ergonomics
+        - PII pre-commit / CI setup
+        - Presets / configuration
+        - Build / packaging / module format
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: What were you trying to do?
+    validations:
+      required: true
+  - type: textarea
+    id: friction
+    attributes:
+      label: Where did TextGuard make this difficult?
+      description: Include commands, errors, confusing docs, or API details when useful. Remove secrets and personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: improvement
+    attributes:
+      label: What would make this easier?
+  - type: input
+    id: package
+    attributes:
+      label: Relevant package / version
+      placeholder: "@textguard/plugin-pii@0.x"
