@@ -40,6 +40,16 @@ code --install-extension textguard-vscode-0.1.0.vsix
 
 The `.vscodeignore` file keeps TypeScript sources and build-only files out of the installable VSIX.
 
-## Marketplace status
+## CI packaging
 
-The extension is now package-ready but is **not published yet**. Marketplace publication still requires a valid Visual Studio Marketplace publisher matching the `publisher` field and an explicit release step. Until that happens, searching `TextGuard` in the VS Code Extensions view will not install this repository's extension.
+`.github/workflows/vscode-extension.yml` validates the extension independently from the root pnpm workspace. Changes under `integrations/vscode` are type-checked, built, packaged into a VSIX, and uploaded as a GitHub Actions artifact.
+
+## Marketplace publishing
+
+`.github/workflows/vscode-marketplace-publish.yml` is an explicit, manually triggered release workflow. It uses `@vscode/vsce publish --oidc`, so GitHub Actions can publish with short-lived OpenID Connect credentials instead of storing a long-lived Marketplace PAT.
+
+Before the first publish, create or verify the Visual Studio Marketplace publisher whose ID matches the extension manifest (`textguard`), then configure Marketplace trusted publishing for this repository and the workflow file `.github/workflows/vscode-marketplace-publish.yml`. The workflow requests `id-token: write` and runs in the `vscode-marketplace` GitHub environment.
+
+Once trusted publishing is configured, run **Publish VS Code Extension** from GitHub Actions. Publishing remains deliberate and is not triggered by pull requests or pushes.
+
+Until the first successful Marketplace publication, searching `TextGuard` in the VS Code Extensions view will not install this repository's extension.
