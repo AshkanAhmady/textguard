@@ -12,18 +12,21 @@ This file is part of the project's persistent working memory. It records the dev
 6. Open a pull request to `main` for maintainer review. Do not merge automatically.
 7. Required CI checks are part of Definition of Done. Do not merge while required checks are failing.
 8. After merge, delete the feature branch and start the next change from the new latest `main`.
-9. When merged Changesets imply an npm release, explicitly remind the maintainer which package(s) and release level are pending.
+9. Track pending release impact after each merged Changeset, but do not assume that merge means immediate npm publishing.
 
 ## Safe release workflow
 
 `docs/RELEASING.md` is the canonical release procedure.
 
 - Never run `npm publish` from the monorepo root.
-- Run `pnpm release:plan` before versioning and review every planned package.
+- Keep per-PR Changesets for public behavior/API changes even when publish is deferred.
+- Batch normal npm releases across several coherent milestones instead of publishing after every feature PR.
+- Run `pnpm release:plan` when intentionally opening a release batch and review every planned package.
 - Run `pnpm version-packages`, then inspect `git diff` before committing generated release files.
 - Run tests/type-check/build before publishing.
 - `pnpm release` first runs `scripts/release-check.mjs`, which compares local public package versions with npm and requires explicit confirmation of the candidate count.
 - If the candidate list contains any unexpected package, cancel the release.
+- Publish immediately only for an intentional stable checkpoint, consumer blocker, critical fix, or independently valuable completed capability.
 - Changesets uses semver-compatible workspace ranges for public runtime dependencies to avoid unnecessary patch-release waves.
 
 ## Documentation is project memory
@@ -55,9 +58,26 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 
 ## Current work sequence
 
-1. **Complete the pending AR3/AR4 release.** Review the Changesets release plan and publish only the expected `@textguard/ar` / `@textguard/all` candidates and any intentional dependency propagation.
-2. **Adoption validation.** Collect real usage, issues, install/DX friction, false-positive/false-negative reports, and developer feedback.
-3. **Broader roadmap reassessment.** Pick the next product milestone from evidence and the Guard Ecosystem Decision Filter rather than adding scope automatically.
+1. **Adoption validation.** Collect real usage, issues, install/DX friction, false-positive/false-negative reports, package discoverability feedback, and recurring requests from developers.
+2. **Broader roadmap reassessment.** Rank the next milestone using evidence, architectural leverage, maintenance cost, and the Guard Ecosystem Decision Filter.
+3. **Next implementation slice.** Build one coherent milestone, keep its Changeset, and defer npm publishing until the next intentional release batch unless there is a strong reason to ship immediately.
+
+The current versioned Arabic parity batch (`@textguard/ar@1.2.0` and `@textguard/all@1.1.0`) may remain unpublished while the next milestones are developed. Future behavior changes should add new Changesets; do not create a release PR after every one of them.
+
+## Adoption validation signals
+
+Prefer concrete signals over speculative scope. Useful evidence includes:
+
+- npm/package usage and install trends;
+- GitHub issues, discussions, stars/forks only as weak supporting signals;
+- repeated setup or API friction reported by consumers;
+- false-positive/false-negative examples that expose product gaps;
+- requests that repeat across independent users/projects;
+- package discoverability or taxonomy confusion;
+- integration requests that clearly reuse existing TextGuard architecture;
+- maintainability cost and regression risk of the proposed solution.
+
+Do not treat a single feature request as roadmap proof. Repeated pain plus strong architectural fit should outrank novelty.
 
 ## Arabic parity rules
 
