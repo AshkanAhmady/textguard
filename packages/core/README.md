@@ -106,6 +106,10 @@ createFilter({
 });
 ```
 
+## Overlap resolution
+
+When two matches overlap, TextGuard prefers the longer match. If their lengths are equal, lower numeric rule priority wins. Remaining ties are resolved by stable plugin/rule identity rather than registration order, so equivalent plugin sets produce deterministic results.
+
 ## Design notes
 
 - Core does not depend on specific language or PII plugins.
