@@ -1,6 +1,14 @@
 #!/usr/bin/env node
 
-import { createFilter } from "@textguard/core";
+import {
+  ConsoleRenderer,
+  HtmlRenderer,
+  JsonRenderer,
+  MarkdownRenderer,
+  createFilter,
+} from "@textguard/core";
+
+type DebugFormat = "console" | "json" | "markdown" | "html";
 
 interface ScanOptions {
   text: string;
@@ -8,8 +16,18 @@ interface ScanOptions {
   json: boolean;
 }
 
+interface DebugOptions {
+  text: string;
+  customWords: string[];
+  format: DebugFormat;
+}
+
 function printUsage(): void {
-  console.log("Usage: textguard scan <text> [--word=<word>] [--json]");
+  console.log("Usage:");
+  console.log("  textguard scan <text> [--word=<word>] [--json]");
+  console.log(
+    "  textguard debug <text> [--word=<word>] [--format=console|json|markdown|html]",
+  );
 }
 
 function parseScanArgs(args: string[]): ScanOptions | null {
@@ -40,12 +58,58 @@ function parseScanArgs(args: string[]): ScanOptions | null {
   return { text, customWords, json };
 }
 
+function isDebugFormat(value: string): value is DebugFormat {
+  return ["console", "json", "markdown", "html"].includes(value);
+}
+
+function parseDebugArgs(args: string[]): DebugOptions | null {
+  const textParts: string[] = [];
+  const customWords: string[] = [];
+  let format: DebugFormat = "console";
+
+  for (const arg of args) {
+    if (arg.startsWith("--word=")) {
+      const word = arg.slice("--word=".length).trim();
+      if (!word) return null;
+      customWords.push(word);
+      continue;
+    }
+
+    if (arg.startsWith("--format=")) {
+      const value = arg.slice("--format=".length).trim();
+      if (!isDebugFormat(value)) return null;
+      format = value;
+      continue;
+    }
+
+    if (arg.startsWith("--")) return null;
+    textParts.push(arg);
+  }
+
+  const text = textParts.join(" ").trim();
+  if (!text) return null;
+
+  return { text, customWords, format };
+}
+
+function renderDebug(format: DebugFormat, text: string, customWords: string[]): string {
+  const report = createFilter({ customWords }).debug(text).report();
+
+  switch (format) {
+    case "json":
+      return new JsonRenderer().render(report);
+    case "markdown":
+      return new MarkdownRenderer().render(report);
+    case "html":
+      return new HtmlRenderer().render(report);
+    case "console":
+      return new ConsoleRenderer().render(report);
+  }
+}
+
 const [, , command, ...args] = process.argv;
 
-if (command !== "scan") {
-  printUsage();
-  process.exitCode = 2;
-} else {
+if (command === "scan") {
   const options = parseScanArgs(args);
 
   if (!options) {
@@ -70,4 +134,17 @@ if (command !== "scan") {
 
     process.exitCode = result.matches.length > 0 ? 1 : 0;
   }
+} else if (command === "debug") {
+  const options = parseDebugArgs(args);
+
+  if (!options) {
+    printUsage();
+    process.exitCode = 2;
+  } else {
+    console.log(renderDebug(options.format, options.text, options.customWords));
+    process.exitCode = 0;
+  }
+} else {
+  printUsage();
+  process.exitCode = 2;
 }
