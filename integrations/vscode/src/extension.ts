@@ -15,11 +15,25 @@ function getPresetName(): PresetName {
     .get<PresetName>("preset", "strict");
 }
 
+function getWhitelist(): string[] {
+  return vscode.workspace
+    .getConfiguration("textguard")
+    .get<string[]>("whitelist", []);
+}
+
 function createConfiguredFilter() {
-  const preset = getPresetName();
-  if (preset === "enterprise") return createFilter(enterprisePreset);
-  if (preset === "socialMedia") return createFilter(socialMediaPreset);
-  return createFilter(strictPreset);
+  const presetName = getPresetName();
+  const preset =
+    presetName === "enterprise"
+      ? enterprisePreset
+      : presetName === "socialMedia"
+        ? socialMediaPreset
+        : strictPreset;
+
+  return createFilter({
+    ...preset,
+    whitelist: getWhitelist(),
+  });
 }
 
 function scanDocument(
@@ -99,6 +113,14 @@ class TextGuardCodeActionProvider implements vscode.CodeActionProvider {
   }
 }
 
+function refreshOpenFileDiagnostics(
+  diagnostics: vscode.DiagnosticCollection,
+): void {
+  for (const document of vscode.workspace.textDocuments) {
+    if (document.uri.scheme === "file") scanDocument(document, diagnostics);
+  }
+}
+
 export function activate(context: vscode.ExtensionContext): void {
   const diagnostics = vscode.languages.createDiagnosticCollection("textguard");
   context.subscriptions.push(diagnostics);
@@ -157,10 +179,13 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((event) => {
-      if (!event.affectsConfiguration("textguard.preset")) return;
-      for (const document of vscode.workspace.textDocuments) {
-        if (document.uri.scheme === "file") scanDocument(document, diagnostics);
+      if (
+        !event.affectsConfiguration("textguard.preset") &&
+        !event.affectsConfiguration("textguard.whitelist")
+      ) {
+        return;
       }
+      refreshOpenFileDiagnostics(diagnostics);
     }),
   );
 
