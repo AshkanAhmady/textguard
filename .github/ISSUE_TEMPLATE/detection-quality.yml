@@ -1,0 +1,54 @@
+name: Detection quality report
+description: Report a false positive, false negative, language miss, or structured-data detection problem.
+title: "[Detection]: "
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Report type
+      options:
+        - False positive
+        - False negative
+        - Normalization / spelling variant
+        - Language or dialect coverage
+        - Structured-data detection
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: package
+    attributes:
+      label: Package or preset
+      placeholder: "@textguard/ar, @textguard/plugin-email, strictPreset"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: "1.2.0"
+  - type: textarea
+    id: sample
+    attributes:
+      label: Minimal input
+      description: Provide the smallest non-sensitive sample that demonstrates the detection problem. Do not post real personal data, secrets, credentials, or payment information.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: For language reports, include locale/dialect/context when relevant. For structured data, explain the intended format without sharing real PII.
