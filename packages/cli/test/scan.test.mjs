@@ -35,3 +35,40 @@ describe("textguard scan", () => {
     expect(parsed.matches[0].matchedText).toBe("secret");
   });
 });
+
+describe("textguard debug", () => {
+  it("renders a console debug report by default", () => {
+    const result = runCli(["debug", "hello secret", "--word=secret"]);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toMatch(/TextGuard Debug Report/);
+    expect(result.stdout).toMatch(/Matches\s+: 1/);
+  });
+
+  it("renders json debug output", () => {
+    const result = runCli([
+      "debug",
+      "hello secret",
+      "--word=secret",
+      "--format=json",
+    ]);
+    const parsed = JSON.parse(result.stdout);
+
+    expect(result.status).toBe(0);
+    expect(parsed.statistics.matchEvents).toBe(1);
+  });
+
+  it("renders markdown debug output", () => {
+    const result = runCli(["debug", "hello world", "--format=markdown"]);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toMatch(/^# TextGuard Debug Report/m);
+  });
+
+  it("rejects unsupported debug formats", () => {
+    const result = runCli(["debug", "hello world", "--format=xml"]);
+
+    expect(result.status).toBe(2);
+    expect(result.stdout).toMatch(/Usage:/);
+  });
+});

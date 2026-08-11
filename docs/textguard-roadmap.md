@@ -13,7 +13,8 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
 4. **Release cadence policy — ✅ batched.** Changesets remain per behavior/API change; npm publishing is intentionally deferred and grouped across several coherent milestones unless a critical/consumer-blocking release is justified.
 5. **Adoption validation — 🟡 current focus.** Gather real consumer signals through structured GitHub intake and package usage data, then use them to rank the next milestone.
-6. **Roadmap reassessment — 🟡 in progress.** Small correctness work may proceed when it removes known engine nondeterminism without expanding product scope.
+6. **Developer integration slice — 🟡 in progress.** The standalone CLI now provides real Core-backed scanning and debug rendering; broader editor/browser/playground integrations remain later.
+7. **Roadmap reassessment — 🟡 in progress.** Small correctness work may proceed when it removes known engine nondeterminism without expanding product scope.
 
 ---
 
@@ -38,11 +39,11 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 | Milestone | Status | Detail |
 | --- | --- | --- |
 | M1 — Debug Foundation | ✅ Done | `DebugSession`, events, collector, `filter.debug()`. |
-| M2 — Renderers | 🟡 Partial | `ConsoleRenderer` and `JsonRenderer` are implemented and publicly exported. Markdown and HTML renderers are described by ADR-001 but are not implemented in the current Core source. |
+| M2 — Renderers | ✅ Done | Console, JSON, Markdown, and HTML renderers are implemented and publicly exported. |
 | M3 — Timeline | ✅ Done | Timeline implemented. |
 | M4 — Performance Diagnostics | ✅ Done | Performance diagnostics implemented. |
 | M5 — Explain API | ✅ Done | Structured Explain domain, builder, public `filter.explain(text)`, tests and public core docs complete. |
-| M6 — Future Integrations | ❌ Not started | VS Code / Chrome / CLI / Playground / AI later. |
+| M6 — Future Integrations | 🟡 Partial | `@textguard/cli` provides Core-backed `scan` plus debug reports in console/JSON/Markdown/HTML. VS Code, Chrome, Playground, and AI integrations remain later. |
 
 ---
 
@@ -85,11 +86,10 @@ Structured GitHub issue forms are the primary qualitative intake surface for run
 ### Other technical debt
 
 - historical preset-ownership documentation mentions `packages/presets/`, but that top-level package directory no longer exists; current preset ownership lives under `packages/all` and the stale debt item should not drive a refactor.
-- ADR-001 describes Markdown/HTML renderer targets that are not implemented in current Core.
-- Markdown and HTML Debug renderers remain potential M2 work, but should be prioritized only with adoption evidence or a concrete integration need.
+- future integrations beyond the CLI should be selected from adoption evidence rather than added as standing scope.
 
 ---
 
 ## Current product-quality focus
 
-**structured adoption intake → correctness hardening where justified → evidence review → one coherent implementation milestone.**
+**structured adoption intake → targeted CLI integration hardening → evidence review → one coherent implementation milestone.**
