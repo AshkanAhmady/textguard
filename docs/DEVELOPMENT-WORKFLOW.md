@@ -55,6 +55,7 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 - Arabic AR4 bundle/preset parity — ✅ complete.
 - Release hardening and canonical package-taxonomy migration — ✅ complete.
 - Guard Ecosystem canonical project-memory document — ✅ added.
+- Batched npm release cadence — ✅ adopted.
 
 ## Current work sequence
 
@@ -63,6 +64,17 @@ Whenever implementation changes product behavior, public APIs, architecture, mil
 3. **Next implementation slice.** Build one coherent milestone, keep its Changeset, and defer npm publishing until the next intentional release batch unless there is a strong reason to ship immediately.
 
 The current versioned Arabic parity batch (`@textguard/ar@1.2.0` and `@textguard/all@1.1.0`) may remain unpublished while the next milestones are developed. Future behavior changes should add new Changesets; do not create a release PR after every one of them.
+
+## Adoption validation intake
+
+GitHub issue forms under `.github/ISSUE_TEMPLATE/` are the primary qualitative intake surface. Keep these categories distinct so feedback is useful for roadmap decisions:
+
+- bug reports for incorrect runtime behavior, regressions, or packaging failures;
+- detection-quality reports for false positives, false negatives, normalization gaps, dialect/language misses, and structured-data detection problems;
+- DX friction reports for install/setup/docs/API/CI/preset/build problems;
+- feature requests that start from a concrete developer problem, current workaround, and evidence of frequency/value.
+
+Detection-quality forms must explicitly discourage real PII, secrets, credentials, and payment data in examples. Prefer minimal synthetic samples.
 
 ## Adoption validation signals
 
