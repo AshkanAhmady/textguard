@@ -40,6 +40,8 @@ filter.use(plugin: Plugin): void;
 - DebugSession stores original input, normalized input, final overlap-resolved matches, and events.
 - Explain projects final accepted matches from the same debug-capable execution path.
 - Explain does not introduce a second detection engine.
+- The current public Debug renderer implementations are `ConsoleRenderer` and `JsonRenderer`.
+- ADR-001 describes Markdown and HTML as renderer targets, but they are not implemented in the current Core source and must not be documented as shipped behavior.
 
 ## 5. Package state
 
@@ -111,11 +113,10 @@ Never run `npm publish` from the repository root. Review the release plan and fi
 
 ## 10. Known technical debt
 
-- `packages/presets/` vs `packages/all/src/presets/` ownership/duplication.
-- existing `enterprisePreset` naming collides conceptually with the future secrets/JWT/API-key roadmap feature.
-- ADR-001 renderer/API plan does not perfectly match the shipped Debug surface.
+- historical docs mention a separate `packages/presets/` ownership path, but that top-level directory is not present in the current repository; presets currently live under `packages/all`, so no ownership refactor should be started from the stale path alone.
+- ADR-001 renderer targets have drifted from implementation: Core currently exports Console and JSON renderers, while Markdown and HTML remain unimplemented targets.
 - overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases.
-- HTML Debug renderer remains missing.
+- future Debug renderer or integration work should be selected from concrete consumer/integration evidence rather than merely completing every item named in the original ADR.
 
 ## 11. Development discipline
 
@@ -142,4 +143,4 @@ The wider ecosystem remains vision-stage. TextGuard should earn adoption and val
 
 Near-term sequence is:
 
-**adoption validation → evidence-driven roadmap reassessment → one coherent implementation milestone → batched release when justified.**
+**structured adoption intake → repository truth reconciliation → evidence-driven roadmap reassessment → one coherent implementation milestone → batched release when justified.**
