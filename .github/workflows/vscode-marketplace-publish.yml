@@ -1,0 +1,37 @@
+name: Publish VS Code Extension
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: vscode-marketplace
+    defaults:
+      run:
+        working-directory: integrations/vscode
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Type check
+        run: npm run check-types
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to VS Code Marketplace
+        run: npx @vscode/vsce publish --oidc
