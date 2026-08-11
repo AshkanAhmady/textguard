@@ -7,13 +7,21 @@
   "publisher": "textguard",
   "engines": { "vscode": "^1.90.0" },
   "categories": ["Linters"],
-  "activationEvents": ["onStartupFinished", "onCommand:textguard.scanActiveEditor"],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:textguard.scanActiveEditor",
+    "onCommand:textguard.explainDiagnostic"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "textguard.scanActiveEditor",
         "title": "TextGuard: Scan Active Editor"
+      },
+      {
+        "command": "textguard.explainDiagnostic",
+        "title": "TextGuard: Explain Match"
       }
     ],
     "configuration": {
