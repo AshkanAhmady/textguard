@@ -13,7 +13,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
 4. **Release cadence policy — ✅ batched.** Changesets remain per behavior/API change; npm publishing is intentionally deferred and grouped across several coherent milestones unless a critical/consumer-blocking release is justified.
 5. **Adoption validation — 🟡 current focus.** Gather real consumer signals through structured GitHub intake and package usage data, then use them to rank the next milestone.
-6. **Developer integration slice — 🟡 in progress.** The standalone CLI provides Core-backed scanning, debug rendering, structured Explain output, and stdin-friendly pipeline input; broader editor/browser/playground integrations remain later.
+6. **Developer integration slice — 🟡 in progress.** The standalone CLI provides Core-backed scanning, debug rendering, structured Explain output, stdin pipelines, and direct UTF-8 file input; broader editor/browser/playground integrations remain later.
 7. **Roadmap reassessment — 🟡 in progress.** Small correctness work may proceed when it removes known engine nondeterminism without expanding product scope.
 
 ---
@@ -43,7 +43,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 | M3 — Timeline | ✅ Done | Timeline implemented. |
 | M4 — Performance Diagnostics | ✅ Done | Performance diagnostics implemented. |
 | M5 — Explain API | ✅ Done | Structured Explain domain, builder, public `filter.explain(text)`, tests and public core docs complete. |
-| M6 — Future Integrations | 🟡 Partial | `@textguard/cli` provides Core-backed `scan`, debug reports in console/JSON/Markdown/HTML, `explain` with readable/JSON output, and stdin input for shell pipelines. VS Code, Chrome, Playground, and AI integrations remain later. |
+| M6 — Future Integrations | 🟡 Partial | `@textguard/cli` provides Core-backed `scan`, debug reports, `explain`, stdin pipelines, and UTF-8 file input. VS Code, Chrome, Playground, and AI integrations remain later. |
 
 ---
 
