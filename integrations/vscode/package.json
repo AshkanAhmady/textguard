@@ -7,10 +7,25 @@
   "publisher": "textguard",
   "engines": { "vscode": "^1.90.0" },
   "categories": ["Linters"],
-  "activationEvents": ["onCommand:textguard.scanActiveEditor"],
+  "activationEvents": ["onStartupFinished", "onCommand:textguard.scanActiveEditor"],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [{ "command": "textguard.scanActiveEditor", "title": "TextGuard: Scan Active Editor" }]
+    "commands": [
+      {
+        "command": "textguard.scanActiveEditor",
+        "title": "TextGuard: Scan Active Editor"
+      }
+    ],
+    "configuration": {
+      "title": "TextGuard",
+      "properties": {
+        "textguard.scanOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan a document with TextGuard when it is saved."
+        }
+      }
+    }
   },
   "scripts": {
     "build": "tsup",
