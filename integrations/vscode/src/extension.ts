@@ -1,14 +1,32 @@
 import * as vscode from "vscode";
-import { createFilter, strictPreset } from "@textguard/all";
+import {
+  createFilter,
+  enterprisePreset,
+  socialMediaPreset,
+  strictPreset,
+} from "@textguard/all";
 
-const filter = createFilter(strictPreset);
 const DIAGNOSTIC_CODE = "textguard.match";
+type PresetName = "strict" | "enterprise" | "socialMedia";
+
+function getPresetName(): PresetName {
+  return vscode.workspace
+    .getConfiguration("textguard")
+    .get<PresetName>("preset", "strict");
+}
+
+function createConfiguredFilter() {
+  const preset = getPresetName();
+  if (preset === "enterprise") return createFilter(enterprisePreset);
+  if (preset === "socialMedia") return createFilter(socialMediaPreset);
+  return createFilter(strictPreset);
+}
 
 function scanDocument(
   document: vscode.TextDocument,
   diagnostics: vscode.DiagnosticCollection,
 ): number {
-  const matches = filter.findBadWords(document.getText());
+  const matches = createConfiguredFilter().findBadWords(document.getText());
   const items = matches.map((match) => {
     const range = new vscode.Range(
       document.positionAt(match.start),
@@ -38,7 +56,7 @@ function findExplanation(
   document: vscode.TextDocument,
   range: vscode.Range,
 ): string | null {
-  const result = filter.explain(document.getText());
+  const result = createConfiguredFilter().explain(document.getText());
   const start = document.offsetAt(range.start);
   const end = document.offsetAt(range.end);
   const explained = result.matches.find(
@@ -95,7 +113,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
       const matchCount = scanDocument(editor.document, diagnostics);
       void vscode.window.showInformationMessage(
-        `TextGuard: ${matchCount} match${matchCount === 1 ? "" : "es"} found.`,
+        `TextGuard (${getPresetName()}): ${matchCount} match${matchCount === 1 ? "" : "es"} found.`,
       );
     }),
   );
@@ -134,6 +152,15 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.workspace.onDidSaveTextDocument((document) => {
       if (!isScanOnSaveEnabled()) return;
       scanDocument(document, diagnostics);
+    }),
+  );
+
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((event) => {
+      if (!event.affectsConfiguration("textguard.preset")) return;
+      for (const document of vscode.workspace.textDocuments) {
+        if (document.uri.scheme === "file") scanDocument(document, diagnostics);
+      }
     }),
   );
 
