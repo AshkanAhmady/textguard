@@ -13,5 +13,10 @@ export type {
 } from "./types";
 export { createRegexRule } from "./rules/createRegexRule";
 export type { RegexRuleOptions } from "./rules/createRegexRule";
+export {
+  toEditorDiagnostics,
+  type EditorDiagnostic,
+  type EditorDiagnosticSeverity,
+} from "./integrations/editorDiagnostics";
 export * from "./debug";
 export * from "./explain";
