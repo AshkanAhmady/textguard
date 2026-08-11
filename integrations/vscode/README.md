@@ -8,6 +8,8 @@ Run **TextGuard: Scan Active Editor** from the Command Palette. The extension sc
 
 The extension also scans documents automatically when they are saved. This behavior is enabled by default and can be disabled through the `textguard.scanOnSave` VS Code setting.
 
+For a TextGuard diagnostic, open VS Code Quick Fix actions and choose **Explain TextGuard match**. The extension reuses the Core Explain API and shows the matched text, source, and structured reason without duplicating detection logic in the extension.
+
 Diagnostics for a document are removed when that document is closed.
 
 ## Local development
