@@ -13,7 +13,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
 4. **Release cadence policy — ✅ batched.** Changesets remain per behavior/API change; npm publishing is intentionally deferred and grouped across several coherent milestones unless a critical/consumer-blocking release is justified.
 5. **Adoption validation — 🟡 current focus.** Gather real consumer signals through structured GitHub intake and package usage data, then use them to rank the next milestone.
-6. **Roadmap reassessment — 🟡 in progress.** Current repository evidence is being reconciled before selecting a behavior-changing milestone.
+6. **Roadmap reassessment — 🟡 in progress.** Small correctness work may proceed when it removes known engine nondeterminism without expanding product scope.
 
 ---
 
@@ -65,25 +65,7 @@ Arabic profanity coverage is intentionally not treated as a finite “complete l
 
 ### Adoption validation — 🟡 current
 
-Structured GitHub issue forms are the primary qualitative intake surface for:
-
-- runtime bugs and regressions;
-- false positives, false negatives, normalization gaps, and language/dialect misses;
-- installation, setup, documentation, TypeScript/API, CI, and packaging friction;
-- feature requests grounded in a concrete developer problem and current workaround.
-
-Also collect and review:
-
-- npm/package usage and install trends;
-- repeated setup/API friction from consumers;
-- recurring requests across independent users/projects;
-- package discoverability/taxonomy confusion;
-- integration requests that clearly reuse existing architecture;
-- maintenance and regression cost of each candidate change.
-
-Do not promote a feature solely because it is interesting or because it appears once in the long-term roadmap. A single issue is evidence, not automatic roadmap priority.
-
-At the start of this validation phase there are no open consumer issues yet. That absence is not evidence for a new feature. Repository-internal drift should be corrected independently while external signals accumulate.
+Structured GitHub issue forms are the primary qualitative intake surface for runtime bugs, detection quality, DX friction, and feature requests. A single issue is evidence, not automatic roadmap priority.
 
 ### Release safety — ✅ hardened
 
@@ -96,15 +78,18 @@ At the start of this validation phase there are no open consumer issues yet. Tha
 - require explicit confirmation of the exact candidate count;
 - keep `docs/RELEASING.md` as the canonical procedure.
 
+### Engine correctness
+
+- overlap ranking determinism — ✅ fixed: longer matches still win; equal-length overlaps preserve lower numeric rule priority, then use stable plugin/rule identity tie-breakers instead of registration order.
+
 ### Other technical debt
 
 - historical preset-ownership documentation mentions `packages/presets/`, but that top-level package directory no longer exists; current preset ownership lives under `packages/all` and the stale debt item should not drive a refactor.
-- ADR-001 describes Markdown/HTML renderer targets that are not implemented in current Core; roadmap/status docs must not claim Markdown is shipped.
-- overlap ranking remains order-dependent in some ties.
+- ADR-001 describes Markdown/HTML renderer targets that are not implemented in current Core.
 - Markdown and HTML Debug renderers remain potential M2 work, but should be prioritized only with adoption evidence or a concrete integration need.
 
 ---
 
 ## Current product-quality focus
 
-**structured adoption intake → repository truth reconciliation → evidence review → one coherent implementation milestone.**
+**structured adoption intake → correctness hardening where justified → evidence review → one coherent implementation milestone.**
