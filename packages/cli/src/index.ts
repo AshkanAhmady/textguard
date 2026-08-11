@@ -19,6 +19,7 @@ interface InputOptions {
 
 interface ScanOptions extends InputOptions {
   json: boolean;
+  files?: string[];
 }
 
 interface DebugOptions extends InputOptions {
@@ -31,13 +32,15 @@ interface ExplainOptions extends InputOptions {
 
 function printUsage(): void {
   console.log("Usage:");
-  console.log("  textguard scan <text|-> [--file=<path>] [--word=<word>] [--json]");
+  console.log(
+    "  textguard scan <text|-> [--file=<path>|--files=<path1,path2>] [--word=<word>] [--json]",
+  );
   console.log(
     "  textguard debug <text|-> [--file=<path>] [--word=<word>] [--format=console|json|markdown|html]",
   );
   console.log("  textguard explain <text|-> [--file=<path>] [--word=<word>] [--json]");
   console.log("");
-  console.log('Use "-" to read text from stdin, or --file=<path> to read a UTF-8 file.');
+  console.log('Use "-" to read text from stdin, --file=<path> for one UTF-8 file, or --files=<path1,path2> to batch scan files.');
 }
 
 function parseInputArg(
@@ -80,6 +83,7 @@ function parseScanArgs(args: string[]): ScanOptions | null {
   const textParts: string[] = [];
   const customWords: string[] = [];
   const file: { value?: string } = {};
+  let files: string[] | undefined;
   let json = false;
 
   for (const arg of args) {
@@ -87,7 +91,25 @@ function parseScanArgs(args: string[]): ScanOptions | null {
       json = true;
       continue;
     }
+
+    if (arg.startsWith("--files=")) {
+      if (files || file.value) return null;
+      const paths = arg
+        .slice("--files=".length)
+        .split(",")
+        .map((path) => path.trim())
+        .filter(Boolean);
+      if (paths.length === 0) return null;
+      files = paths;
+      continue;
+    }
+
     if (!parseInputArg(arg, textParts, customWords, file)) return null;
+  }
+
+  if (files) {
+    if (file.value || textParts.join(" ").trim()) return null;
+    return { text: "", customWords, json, files };
   }
 
   const input = finishInputOptions(textParts, customWords, file.value);
@@ -120,6 +142,7 @@ function parseDebugArgs(args: string[]): DebugOptions | null {
 
 function parseExplainArgs(args: string[]): ExplainOptions | null {
   const parsed = parseScanArgs(args);
+  if (!parsed || parsed.files) return null;
   return parsed;
 }
 
@@ -152,6 +175,23 @@ async function resolveText(options: InputOptions): Promise<string | null> {
   return stdin || null;
 }
 
+async function readBatchFiles(
+  paths: string[],
+): Promise<Array<{ path: string; text: string }> | null> {
+  try {
+    const files = await Promise.all(
+      paths.map(async (path) => ({
+        path,
+        text: (await readFile(path, "utf8")).trim(),
+      })),
+    );
+
+    return files.every((file) => file.text.length > 0) ? files : null;
+  } catch {
+    return null;
+  }
+}
+
 function renderDebug(
   format: DebugFormat,
   text: string,
@@ -182,6 +222,57 @@ async function main(): Promise<void> {
       return;
     }
 
+    const filter = createFilter({ customWords: options.customWords });
+
+    if (options.files) {
+      const files = await readBatchFiles(options.files);
+      if (!files) {
+        printUsage();
+        process.exitCode = 2;
+        return;
+      }
+
+      const results = files.map(({ path, text }) => ({
+        path,
+        result: filter.filter(text),
+      }));
+      const matchCount = results.reduce(
+        (total, item) => total + item.result.matches.length,
+        0,
+      );
+      const matchedFiles = results.filter(
+        (item) => item.result.matches.length > 0,
+      ).length;
+
+      if (options.json) {
+        console.log(
+          JSON.stringify(
+            {
+              files: results,
+              summary: {
+                fileCount: results.length,
+                matchedFiles,
+                matchCount,
+              },
+            },
+            null,
+            2,
+          ),
+        );
+      } else {
+        console.log("TextGuard Batch Scan");
+        for (const item of results) {
+          console.log(`${item.path}: ${item.result.matches.length} match(es)`);
+        }
+        console.log(`Files: ${results.length}`);
+        console.log(`Matched files: ${matchedFiles}`);
+        console.log(`Matches: ${matchCount}`);
+      }
+
+      process.exitCode = matchCount > 0 ? 1 : 0;
+      return;
+    }
+
     const text = await resolveText(options);
     if (!text) {
       printUsage();
@@ -189,7 +280,7 @@ async function main(): Promise<void> {
       return;
     }
 
-    const result = createFilter({ customWords: options.customWords }).filter(text);
+    const result = filter.filter(text);
     if (options.json) {
       console.log(JSON.stringify(result, null, 2));
     } else {
