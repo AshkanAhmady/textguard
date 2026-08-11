@@ -22,12 +22,19 @@ interface DebugOptions {
   format: DebugFormat;
 }
 
+interface ExplainOptions {
+  text: string;
+  customWords: string[];
+  json: boolean;
+}
+
 function printUsage(): void {
   console.log("Usage:");
   console.log("  textguard scan <text> [--word=<word>] [--json]");
   console.log(
     "  textguard debug <text> [--word=<word>] [--format=console|json|markdown|html]",
   );
+  console.log("  textguard explain <text> [--word=<word>] [--json]");
 }
 
 function parseScanArgs(args: string[]): ScanOptions | null {
@@ -92,7 +99,18 @@ function parseDebugArgs(args: string[]): DebugOptions | null {
   return { text, customWords, format };
 }
 
-function renderDebug(format: DebugFormat, text: string, customWords: string[]): string {
+function parseExplainArgs(args: string[]): ExplainOptions | null {
+  const parsed = parseScanArgs(args);
+  if (!parsed) return null;
+
+  return parsed;
+}
+
+function renderDebug(
+  format: DebugFormat,
+  text: string,
+  customWords: string[],
+): string {
   const report = createFilter({ customWords }).debug(text).report();
 
   switch (format) {
@@ -143,6 +161,35 @@ if (command === "scan") {
   } else {
     console.log(renderDebug(options.format, options.text, options.customWords));
     process.exitCode = 0;
+  }
+} else if (command === "explain") {
+  const options = parseExplainArgs(args);
+
+  if (!options) {
+    printUsage();
+    process.exitCode = 2;
+  } else {
+    const result = createFilter({ customWords: options.customWords }).explain(
+      options.text,
+    );
+
+    if (options.json) {
+      console.log(JSON.stringify(result, null, 2));
+    } else {
+      console.log("TextGuard Explain");
+      console.log(`Matched: ${result.matched ? "yes" : "no"}`);
+      console.log(`Matches: ${result.summary.matchCount}`);
+
+      for (const explained of result.matches) {
+        console.log(
+          `- ${explained.match.matchedText} [${explained.match.start}-${explained.match.end}]`,
+        );
+        console.log(`  Source: ${explained.source.plugin}`);
+        console.log(`  Reason: ${explained.reason.message}`);
+      }
+    }
+
+    process.exitCode = result.matched ? 1 : 0;
   }
 } else {
   printUsage();
