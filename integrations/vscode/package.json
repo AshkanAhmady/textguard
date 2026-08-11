@@ -1,12 +1,22 @@
 {
   "name": "textguard-vscode",
   "displayName": "TextGuard",
-  "description": "Scan the active editor with TextGuard and surface matches as VS Code diagnostics.",
+  "description": "Scan editor content with TextGuard and surface matches as diagnostics with Explain actions.",
   "version": "0.1.0",
   "private": true,
   "publisher": "textguard",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AshkanAhmady/textguard.git",
+    "directory": "integrations/vscode"
+  },
+  "homepage": "https://github.com/AshkanAhmady/textguard/tree/main/integrations/vscode",
+  "bugs": {
+    "url": "https://github.com/AshkanAhmady/textguard/issues"
+  },
+  "keywords": ["textguard", "lint", "profanity", "pii", "content-moderation"],
   "engines": { "vscode": "^1.90.0" },
-  "categories": ["Linters"],
+  "categories": ["Linters", "Other"],
   "activationEvents": [
     "onStartupFinished",
     "onCommand:textguard.scanActiveEditor",
@@ -50,13 +60,15 @@
   },
   "scripts": {
     "build": "tsup",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "package:vsix": "npm run build && vsce package --out textguard-vscode-${npm_package_version}.vsix"
   },
   "dependencies": {
     "@textguard/all": "^1.0.3"
   },
   "devDependencies": {
     "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^3.9.2",
     "tsup": "^8.5.1",
     "typescript": "^5.9.2"
   }

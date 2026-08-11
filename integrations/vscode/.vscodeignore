@@ -1,0 +1,7 @@
+src/**
+**/*.ts
+**/*.map
+tsconfig.json
+tsup.config.ts
+node_modules/.cache/**
+*.vsix
