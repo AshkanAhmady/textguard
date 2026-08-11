@@ -1,7 +1,6 @@
-import test from "node:test";
-import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { describe, expect, it } from "vitest";
 
 const cliPath = fileURLToPath(new URL("../dist/index.js", import.meta.url));
 
@@ -11,26 +10,28 @@ function runCli(args) {
   });
 }
 
-test("scan returns clean result with exit code 0", () => {
-  const result = runCli(["scan", "hello world"]);
+describe("textguard scan", () => {
+  it("returns clean result with exit code 0", () => {
+    const result = runCli(["scan", "hello world"]);
 
-  assert.equal(result.status, 0);
-  assert.match(result.stdout, /Matches: 0/);
-});
+    expect(result.status).toBe(0);
+    expect(result.stdout).toMatch(/Matches: 0/);
+  });
 
-test("scan detects custom words and returns exit code 1", () => {
-  const result = runCli(["scan", "hello secret", "--word=secret"]);
+  it("detects custom words and returns exit code 1", () => {
+    const result = runCli(["scan", "hello secret", "--word=secret"]);
 
-  assert.equal(result.status, 1);
-  assert.match(result.stdout, /Matches: 1/);
-  assert.match(result.stdout, /secret/);
-});
+    expect(result.status).toBe(1);
+    expect(result.stdout).toMatch(/Matches: 1/);
+    expect(result.stdout).toMatch(/secret/);
+  });
 
-test("scan supports json output", () => {
-  const result = runCli(["scan", "hello secret", "--word=secret", "--json"]);
-  const parsed = JSON.parse(result.stdout);
+  it("supports json output", () => {
+    const result = runCli(["scan", "hello secret", "--word=secret", "--json"]);
+    const parsed = JSON.parse(result.stdout);
 
-  assert.equal(result.status, 1);
-  assert.equal(parsed.matches.length, 1);
-  assert.equal(parsed.matches[0].matchedText, "secret");
+    expect(result.status).toBe(1);
+    expect(parsed.matches).toHaveLength(1);
+    expect(parsed.matches[0].matchedText).toBe("secret");
+  });
 });
