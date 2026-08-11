@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { createFilter, strictPreset } from "@textguard/all";
 
 const filter = createFilter(strictPreset);
+const DIAGNOSTIC_CODE = "textguard.match";
 
 function scanDocument(
   document: vscode.TextDocument,
@@ -19,6 +20,7 @@ function scanDocument(
       vscode.DiagnosticSeverity.Warning,
     );
     diagnostic.source = "TextGuard";
+    diagnostic.code = DIAGNOSTIC_CODE;
     return diagnostic;
   });
 
@@ -30,6 +32,53 @@ function isScanOnSaveEnabled(): boolean {
   return vscode.workspace
     .getConfiguration("textguard")
     .get<boolean>("scanOnSave", true);
+}
+
+function findExplanation(
+  document: vscode.TextDocument,
+  range: vscode.Range,
+): string | null {
+  const result = filter.explain(document.getText());
+  const start = document.offsetAt(range.start);
+  const end = document.offsetAt(range.end);
+  const explained = result.matches.find(
+    (item) => item.match.start === start && item.match.end === end,
+  );
+
+  if (!explained) return null;
+
+  return [
+    `TextGuard matched "${explained.match.matchedText}".`,
+    `Source: ${explained.source.plugin}`,
+    `Reason: ${explained.reason.message}`,
+  ].join("\n");
+}
+
+class TextGuardCodeActionProvider implements vscode.CodeActionProvider {
+  provideCodeActions(
+    document: vscode.TextDocument,
+    _range: vscode.Range,
+    context: vscode.CodeActionContext,
+  ): vscode.CodeAction[] {
+    return context.diagnostics
+      .filter(
+        (diagnostic) =>
+          diagnostic.source === "TextGuard" && diagnostic.code === DIAGNOSTIC_CODE,
+      )
+      .map((diagnostic) => {
+        const action = new vscode.CodeAction(
+          "Explain TextGuard match",
+          vscode.CodeActionKind.QuickFix,
+        );
+        action.diagnostics = [diagnostic];
+        action.command = {
+          command: "textguard.explainDiagnostic",
+          title: "Explain TextGuard match",
+          arguments: [document.uri, diagnostic.range],
+        };
+        return action;
+      });
+  }
 }
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -49,6 +98,36 @@ export function activate(context: vscode.ExtensionContext): void {
         `TextGuard: ${matchCount} match${matchCount === 1 ? "" : "es"} found.`,
       );
     }),
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "textguard.explainDiagnostic",
+      (uri: vscode.Uri, range: vscode.Range) => {
+        const document = vscode.workspace.textDocuments.find(
+          (candidate) => candidate.uri.toString() === uri.toString(),
+        );
+        if (!document) return;
+
+        const explanation = findExplanation(document, range);
+        if (!explanation) {
+          void vscode.window.showInformationMessage(
+            "TextGuard: explanation is no longer available. Scan the document again.",
+          );
+          return;
+        }
+
+        void vscode.window.showInformationMessage(explanation, { modal: true });
+      },
+    ),
+  );
+
+  context.subscriptions.push(
+    vscode.languages.registerCodeActionsProvider(
+      { scheme: "file" },
+      new TextGuardCodeActionProvider(),
+      { providedCodeActionKinds: [vscode.CodeActionKind.QuickFix] },
+    ),
   );
 
   context.subscriptions.push(
