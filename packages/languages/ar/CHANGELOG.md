@@ -1,5 +1,11 @@
 # @textguard/ar
 
+## 1.2.0
+
+### Minor Changes
+
+- d6b60e5: Expand Arabic moderation with a small high-confidence dialectal profanity slice and public API regression coverage while preserving existing exports and the conservative false-positive policy.
+
 ## 1.1.0
 
 ### Minor Changes
