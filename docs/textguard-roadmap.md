@@ -12,7 +12,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 2. **AR1/AR2 package release — ✅ complete.** `@textguard/core@1.0.3`, `@textguard/all@1.0.3`, `@textguard/ar@1.1.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2` are published.
 3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
 4. **Release cadence policy — ✅ batched.** Changesets remain per behavior/API change; npm publishing is intentionally deferred and grouped across several coherent milestones unless a critical/consumer-blocking release is justified.
-5. **Adoption validation — 🟡 current focus.** Gather real consumer signals and use them to rank the next milestone.
+5. **Adoption validation — 🟡 current focus.** Gather real consumer signals through structured GitHub intake and package usage data, then use them to rank the next milestone.
 6. **Roadmap reassessment — next.** Choose one implementation slice using evidence, architectural leverage, maintenance cost, and the Guard Ecosystem Decision Filter.
 
 ---
@@ -65,17 +65,23 @@ Arabic profanity coverage is intentionally not treated as a finite “complete l
 
 ### Adoption validation — 🟡 current
 
-Before selecting the next major feature, collect and review:
+Structured GitHub issue forms are the primary qualitative intake surface for:
+
+- runtime bugs and regressions;
+- false positives, false negatives, normalization gaps, and language/dialect misses;
+- installation, setup, documentation, TypeScript/API, CI, and packaging friction;
+- feature requests grounded in a concrete developer problem and current workaround.
+
+Also collect and review:
 
 - npm/package usage and install trends;
 - repeated setup/API friction from consumers;
-- false-positive and false-negative reports;
 - recurring requests across independent users/projects;
 - package discoverability/taxonomy confusion;
 - integration requests that clearly reuse existing architecture;
 - maintenance and regression cost of each candidate change.
 
-Do not promote a feature solely because it is interesting or because it appears once in the long-term roadmap.
+Do not promote a feature solely because it is interesting or because it appears once in the long-term roadmap. A single issue is evidence, not automatic roadmap priority.
 
 ### Release safety — ✅ hardened
 
@@ -99,4 +105,4 @@ Do not promote a feature solely because it is interesting or because it appears 
 
 ## Current product-quality focus
 
-**adoption validation → evidence-driven roadmap reassessment → one coherent implementation milestone.**
+**structured adoption intake → evidence review → roadmap reassessment → one coherent implementation milestone.**

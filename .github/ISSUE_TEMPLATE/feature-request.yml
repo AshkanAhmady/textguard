@@ -1,0 +1,42 @@
+name: Feature request
+description: Propose a concrete TextGuard capability based on a real developer use case.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Developer problem
+      description: Describe the concrete workflow or problem. Focus on the need before the proposed solution.
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current workaround
+      description: How do you solve this today, if at all?
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed TextGuard capability
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Product area
+      options:
+        - Core detection / filtering
+        - Language moderation
+        - Structured-data detection
+        - PII / compliance guard
+        - Debug / Explain tooling
+        - Presets / bundles
+        - Developer tooling / integrations
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence / frequency
+      description: How often does this problem occur, who encounters it, and why would solving it materially improve adoption?

@@ -1,0 +1,43 @@
+name: Bug report
+description: Report incorrect behavior, crashes, regressions, or packaging problems.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve TextGuard. Please provide a minimal reproducible case when possible.
+  - type: input
+    id: package
+    attributes:
+      label: Package
+      description: Which TextGuard package is affected?
+      placeholder: "@textguard/core"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: "1.0.3"
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include the smallest code sample, repository, or steps that reproduce the problem.
+      render: ts
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Runtime / environment
+      placeholder: "Node 20, pnpm 10, Windows 11"
