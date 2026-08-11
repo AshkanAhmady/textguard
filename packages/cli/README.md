@@ -40,4 +40,20 @@ textguard debug "hello secret" --word=secret --format=html
 
 Valid debug formats are `console`, `json`, `markdown`, and `html`. Successful debug commands exit with `0`; invalid usage exits with `2`.
 
-The CLI remains an adapter over `@textguard/core`; detection and debug behavior stay in Core and configured packs.
+## Explain
+
+Use the Core Explain API to see why text matched and which source produced each match:
+
+```bash
+textguard explain "hello secret" --word=secret
+```
+
+Use `--json` for a stable machine-readable Explain result:
+
+```bash
+textguard explain "hello secret" --word=secret --json
+```
+
+Explain exit codes are `0` for clean text, `1` when matches are explained, and `2` for invalid CLI usage.
+
+The CLI remains an adapter over `@textguard/core`; detection, debug, and explain behavior stay in Core and configured packs.
