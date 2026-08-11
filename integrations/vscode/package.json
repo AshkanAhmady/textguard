@@ -31,6 +31,12 @@
           "type": "boolean",
           "default": true,
           "description": "Automatically scan a document with TextGuard when it is saved."
+        },
+        "textguard.preset": {
+          "type": "string",
+          "enum": ["strict", "enterprise", "socialMedia"],
+          "default": "strict",
+          "description": "TextGuard preset used for editor scans and explanations."
         }
       }
     }
