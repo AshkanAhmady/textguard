@@ -4,9 +4,10 @@ import { describe, expect, it } from "vitest";
 
 const cliPath = fileURLToPath(new URL("../dist/index.js", import.meta.url));
 
-function runCli(args) {
+function runCli(args, input) {
   return spawnSync(process.execPath, [cliPath, ...args], {
     encoding: "utf8",
+    input,
   });
 }
 
@@ -33,6 +34,21 @@ describe("textguard scan", () => {
     expect(result.status).toBe(1);
     expect(parsed.matches).toHaveLength(1);
     expect(parsed.matches[0].matchedText).toBe("secret");
+  });
+
+  it("reads scan text from stdin when text is dash", () => {
+    const result = runCli(["scan", "-", "--word=secret"], "hello secret\n");
+
+    expect(result.status).toBe(1);
+    expect(result.stdout).toMatch(/Matches: 1/);
+    expect(result.stdout).toMatch(/secret/);
+  });
+
+  it("rejects empty stdin input", () => {
+    const result = runCli(["scan", "-"], "\n");
+
+    expect(result.status).toBe(2);
+    expect(result.stdout).toMatch(/Usage:/);
   });
 });
 
@@ -63,6 +79,17 @@ describe("textguard debug", () => {
 
     expect(result.status).toBe(0);
     expect(result.stdout).toMatch(/^# TextGuard Debug Report/m);
+  });
+
+  it("reads debug text from stdin", () => {
+    const result = runCli(
+      ["debug", "-", "--word=secret", "--format=json"],
+      "hello secret\n",
+    );
+    const parsed = JSON.parse(result.stdout);
+
+    expect(result.status).toBe(0);
+    expect(parsed.statistics.matchEvents).toBe(1);
   });
 
   it("rejects unsupported debug formats", () => {
@@ -99,6 +126,18 @@ describe("textguard explain", () => {
     expect(parsed.matches).toHaveLength(1);
     expect(parsed.matches[0].match.matchedText).toBe("secret");
     expect(parsed.matches[0].reason.code).toBe("rule-match");
+  });
+
+  it("reads explain text from stdin", () => {
+    const result = runCli(
+      ["explain", "-", "--word=secret", "--json"],
+      "hello secret\n",
+    );
+    const parsed = JSON.parse(result.stdout);
+
+    expect(result.status).toBe(1);
+    expect(parsed.summary.matchCount).toBe(1);
+    expect(parsed.matches[0].match.matchedText).toBe("secret");
   });
 
   it("returns exit code 0 for a clean explanation", () => {
