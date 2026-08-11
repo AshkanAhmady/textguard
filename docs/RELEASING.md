@@ -4,6 +4,21 @@ This is the canonical package-release procedure for the TextGuard monorepo.
 
 The repository uses Changesets. Do **not** run `npm publish` from the repository root and do not manually publish every workspace package.
 
+## Release cadence
+
+TextGuard separates **Changeset creation** from **npm publishing**.
+
+Every merged public runtime/API/behavior change should still carry the appropriate Changeset, but a merged Changeset does **not** imply an immediate npm publish. Pending changes should normally be batched and published after several related milestones or when there is a clear consumer-facing reason to ship.
+
+Publish earlier only when one of these applies:
+
+- a critical bug/security fix needs to reach consumers quickly;
+- a newly completed capability is independently valuable and ready for adoption;
+- a compatibility/dependency fix is blocking consumers;
+- the maintainer intentionally wants a stable checkpoint before a larger development phase.
+
+Otherwise, keep accumulating Changesets and release them together. This reduces release overhead without losing per-PR release metadata.
+
 ## Why this workflow exists
 
 A release of `@textguard/core` can affect many workspace dependents. TextGuard therefore separates release planning, versioning, verification, and publishing so an unintended package wave is visible before anything reaches npm.
@@ -26,7 +41,11 @@ pnpm release:plan
 
 Review every package and release level shown by Changesets. If the plan includes an unexpected package, stop and fix the Changeset/configuration before versioning.
 
+For batched releases, the plan may legitimately contain Changesets from several merged milestones. The important rule is that every candidate must be intentional and explainable.
+
 ## 3. Apply versions
+
+Only version packages when you are intentionally preparing a release batch:
 
 ```bash
 pnpm version-packages
@@ -44,6 +63,8 @@ Expected changes normally include package versions, changelogs, consumed Changes
 
 Do not publish when the diff contains an unexpected package bump.
 
+A versioned-but-not-yet-published release batch may remain on `main` while additional development continues, but avoid repeatedly versioning packages between every feature PR. Prefer accumulating new Changesets until the next intentional release batch.
+
 ## 4. Validate the repository
 
 ```bash
@@ -56,6 +77,8 @@ pnpm build
 A release PR is not ready to merge unless `pnpm install --frozen-lockfile` succeeds from the committed lockfile. Commit the generated release changes only after the release set and checks are correct.
 
 ## 5. Publish with the guard
+
+When the batch is ready to ship:
 
 ```bash
 pnpm release
@@ -106,4 +129,4 @@ Together, the caret workspace ranges and this Changesets setting avoid unnecessa
 
 ## Release rule
 
-A merged runtime/public-package change should have a Changeset. After merge, explicitly review whether a package release is pending. Never infer that every workspace package should be published just because the monorepo build succeeds.
+A merged runtime/public-package change should have a Changeset. After merge, record the pending release impact, but do **not** automatically publish. Batch normal releases across multiple coherent milestones and publish only when the release batch is intentionally opened.
