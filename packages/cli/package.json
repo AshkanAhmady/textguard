@@ -1,0 +1,23 @@
+{
+  "name": "@textguard/cli",
+  "version": "0.1.0",
+  "description": "Command line interface for TextGuard",
+  "type": "module",
+  "bin": {
+    "textguard": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@textguard/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.2"
+  }
+}
