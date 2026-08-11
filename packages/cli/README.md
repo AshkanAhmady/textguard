@@ -20,7 +20,14 @@ Use `--word=<word>` to add one or more custom words and `--json` for machine-rea
 textguard scan --file=message.txt --word=secret --json
 ```
 
-Scan exit codes are `0` for a clean scan, `1` when matches are found, and `2` for invalid input or CLI usage.
+Batch scan multiple UTF-8 files with `--files=<path1,path2>`:
+
+```bash
+textguard scan --files=one.txt,two.txt --word=secret
+textguard scan --files=one.txt,two.txt --word=secret --json
+```
+
+Batch JSON output contains per-file results plus a summary with `fileCount`, `matchedFiles`, and `matchCount`. Scan exit codes are `0` when all input is clean, `1` when at least one match is found, and `2` for invalid or unreadable input.
 
 ## Debug
 
