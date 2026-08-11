@@ -72,3 +72,41 @@ describe("textguard debug", () => {
     expect(result.stdout).toMatch(/Usage:/);
   });
 });
+
+describe("textguard explain", () => {
+  it("prints a readable explanation and returns exit code 1 for matches", () => {
+    const result = runCli(["explain", "hello secret", "--word=secret"]);
+
+    expect(result.status).toBe(1);
+    expect(result.stdout).toMatch(/TextGuard Explain/);
+    expect(result.stdout).toMatch(/Matched: yes/);
+    expect(result.stdout).toMatch(/Matches: 1/);
+    expect(result.stdout).toMatch(/Reason:/);
+  });
+
+  it("supports machine-readable explain output", () => {
+    const result = runCli([
+      "explain",
+      "hello secret",
+      "--word=secret",
+      "--json",
+    ]);
+    const parsed = JSON.parse(result.stdout);
+
+    expect(result.status).toBe(1);
+    expect(parsed.matched).toBe(true);
+    expect(parsed.summary.matchCount).toBe(1);
+    expect(parsed.matches).toHaveLength(1);
+    expect(parsed.matches[0].match.matchedText).toBe("secret");
+    expect(parsed.matches[0].reason.code).toBe("rule-match");
+  });
+
+  it("returns exit code 0 for a clean explanation", () => {
+    const result = runCli(["explain", "hello world", "--json"]);
+    const parsed = JSON.parse(result.stdout);
+
+    expect(result.status).toBe(0);
+    expect(parsed.matched).toBe(false);
+    expect(parsed.summary.matchCount).toBe(0);
+  });
+});
