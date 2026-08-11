@@ -30,11 +30,13 @@ interface ExplainOptions {
 
 function printUsage(): void {
   console.log("Usage:");
-  console.log("  textguard scan <text> [--word=<word>] [--json]");
+  console.log("  textguard scan <text|-> [--word=<word>] [--json]");
   console.log(
-    "  textguard debug <text> [--word=<word>] [--format=console|json|markdown|html]",
+    "  textguard debug <text|-> [--word=<word>] [--format=console|json|markdown|html]",
   );
-  console.log("  textguard explain <text> [--word=<word>] [--json]");
+  console.log("  textguard explain <text|-> [--word=<word>] [--json]");
+  console.log("");
+  console.log('Use "-" to read text from stdin.');
 }
 
 function parseScanArgs(args: string[]): ScanOptions | null {
@@ -106,6 +108,26 @@ function parseExplainArgs(args: string[]): ExplainOptions | null {
   return parsed;
 }
 
+function readStdin(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let input = "";
+
+    process.stdin.setEncoding("utf8");
+    process.stdin.on("data", (chunk) => {
+      input += chunk;
+    });
+    process.stdin.on("end", () => resolve(input.trim()));
+    process.stdin.on("error", reject);
+  });
+}
+
+async function resolveText(text: string): Promise<string | null> {
+  if (text !== "-") return text;
+
+  const stdin = await readStdin();
+  return stdin || null;
+}
+
 function renderDebug(
   format: DebugFormat,
   text: string,
@@ -125,17 +147,27 @@ function renderDebug(
   }
 }
 
-const [, , command, ...args] = process.argv;
+async function main(): Promise<void> {
+  const [, , command, ...args] = process.argv;
 
-if (command === "scan") {
-  const options = parseScanArgs(args);
+  if (command === "scan") {
+    const options = parseScanArgs(args);
 
-  if (!options) {
-    printUsage();
-    process.exitCode = 2;
-  } else {
+    if (!options) {
+      printUsage();
+      process.exitCode = 2;
+      return;
+    }
+
+    const text = await resolveText(options.text);
+    if (!text) {
+      printUsage();
+      process.exitCode = 2;
+      return;
+    }
+
     const filter = createFilter({ customWords: options.customWords });
-    const result = filter.filter(options.text);
+    const result = filter.filter(text);
 
     if (options.json) {
       console.log(JSON.stringify(result, null, 2));
@@ -151,27 +183,47 @@ if (command === "scan") {
     }
 
     process.exitCode = result.matches.length > 0 ? 1 : 0;
+    return;
   }
-} else if (command === "debug") {
-  const options = parseDebugArgs(args);
 
-  if (!options) {
-    printUsage();
-    process.exitCode = 2;
-  } else {
-    console.log(renderDebug(options.format, options.text, options.customWords));
+  if (command === "debug") {
+    const options = parseDebugArgs(args);
+
+    if (!options) {
+      printUsage();
+      process.exitCode = 2;
+      return;
+    }
+
+    const text = await resolveText(options.text);
+    if (!text) {
+      printUsage();
+      process.exitCode = 2;
+      return;
+    }
+
+    console.log(renderDebug(options.format, text, options.customWords));
     process.exitCode = 0;
+    return;
   }
-} else if (command === "explain") {
-  const options = parseExplainArgs(args);
 
-  if (!options) {
-    printUsage();
-    process.exitCode = 2;
-  } else {
-    const result = createFilter({ customWords: options.customWords }).explain(
-      options.text,
-    );
+  if (command === "explain") {
+    const options = parseExplainArgs(args);
+
+    if (!options) {
+      printUsage();
+      process.exitCode = 2;
+      return;
+    }
+
+    const text = await resolveText(options.text);
+    if (!text) {
+      printUsage();
+      process.exitCode = 2;
+      return;
+    }
+
+    const result = createFilter({ customWords: options.customWords }).explain(text);
 
     if (options.json) {
       console.log(JSON.stringify(result, null, 2));
@@ -190,8 +242,11 @@ if (command === "scan") {
     }
 
     process.exitCode = result.matched ? 1 : 0;
+    return;
   }
-} else {
+
   printUsage();
   process.exitCode = 2;
 }
+
+void main();
