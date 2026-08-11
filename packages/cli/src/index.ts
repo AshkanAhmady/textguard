@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-import { createRequire } from "node:module";
-
 const [, , command, ...args] = process.argv;
 
 if (command !== "scan") {
@@ -18,5 +16,3 @@ if (command !== "scan") {
     console.log(`TextGuard scan: ${input}`);
   }
 }
-
-void createRequire(import.meta.url);
