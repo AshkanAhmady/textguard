@@ -11,7 +11,9 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 1. **Release hardening — ✅ complete.** Safe Changesets planning, bounded npm candidate checks, release docs, and canonical package taxonomy are in place.
 2. **AR1/AR2 package release — ✅ complete.** `@textguard/core@1.0.3`, `@textguard/all@1.0.3`, `@textguard/ar@1.1.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2` are published.
 3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
-4. **Adoption validation / roadmap reassessment — 🟡 current focus.** Use real package usage, issues, feedback, and developer friction to choose the next product milestone instead of expanding scope automatically.
+4. **Release cadence policy — ✅ batched.** Changesets remain per behavior/API change; npm publishing is intentionally deferred and grouped across several coherent milestones unless a critical/consumer-blocking release is justified.
+5. **Adoption validation — 🟡 current focus.** Gather real consumer signals and use them to rank the next milestone.
+6. **Roadmap reassessment — next.** Choose one implementation slice using evidence, architectural leverage, maintenance cost, and the Guard Ecosystem Decision Filter.
 
 ---
 
@@ -61,10 +63,26 @@ Future public API/behavior changes must update affected READMEs in the same PR.
 
 Arabic profanity coverage is intentionally not treated as a finite “complete list”; future vocabulary changes should be evidence-driven rather than treated as a standing roadmap obligation.
 
+### Adoption validation — 🟡 current
+
+Before selecting the next major feature, collect and review:
+
+- npm/package usage and install trends;
+- repeated setup/API friction from consumers;
+- false-positive and false-negative reports;
+- recurring requests across independent users/projects;
+- package discoverability/taxonomy confusion;
+- integration requests that clearly reuse existing architecture;
+- maintenance and regression cost of each candidate change.
+
+Do not promote a feature solely because it is interesting or because it appears once in the long-term roadmap.
+
 ### Release safety — ✅ hardened
 
 - never run root `npm publish`;
-- preview Changesets with `pnpm release:plan` before versioning;
+- keep Changesets per public behavior/API change;
+- batch normal npm releases across several coherent milestones;
+- preview Changesets with `pnpm release:plan` when opening a release batch;
 - review generated version/changelog diff before commit;
 - compare local public package versions with npm before `changeset publish`;
 - require explicit confirmation of the exact candidate count;
@@ -81,4 +99,4 @@ Arabic profanity coverage is intentionally not treated as a finite “complete l
 
 ## Current product-quality focus
 
-**adoption validation → evidence-driven roadmap reassessment.**
+**adoption validation → evidence-driven roadmap reassessment → one coherent implementation milestone.**

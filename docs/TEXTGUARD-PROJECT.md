@@ -97,15 +97,17 @@ AR3 added a small high-confidence dialect vocabulary slice while preserving the 
 
 Arabic vocabulary is not treated as a finite “complete list.” Further coverage work should be driven by real false negatives, user reports, or other evidence rather than permanent roadmap expansion.
 
-## 9. Release safety
+## 9. Release safety and cadence
 
 Release hardening is complete. The repository uses Changesets with release planning, explicit npm candidate checks, bounded registry lookup, canonical package taxonomy, and a documented procedure in `docs/RELEASING.md`.
 
 The latest published baseline includes `@textguard/core@1.0.3`, `@textguard/all@1.0.3`, `@textguard/ar@1.1.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2`.
 
-Never run `npm publish` from the repository root. Review the release plan and final npm candidate list before every publish.
+The repository now uses a **batched publishing cadence**: public behavior/API PRs still get Changesets, but npm publishing is normally deferred across several coherent milestones. Immediate publish is reserved for intentional stable checkpoints, consumer blockers, critical fixes, or independently valuable completed capabilities.
 
-AR3 and AR4 have merged Changesets, so the next release cycle should include the resulting `@textguard/ar` and `@textguard/all` version bumps after the normal release-plan review.
+The currently versioned Arabic parity batch is `@textguard/ar@1.2.0` and `@textguard/all@1.1.0`. These versions may remain ahead of npm while additional milestones are developed; future behavior changes should add new Changesets rather than forcing another immediate release cycle.
+
+Never run `npm publish` from the repository root. Review the release plan and final npm candidate list before every publish.
 
 ## 10. Known technical debt
 
@@ -123,12 +125,12 @@ Every coherent change-set should:
 2. include relevant tests when behavior changes;
 3. update stale roadmap/project/ADR/README/example documentation in the same branch;
 4. include Changesets when published package behavior changes;
-5. follow `docs/RELEASING.md` for npm releases;
+5. follow `docs/RELEASING.md` when an intentional release batch is opened;
 6. open a PR for maintainer review;
 7. merge only with required checks green;
 8. delete the feature branch after merge.
 
-When a merged Changeset means an npm package should be released, explicitly remind the maintainer which package(s) and release level are pending.
+A merged Changeset means release impact is pending, not that npm must be updated immediately.
 
 ## 12. Guard Ecosystem memory
 
@@ -140,4 +142,4 @@ The wider ecosystem remains vision-stage. TextGuard should earn adoption and val
 
 Near-term sequence is:
 
-**complete pending AR3/AR4 release → adoption validation → evidence-driven roadmap reassessment.**
+**adoption validation → evidence-driven roadmap reassessment → one coherent implementation milestone → batched release when justified.**
