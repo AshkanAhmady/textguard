@@ -13,7 +13,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
 4. **Release cadence policy — ✅ batched.** Changesets remain per behavior/API change; npm publishing is intentionally deferred and grouped across several coherent milestones unless a critical/consumer-blocking release is justified.
 5. **Adoption validation — 🟡 current focus.** Gather real consumer signals through structured GitHub intake and package usage data, then use them to rank the next milestone.
-6. **Roadmap reassessment — next.** Choose one implementation slice using evidence, architectural leverage, maintenance cost, and the Guard Ecosystem Decision Filter.
+6. **Roadmap reassessment — 🟡 in progress.** Current repository evidence is being reconciled before selecting a behavior-changing milestone.
 
 ---
 
@@ -38,7 +38,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 | Milestone | Status | Detail |
 | --- | --- | --- |
 | M1 — Debug Foundation | ✅ Done | `DebugSession`, events, collector, `filter.debug()`. |
-| M2 — Renderers | 🟡 Partial | Console/JSON/Markdown exist; HTML remains missing. |
+| M2 — Renderers | 🟡 Partial | `ConsoleRenderer` and `JsonRenderer` are implemented and publicly exported. Markdown and HTML renderers are described by ADR-001 but are not implemented in the current Core source. |
 | M3 — Timeline | ✅ Done | Timeline implemented. |
 | M4 — Performance Diagnostics | ✅ Done | Performance diagnostics implemented. |
 | M5 — Explain API | ✅ Done | Structured Explain domain, builder, public `filter.explain(text)`, tests and public core docs complete. |
@@ -83,6 +83,8 @@ Also collect and review:
 
 Do not promote a feature solely because it is interesting or because it appears once in the long-term roadmap. A single issue is evidence, not automatic roadmap priority.
 
+At the start of this validation phase there are no open consumer issues yet. That absence is not evidence for a new feature. Repository-internal drift should be corrected independently while external signals accumulate.
+
 ### Release safety — ✅ hardened
 
 - never run root `npm publish`;
@@ -96,13 +98,13 @@ Do not promote a feature solely because it is interesting or because it appears 
 
 ### Other technical debt
 
-- `packages/presets/` versus `packages/all/src/presets/` ownership/duplication.
-- ADR-001 renderer/API documentation drift.
+- historical preset-ownership documentation mentions `packages/presets/`, but that top-level package directory no longer exists; current preset ownership lives under `packages/all` and the stale debt item should not drive a refactor.
+- ADR-001 describes Markdown/HTML renderer targets that are not implemented in current Core; roadmap/status docs must not claim Markdown is shipped.
 - overlap ranking remains order-dependent in some ties.
-- HTML Debug renderer remains missing.
+- Markdown and HTML Debug renderers remain potential M2 work, but should be prioritized only with adoption evidence or a concrete integration need.
 
 ---
 
 ## Current product-quality focus
 
-**structured adoption intake → evidence review → roadmap reassessment → one coherent implementation milestone.**
+**structured adoption intake → repository truth reconciliation → evidence review → one coherent implementation milestone.**
