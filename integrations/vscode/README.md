@@ -6,6 +6,10 @@ Initial VS Code integration for TextGuard.
 
 Run **TextGuard: Scan Active Editor** from the Command Palette. The extension scans the full active document with `strictPreset` and publishes each match as a VS Code warning diagnostic, so matches appear inline and in the Problems panel.
 
+The extension also scans documents automatically when they are saved. This behavior is enabled by default and can be disabled through the `textguard.scanOnSave` VS Code setting.
+
+Diagnostics for a document are removed when that document is closed.
+
 ## Local development
 
 This integration intentionally lives outside the root pnpm workspace during the initial Marketplace shell milestone. That prevents extension-only VS Code tooling from changing the library workspace lockfile or CI dependency graph.
