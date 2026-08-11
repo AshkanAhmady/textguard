@@ -1,5 +1,16 @@
 # @textguard/all
 
+## 1.1.0
+
+### Minor Changes
+
+- 1f99866: Include the canonical Arabic moderation dictionary in the strict and enterprise presets, with preset-level regression coverage and updated bundle documentation.
+
+### Patch Changes
+
+- Updated dependencies [d6b60e5]
+  - @textguard/ar@1.2.0
+
 ## 1.0.3
 
 ### Patch Changes
