@@ -8,6 +8,38 @@ interface ResolvedMatch {
   readonly registeredRule: RegisteredRule;
 }
 
+function compareTieBreakers(
+  current: ResolvedMatch,
+  existing: ResolvedMatch,
+): number {
+  const priorityDifference =
+    current.registeredRule.rule.priority - existing.registeredRule.rule.priority;
+
+  if (priorityDifference !== 0) {
+    return priorityDifference;
+  }
+
+  const pluginDifference = current.registeredRule.plugin.localeCompare(
+    existing.registeredRule.plugin,
+  );
+
+  if (pluginDifference !== 0) {
+    return pluginDifference;
+  }
+
+  const ruleIdDifference = current.registeredRule.rule.id.localeCompare(
+    existing.registeredRule.rule.id,
+  );
+
+  if (ruleIdDifference !== 0) {
+    return ruleIdDifference;
+  }
+
+  return current.registeredRule.rule.name.localeCompare(
+    existing.registeredRule.rule.name,
+  );
+}
+
 export function runRules(
   rules: readonly RegisteredRule[],
   context: MatchContext,
@@ -47,14 +79,20 @@ export function runRules(
 
       const existingLength = existing.match.end - existing.match.start;
       const currentLength = match.end - match.start;
+      const currentResolved = { match, registeredRule };
 
-      if (currentLength > existingLength) {
+      const currentWins =
+        currentLength > existingLength ||
+        (currentLength === existingLength &&
+          compareTieBreakers(currentResolved, existing) < 0);
+
+      if (currentWins) {
         observer?.onMatchRejected?.(
           existing.registeredRule,
           existing.match,
           match,
         );
-        matches[overlappedIndex] = { match, registeredRule };
+        matches[overlappedIndex] = currentResolved;
       } else {
         observer?.onMatchRejected?.(registeredRule, match, existing.match);
       }
