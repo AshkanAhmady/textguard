@@ -50,6 +50,6 @@ The `.vscodeignore` file keeps TypeScript sources and build-only files out of th
 
 Before the first publish, create or verify the Visual Studio Marketplace publisher whose ID matches the extension manifest (`textguard`), then configure Marketplace trusted publishing for this repository and the workflow file `.github/workflows/vscode-marketplace-publish.yml`. The workflow requests `id-token: write` and runs in the `vscode-marketplace` GitHub environment.
 
-Once trusted publishing is configured, run **Publish VS Code Extension** from GitHub Actions. Publishing remains deliberate and is not triggered by pull requests or pushes.
+When starting **Publish VS Code Extension**, enter the exact version from `integrations/vscode/package.json` (currently `0.1.0`). The workflow refuses to continue when the requested version differs from the manifest, then type-checks, builds, packages the exact VSIX, uploads that release candidate as an Actions artifact, and publishes that same artifact to Marketplace. This keeps the reviewed package and published package identical.
 
-Until the first successful Marketplace publication, searching `TextGuard` in the VS Code Extensions view will not install this repository's extension.
+Publishing remains deliberate and is not triggered by pull requests or pushes. Until the first successful Marketplace publication, searching `TextGuard` in the VS Code Extensions view will not install this repository's extension.
