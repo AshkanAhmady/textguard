@@ -37,6 +37,13 @@
           "enum": ["strict", "enterprise", "socialMedia"],
           "default": "strict",
           "description": "TextGuard preset used for editor scans and explanations."
+        },
+        "textguard.whitelist": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "uniqueItems": true,
+          "description": "Words that TextGuard should allow and omit from editor diagnostics."
         }
       }
     }

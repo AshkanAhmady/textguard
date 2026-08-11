@@ -10,6 +10,14 @@ The extension also scans documents automatically when they are saved. This behav
 
 Choose the scanning policy with `textguard.preset`. Supported values are `strict` (default), `enterprise`, and `socialMedia`. Changing the preset refreshes diagnostics for currently open file documents, and the same preset is used by Explain so diagnostics and explanations stay consistent.
 
+Use `textguard.whitelist` for project-specific allowed words that should not produce diagnostics. The setting is a unique string array and is applied on top of the selected preset. Updating it refreshes currently open file documents immediately.
+
+```json
+{
+  "textguard.whitelist": ["project-name", "approved-term"]
+}
+```
+
 For a TextGuard diagnostic, open VS Code Quick Fix actions and choose **Explain TextGuard match**. The extension reuses the Core Explain API and shows the matched text, source, and structured reason without duplicating detection logic in the extension.
 
 Diagnostics for a document are removed when that document is closed.
