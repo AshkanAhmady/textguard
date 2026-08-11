@@ -63,11 +63,55 @@ describe("textguard scan", () => {
     expect(parsed.matches[0].matchedText).toBe("secret");
   });
 
+  it("batch scans multiple UTF-8 files", () => {
+    const cleanPath = createInputFile("hello world");
+    const matchedPath = createInputFile("hello secret");
+    const result = runCli([
+      "scan",
+      `--files=${cleanPath},${matchedPath}`,
+      "--word=secret",
+      "--json",
+    ]);
+    const parsed = JSON.parse(result.stdout);
+
+    expect(result.status).toBe(1);
+    expect(parsed.summary.fileCount).toBe(2);
+    expect(parsed.summary.matchedFiles).toBe(1);
+    expect(parsed.summary.matchCount).toBe(1);
+    expect(parsed.files).toHaveLength(2);
+  });
+
+  it("returns exit code 0 when every batch file is clean", () => {
+    const first = createInputFile("hello world");
+    const second = createInputFile("another clean message");
+    const result = runCli(["scan", `--files=${first},${second}`, "--json"]);
+
+    expect(result.status).toBe(0);
+    expect(JSON.parse(result.stdout).summary.matchCount).toBe(0);
+  });
+
+  it("rejects missing files in batch mode", () => {
+    const path = createInputFile("hello world");
+    const result = runCli([
+      "scan",
+      `--files=${path},missing-textguard-batch-input.txt`,
+    ]);
+
+    expect(result.status).toBe(2);
+    expect(result.stdout).toMatch(/Usage:/);
+  });
+
   it("rejects text and file input together", () => {
     const path = createInputFile("hello secret");
     const result = runCli(["scan", "hello", `--file=${path}`]);
     expect(result.status).toBe(2);
     expect(result.stdout).toMatch(/Usage:/);
+  });
+
+  it("rejects text and batch input together", () => {
+    const path = createInputFile("hello secret");
+    const result = runCli(["scan", "hello", `--files=${path}`]);
+    expect(result.status).toBe(2);
   });
 
   it("rejects missing files", () => {
