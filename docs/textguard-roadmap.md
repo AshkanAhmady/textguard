@@ -13,7 +13,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
 4. **Release cadence policy — ✅ batched.** Changesets remain per behavior/API change; npm publishing is intentionally deferred and grouped across several coherent milestones unless a critical/consumer-blocking release is justified.
 5. **Adoption validation — 🟡 current focus.** Gather real consumer signals through structured GitHub intake and package usage data, then use them to rank the next milestone.
-6. **Developer integration slice — 🟡 in progress.** The standalone CLI provides Core-backed scanning, debug rendering, structured Explain output, stdin pipelines, direct UTF-8 file input, and deterministic multi-file batch scans; broader editor/browser/playground integrations remain later.
+6. **Developer integration slice — 🟡 in progress.** The initial CLI milestone is feature-complete for current scope. Editor integration work now starts with a reusable editor-neutral diagnostic boundary before the VS Code host package is added.
 7. **Roadmap reassessment — 🟡 in progress.** Small correctness work may proceed when it removes known engine nondeterminism without expanding product scope.
 
 ---
@@ -43,7 +43,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 | M3 — Timeline | ✅ Done | Timeline implemented. |
 | M4 — Performance Diagnostics | ✅ Done | Performance diagnostics implemented. |
 | M5 — Explain API | ✅ Done | Structured Explain domain, builder, public `filter.explain(text)`, tests and public core docs complete. |
-| M6 — Future Integrations | 🟡 Partial | `@textguard/cli` provides Core-backed `scan`, debug reports, `explain`, stdin pipelines, single-file input, and multi-file batch scan output for CI. VS Code, Chrome, Playground, and AI integrations remain later. |
+| M6 — Future Integrations | 🟡 Partial | `@textguard/cli` is complete for its initial scope with scan/debug/explain, stdin, file and batch input, machine-readable output, and CI-friendly exit codes. The next slice is VS Code integration, beginning with an editor-neutral diagnostic adapter in Core. Chrome, Playground, and AI integrations remain later. |
 
 ---
 
@@ -86,10 +86,10 @@ Structured GitHub issue forms are the primary qualitative intake surface for run
 ### Other technical debt
 
 - historical preset-ownership documentation mentions `packages/presets/`, but that top-level package directory no longer exists; current preset ownership lives under `packages/all` and the stale debt item should not drive a refactor.
-- future integrations beyond the CLI should be selected from adoption evidence rather than added as standing scope.
+- future integrations beyond the current VS Code slice should be selected from adoption evidence rather than added as standing scope.
 
 ---
 
 ## Current product-quality focus
 
-**structured adoption intake → targeted CLI integration hardening → evidence review → one coherent implementation milestone.**
+**editor-neutral diagnostics → VS Code host integration → adoption feedback → evidence review.**
