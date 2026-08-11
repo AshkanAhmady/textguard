@@ -20,6 +20,12 @@ Use `--json` for machine-readable output:
 textguard scan "hello secret" --word=secret --json
 ```
 
+Read text from stdin by passing `-` as the text argument:
+
+```bash
+cat message.txt | textguard scan - --word=secret
+```
+
 Scan exit codes are `0` for a clean scan, `1` when matches are found, and `2` for invalid CLI usage.
 
 ## Debug
@@ -38,6 +44,12 @@ textguard debug "hello secret" --word=secret --format=markdown
 textguard debug "hello secret" --word=secret --format=html
 ```
 
+Debug also accepts stdin:
+
+```bash
+cat message.txt | textguard debug - --format=json
+```
+
 Valid debug formats are `console`, `json`, `markdown`, and `html`. Successful debug commands exit with `0`; invalid usage exits with `2`.
 
 ## Explain
@@ -52,6 +64,12 @@ Use `--json` for a stable machine-readable Explain result:
 
 ```bash
 textguard explain "hello secret" --word=secret --json
+```
+
+Explain can consume piped text too:
+
+```bash
+cat message.txt | textguard explain - --json
 ```
 
 Explain exit codes are `0` for clean text, `1` when matches are explained, and `2` for invalid CLI usage.
