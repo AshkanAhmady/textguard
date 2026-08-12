@@ -8,12 +8,12 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 
 ## Near-term execution order
 
-1. **Release hardening — ✅ complete.** Safe Changesets planning, bounded npm candidate checks, release docs, and canonical package taxonomy are in place.
+1. **Release hardening — ✅ complete.** Safe Changesets planning, bounded npm candidate checks, release docs, canonical package taxonomy, branch protection, and Marketplace packaging hardening are in place.
 2. **AR1/AR2 package release — ✅ complete.** `@textguard/core@1.0.3`, `@textguard/all@1.0.3`, `@textguard/ar@1.1.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2` are published.
 3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
 4. **Release cadence policy — ✅ batched.** Changesets remain per behavior/API change; npm publishing is intentionally deferred and grouped across several coherent milestones unless a critical/consumer-blocking release is justified.
 5. **Adoption validation — 🟡 current focus.** Gather real consumer signals through structured GitHub intake and package usage data, then use them to rank the next milestone.
-6. **Developer integration slice — 🟡 in progress.** The initial CLI milestone is feature-complete for current scope. The VS Code host supports diagnostics, Explain quick fixes, preset selection, workspace whitelists, reproducible VSIX packaging, dedicated extension CI, and a version-confirmed trusted-publishing workflow; Marketplace publisher/trust configuration and first publication remain external release steps.
+6. **Developer integration slice — 🟡 in progress.** The initial CLI milestone is feature-complete for current scope. The VS Code extension is publicly available on Marketplace and supports diagnostics, Explain quick fixes, preset selection, workspace whitelists, reproducible VSIX packaging, dedicated extension CI, and release automation.
 7. **Roadmap reassessment — 🟡 in progress.** Small correctness work may proceed when it removes known engine nondeterminism without expanding product scope.
 
 ---
@@ -43,7 +43,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 | M3 — Timeline | ✅ Done | Timeline implemented. |
 | M4 — Performance Diagnostics | ✅ Done | Performance diagnostics implemented. |
 | M5 — Explain API | ✅ Done | Structured Explain domain, builder, public `filter.explain(text)`, tests and public core docs complete. |
-| M6 — Future Integrations | 🟡 Partial | `@textguard/cli` is complete for its initial scope. VS Code integration supports manual/save-time diagnostics, Explain quick fixes, preset selection, workspace whitelist control, VSIX packaging, dedicated CI validation, and a version-confirmed OIDC Marketplace publish workflow. First Marketplace publication, Chrome, Playground, and AI integrations remain later. |
+| M6 — Future Integrations | 🟡 Partial | `@textguard/cli` is complete for its initial scope. VS Code integration is publicly released with manual/save-time diagnostics, Explain quick fixes, preset selection, workspace whitelist control, VSIX packaging, and dedicated CI validation. Chrome, Playground, and AI integrations remain later. |
 
 ---
 
@@ -77,6 +77,7 @@ Structured GitHub issue forms are the primary qualitative intake surface for run
 - review generated version/changelog diff before commit;
 - compare local public package versions with npm before `changeset publish`;
 - require explicit confirmation of the exact candidate count;
+- protect `main` with PR-only changes and required CI checks;
 - keep `docs/RELEASING.md` as the canonical procedure.
 
 ### Engine correctness
@@ -92,4 +93,4 @@ Structured GitHub issue forms are the primary qualitative intake surface for run
 
 ## Current product-quality focus
 
-**version-confirmed Marketplace release → publisher/trust setup → first public release → adoption feedback.**
+**Marketplace adoption feedback → evidence review → next developer integration milestone.**
