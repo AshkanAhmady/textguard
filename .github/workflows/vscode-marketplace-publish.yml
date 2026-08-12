@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Exact extension version to publish (for example 0.1.0)"
+        description: "Exact extension version to publish (for example 0.1.1)"
         required: true
         type: string
 
@@ -22,12 +22,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
+          package-manager-cache: false
 
       - name: Verify requested version
         env:
@@ -48,7 +49,7 @@ jobs:
         run: npx @vscode/vsce package --out textguard-vscode-${{ inputs.version }}.vsix
 
       - name: Upload release candidate
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: textguard-vscode-${{ inputs.version }}
           path: integrations/vscode/textguard-vscode-${{ inputs.version }}.vsix
