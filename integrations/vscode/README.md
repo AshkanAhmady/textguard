@@ -34,12 +34,12 @@ npm run package:vsix
 
 This produces a versioned `textguard-vscode-<version>.vsix`. Install it from VS Code using **Extensions → … → Install from VSIX…**, or from the command line with `code --install-extension <file>.vsix`.
 
-The `.vscodeignore` file keeps TypeScript sources and build-only files out of the installable VSIX.
+The `.vscodeignore` file keeps TypeScript sources and build-only files out of the installable VSIX. The extension is distributed under the MIT License and the VSIX includes its license file.
 
 ## CI packaging
 
-`.github/workflows/vscode-extension.yml` validates the extension independently from the root pnpm workspace. Changes under `integrations/vscode` are type-checked, built, packaged into a VSIX, and uploaded as a GitHub Actions artifact.
+`.github/workflows/vscode-extension.yml` validates the extension independently from the root pnpm workspace. Changes under `integrations/vscode` are type-checked, built, packaged into a VSIX, and uploaded as a GitHub Actions artifact. The workflow uses current Node 24-based GitHub Action runtimes while continuing to build the extension with Node.js 22.
 
 ## Marketplace publishing
 
-TextGuard is publicly available in the Visual Studio Marketplace under publisher `textguard`. Marketplace releases remain deliberate and versioned; the release workflow verifies the requested version before packaging and publishing the reviewed VSIX.
+TextGuard is publicly available in the Visual Studio Marketplace under publisher `textguard`. The CI-produced VSIX is the canonical release candidate. Marketplace updates are currently uploaded deliberately to the existing extension after reviewing that artifact; the separate publish workflow remains available for automated OIDC publishing once its external Marketplace/identity configuration is finalized.
