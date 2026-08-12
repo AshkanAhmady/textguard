@@ -32,11 +32,7 @@ npm run check-types
 npm run package:vsix
 ```
 
-This produces `textguard-vscode-0.1.0.vsix`. Install it from VS Code using **Extensions → … → Install from VSIX…**, or from the command line:
-
-```bash
-code --install-extension textguard-vscode-0.1.0.vsix
-```
+This produces a versioned `textguard-vscode-<version>.vsix`. Install it from VS Code using **Extensions → … → Install from VSIX…**, or from the command line with `code --install-extension <file>.vsix`.
 
 The `.vscodeignore` file keeps TypeScript sources and build-only files out of the installable VSIX.
 
@@ -46,10 +42,4 @@ The `.vscodeignore` file keeps TypeScript sources and build-only files out of th
 
 ## Marketplace publishing
 
-`.github/workflows/vscode-marketplace-publish.yml` is an explicit, manually triggered release workflow. It uses `@vscode/vsce publish --oidc`, so GitHub Actions can publish with short-lived OpenID Connect credentials instead of storing a long-lived Marketplace PAT.
-
-Before the first publish, create or verify the Visual Studio Marketplace publisher whose ID matches the extension manifest (`textguard`), then configure Marketplace trusted publishing for this repository and the workflow file `.github/workflows/vscode-marketplace-publish.yml`. The workflow requests `id-token: write` and runs in the `vscode-marketplace` GitHub environment.
-
-When starting **Publish VS Code Extension**, enter the exact version from `integrations/vscode/package.json` (currently `0.1.0`). The workflow refuses to continue when the requested version differs from the manifest, then type-checks, builds, packages the exact VSIX, uploads that release candidate as an Actions artifact, and publishes that same artifact to Marketplace. This keeps the reviewed package and published package identical.
-
-Publishing remains deliberate and is not triggered by pull requests or pushes. Until the first successful Marketplace publication, searching `TextGuard` in the VS Code Extensions view will not install this repository's extension.
+TextGuard is publicly available in the Visual Studio Marketplace under publisher `textguard`. Marketplace releases remain deliberate and versioned; the release workflow verifies the requested version before packaging and publishing the reviewed VSIX.

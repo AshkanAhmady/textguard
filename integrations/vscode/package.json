@@ -2,9 +2,10 @@
   "name": "textguard-vscode",
   "displayName": "TextGuard",
   "description": "Scan editor content with TextGuard and surface matches as diagnostics with Explain actions.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "publisher": "textguard",
+  "icon": "assets/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/AshkanAhmady/textguard.git",
