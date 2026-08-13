@@ -58,6 +58,23 @@
             <li class="empty">No explanations available for clean text.</li>
           </ol>
         </section>
+
+        <section class="debug-panel" aria-labelledby="debug-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Debug Engine</p>
+              <h2 id="debug-heading">Execution timeline</h2>
+            </div>
+            <span class="explain-count" id="debug-count">0 events</span>
+          </div>
+          <div class="debug-grid">
+            <ol id="debug-events" class="debug-events"><li class="empty">No debug events yet.</li></ol>
+            <div>
+              <h3>Timeline projection</h3>
+              <pre id="debug-timeline" class="debug-json">{}</pre>
+            </div>
+          </div>
+        </section>
       </section>
     </main>
     <script type="module" src="/src/main.ts"></script>

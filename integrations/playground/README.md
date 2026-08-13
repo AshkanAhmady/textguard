@@ -8,9 +8,10 @@ Browser playground for trying TextGuard without writing integration code.
 - switch between `strict`, `enterprise`, and `socialMedia` presets;
 - inspect filtered output and match ranges;
 - inspect structured Explain metadata for each match, including source plugin, rule id, reason, and range;
+- inspect Debug Engine event order and the public timeline projection from the same scan;
 - run entirely in the browser through the public `@textguard/all` package.
 
-The Explain panel calls the same public `filter.explain(text)` API used by other TextGuard integrations, so the Playground does not duplicate detection or explanation logic.
+The Explain and Debug panels call the same public `filter.explain(text)` and `filter.debug(text)` APIs used by other TextGuard integrations, so the Playground does not duplicate engine logic.
 
 This integration is intentionally isolated from the root pnpm workspace so browser-tooling dependencies do not change the library release graph or root lockfile.
 
@@ -30,4 +31,4 @@ For a production build:
 npm run build
 ```
 
-The Playground remains intentionally incremental. Debug/timeline visualization, shareable examples, deployment, and richer detection controls should be added only as subsequent milestones.
+The Playground remains intentionally incremental. Deployment, shareable examples, and richer detection controls remain later milestones.
