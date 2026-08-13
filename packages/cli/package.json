@@ -17,7 +17,7 @@
     "test": "node --test test/*.test.mjs"
   },
   "dependencies": {
-    "@textguard/core": "workspace:^"
+    "@textguard/core": "workspace:*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
