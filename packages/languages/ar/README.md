@@ -1,4 +1,4 @@
-# @textguard/ar
+# @textguard/ar 🇸🇦
 
 Arabic language moderation resources for TextGuard.
 
