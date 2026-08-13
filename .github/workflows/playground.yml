@@ -1,0 +1,34 @@
+name: Playground
+
+on:
+  pull_request:
+    paths:
+      - "integrations/playground/**"
+      - ".github/workflows/playground.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: integrations/playground
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Type check
+        run: npm run check-types
+
+      - name: Build
+        run: npm run build
