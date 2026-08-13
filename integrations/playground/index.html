@@ -15,6 +15,19 @@
       </section>
 
       <section class="playground-card" aria-label="TextGuard playground">
+        <div class="toolbar" aria-label="Example scenarios">
+          <label>
+            Example scenario
+            <select id="example">
+              <option value="contact">Contact data</option>
+              <option value="identifiers">Technical identifiers</option>
+              <option value="multilingual">Multilingual text</option>
+              <option value="clean">Clean baseline</option>
+            </select>
+          </label>
+          <button id="load-example" type="button">Load example</button>
+        </div>
+
         <div class="toolbar">
           <label>
             Preset

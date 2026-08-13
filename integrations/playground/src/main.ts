@@ -7,9 +7,37 @@ import {
 import "./styles.css";
 
 type PresetName = "strict" | "enterprise" | "socialMedia";
+type ExampleName = "contact" | "identifiers" | "multilingual" | "clean";
+
+type ExampleScenario = {
+  preset: PresetName;
+  text: string;
+};
+
+const examples: Record<ExampleName, ExampleScenario> = {
+  contact: {
+    preset: "enterprise",
+    text: "Contact example@example.com and review https://example.com/profile.",
+  },
+  identifiers: {
+    preset: "enterprise",
+    text: "Request 550e8400-e29b-41d4-a716-446655440000 came from 192.0.2.10.",
+  },
+  multilingual: {
+    preset: "socialMedia",
+    text: "Hello team. سلام دوستان. مرحبا بالجميع. This is a multilingual message.",
+  },
+  clean: {
+    preset: "strict",
+    text: "TextGuard helps developers inspect text filtering behavior in a reproducible way.",
+  },
+};
 
 const inputElement = document.querySelector<HTMLTextAreaElement>("#input");
 const presetElement = document.querySelector<HTMLSelectElement>("#preset");
+const exampleElement = document.querySelector<HTMLSelectElement>("#example");
+const loadExampleElement =
+  document.querySelector<HTMLButtonElement>("#load-example");
 const scanElement = document.querySelector<HTMLButtonElement>("#scan");
 const shareElement = document.querySelector<HTMLButtonElement>("#share");
 const shareStatusElement = document.querySelector<HTMLElement>("#share-status");
@@ -30,6 +58,8 @@ const debugTimelineElement =
 if (
   !inputElement ||
   !presetElement ||
+  !exampleElement ||
+  !loadExampleElement ||
   !scanElement ||
   !shareElement ||
   !shareStatusElement ||
@@ -48,6 +78,8 @@ if (
 
 const input = inputElement;
 const preset = presetElement;
+const example = exampleElement;
+const loadExample = loadExampleElement;
 const scan = scanElement;
 const share = shareElement;
 const shareStatus = shareStatusElement;
@@ -67,6 +99,10 @@ function isPresetName(value: string | null): value is PresetName {
   );
 }
 
+function isExampleName(value: string): value is ExampleName {
+  return value in examples;
+}
+
 function hydrateFromUrl(): void {
   const params = new URLSearchParams(window.location.search);
   const text = params.get("text");
@@ -84,6 +120,16 @@ function updateShareUrl(): void {
 
   window.history.replaceState(null, "", url);
   shareStatus.textContent = "Share URL updated. Copy it from the address bar.";
+}
+
+function loadSelectedExample(): void {
+  if (!isExampleName(example.value)) return;
+
+  const scenario = examples[example.value];
+  preset.value = scenario.preset;
+  input.value = scenario.text;
+  shareStatus.textContent = "";
+  render();
 }
 
 function getPreset(name: PresetName) {
@@ -173,11 +219,8 @@ function render(): void {
 }
 
 hydrateFromUrl();
+loadExample.addEventListener("click", loadSelectedExample);
 scan.addEventListener("click", render);
-
-share.addEventListener("click", () => {
-  updateShareUrl();
-});
-
+share.addEventListener("click", updateShareUrl);
 preset.addEventListener("change", render);
 render();
