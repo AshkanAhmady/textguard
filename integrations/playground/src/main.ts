@@ -4,40 +4,34 @@ import {
   socialMediaPreset,
   strictPreset,
 } from "@textguard/all";
+import { creditCardPlugin } from "@textguard/plugin-credit-card";
+import { emailPlugin } from "@textguard/plugin-email";
+import { ibanPlugin } from "@textguard/plugin-iban";
+import { ipPlugin } from "@textguard/plugin-ip";
+import { phonePlugin } from "@textguard/plugin-phone";
+import { urlPlugin } from "@textguard/plugin-url";
+import { uuidPlugin } from "@textguard/plugin-uuid";
 import "./styles.css";
 
 type PresetName = "strict" | "enterprise" | "socialMedia";
 type ExampleName = "contact" | "identifiers" | "multilingual" | "clean";
+type DetectorName = "email" | "url" | "phone" | "ip" | "uuid" | "credit-card" | "iban";
 
-type ExampleScenario = {
-  preset: PresetName;
-  text: string;
-};
+type ExampleScenario = { preset: PresetName; text: string };
 
 const examples: Record<ExampleName, ExampleScenario> = {
-  contact: {
-    preset: "enterprise",
-    text: "Contact user at demo [at] example [dot] test and review https://example.invalid/profile.",
-  },
-  identifiers: {
-    preset: "enterprise",
-    text: "Request demo-id-1234 came from test-host.local.",
-  },
-  multilingual: {
-    preset: "socialMedia",
-    text: "Hello team. سلام دوستان. مرحبا بالجميع. This is a multilingual message.",
-  },
-  clean: {
-    preset: "strict",
-    text: "TextGuard helps developers inspect text filtering behavior in a reproducible way.",
-  },
+  contact: { preset: "enterprise", text: "Contact user at demo [at] example [dot] test and review https://example.invalid/profile." },
+  identifiers: { preset: "enterprise", text: "Request demo-id-1234 came from test-host.local." },
+  multilingual: { preset: "socialMedia", text: "Hello team. سلام دوستان. مرحبا بالجميع. This is a multilingual message." },
+  clean: { preset: "strict", text: "TextGuard helps developers inspect text filtering behavior in a reproducible way." },
 };
 
 const inputElement = document.querySelector<HTMLTextAreaElement>("#input");
 const presetElement = document.querySelector<HTMLSelectElement>("#preset");
 const exampleElement = document.querySelector<HTMLSelectElement>("#example");
-const loadExampleElement =
-  document.querySelector<HTMLButtonElement>("#load-example");
+const loadExampleElement = document.querySelector<HTMLButtonElement>("#load-example");
+const detectorControlsElement = document.querySelector<HTMLFieldSetElement>("#detector-controls");
+const detectorElements = document.querySelectorAll<HTMLInputElement>("[data-detector]");
 const scanElement = document.querySelector<HTMLButtonElement>("#scan");
 const shareElement = document.querySelector<HTMLButtonElement>("#share");
 const shareStatusElement = document.querySelector<HTMLElement>("#share-status");
@@ -45,34 +39,13 @@ const matchCountElement = document.querySelector<HTMLElement>("#match-count");
 const statusElement = document.querySelector<HTMLElement>("#status");
 const filteredElement = document.querySelector<HTMLElement>("#filtered");
 const matchesElement = document.querySelector<HTMLOListElement>("#matches");
-const explainCountElement =
-  document.querySelector<HTMLElement>("#explain-count");
-const explanationsElement =
-  document.querySelector<HTMLOListElement>("#explanations");
+const explainCountElement = document.querySelector<HTMLElement>("#explain-count");
+const explanationsElement = document.querySelector<HTMLOListElement>("#explanations");
 const debugCountElement = document.querySelector<HTMLElement>("#debug-count");
-const debugEventsElement =
-  document.querySelector<HTMLOListElement>("#debug-events");
-const debugTimelineElement =
-  document.querySelector<HTMLElement>("#debug-timeline");
+const debugEventsElement = document.querySelector<HTMLOListElement>("#debug-events");
+const debugTimelineElement = document.querySelector<HTMLElement>("#debug-timeline");
 
-if (
-  !inputElement ||
-  !presetElement ||
-  !exampleElement ||
-  !loadExampleElement ||
-  !scanElement ||
-  !shareElement ||
-  !shareStatusElement ||
-  !matchCountElement ||
-  !statusElement ||
-  !filteredElement ||
-  !matchesElement ||
-  !explainCountElement ||
-  !explanationsElement ||
-  !debugCountElement ||
-  !debugEventsElement ||
-  !debugTimelineElement
-) {
+if (!inputElement || !presetElement || !exampleElement || !loadExampleElement || !detectorControlsElement || !scanElement || !shareElement || !shareStatusElement || !matchCountElement || !statusElement || !filteredElement || !matchesElement || !explainCountElement || !explanationsElement || !debugCountElement || !debugEventsElement || !debugTimelineElement) {
   throw new Error("TextGuard playground failed to initialize.");
 }
 
@@ -80,6 +53,7 @@ const input = inputElement;
 const preset = presetElement;
 const example = exampleElement;
 const loadExample = loadExampleElement;
+const detectorControls = detectorControlsElement;
 const scan = scanElement;
 const share = shareElement;
 const shareStatus = shareStatusElement;
@@ -94,37 +68,32 @@ const debugEvents = debugEventsElement;
 const debugTimeline = debugTimelineElement;
 
 function isPresetName(value: string | null): value is PresetName {
-  return (
-    value === "strict" || value === "enterprise" || value === "socialMedia"
-  );
+  return value === "strict" || value === "enterprise" || value === "socialMedia";
 }
 
-function isExampleName(value: string): value is ExampleName {
-  return value in examples;
+function isExampleName(value: string): value is ExampleName { return value in examples; }
+function isDetectorName(value: string | undefined): value is DetectorName {
+  return value === "email" || value === "url" || value === "phone" || value === "ip" || value === "uuid" || value === "credit-card" || value === "iban";
 }
 
 function hydrateFromUrl(): void {
   const params = new URLSearchParams(window.location.search);
   const text = params.get("text");
   const sharedPreset = params.get("preset");
-
   if (text !== null) input.value = text;
   if (isPresetName(sharedPreset)) preset.value = sharedPreset;
 }
 
 function updateShareUrl(): void {
   const url = new URL(window.location.href);
-
   url.searchParams.set("preset", preset.value);
   url.searchParams.set("text", input.value);
-
   window.history.replaceState(null, "", url);
   shareStatus.textContent = "Share URL updated. Copy it from the address bar.";
 }
 
 function loadSelectedExample(): void {
   if (!isExampleName(example.value)) return;
-
   const scenario = examples[example.value];
   preset.value = scenario.preset;
   input.value = scenario.text;
@@ -132,8 +101,25 @@ function loadSelectedExample(): void {
   render();
 }
 
-function getPreset(name: PresetName) {
-  if (name === "enterprise") return enterprisePreset;
+function createDetector(name: DetectorName) {
+  if (name === "email") return emailPlugin();
+  if (name === "url") return urlPlugin();
+  if (name === "phone") return phonePlugin();
+  if (name === "ip") return ipPlugin();
+  if (name === "uuid") return uuidPlugin();
+  if (name === "credit-card") return creditCardPlugin();
+  return ibanPlugin();
+}
+
+function getSelectedEnterprisePlugins() {
+  return Array.from(detectorElements)
+    .filter((element) => element.checked && isDetectorName(element.dataset.detector))
+    .map((element) => createDetector(element.dataset.detector as DetectorName));
+}
+
+function getFilterOptions(name: PresetName) {
+  detectorControls.disabled = name !== "enterprise";
+  if (name === "enterprise") return { ...enterprisePreset, plugins: getSelectedEnterprisePlugins() };
   if (name === "socialMedia") return socialMediaPreset;
   return strictPreset;
 }
@@ -148,7 +134,7 @@ function renderEmpty(list: HTMLOListElement, message: string): void {
 function render(): void {
   const text = input.value;
   const selectedPreset = preset.value as PresetName;
-  const filter = createFilter(getPreset(selectedPreset));
+  const filter = createFilter(getFilterOptions(selectedPreset));
   const result = filter.filter(text);
   const explanation = filter.explain(text);
   const debugSession = filter.debug(text);
@@ -165,48 +151,38 @@ function render(): void {
   debugCount.textContent = `${events.length} event${events.length === 1 ? "" : "s"}`;
   debugTimeline.textContent = JSON.stringify(timeline, null, 2);
 
-  if (result.matches.length === 0) {
-    renderEmpty(matches, "No matches found.");
-  } else {
-    for (const match of result.matches) {
-      const item = document.createElement("li");
-      const word = document.createElement("strong");
-      const range = document.createElement("span");
-      word.textContent = match.matchedText;
-      range.textContent = `[${match.start}-${match.end}]`;
-      item.append(word, range);
-      matches.append(item);
-    }
+  if (result.matches.length === 0) renderEmpty(matches, "No matches found.");
+  else for (const match of result.matches) {
+    const item = document.createElement("li");
+    const word = document.createElement("strong");
+    const range = document.createElement("span");
+    word.textContent = match.matchedText;
+    range.textContent = `[${match.start}-${match.end}]`;
+    item.append(word, range);
+    matches.append(item);
   }
 
-  if (explanation.matches.length === 0) {
-    renderEmpty(explanations, "No explanations available for clean text.");
-  } else {
-    for (const explained of explanation.matches) {
-      const item = document.createElement("li");
-      item.className = "explanation-card";
-      const top = document.createElement("div");
-      top.className = "explanation-top";
-      const word = document.createElement("strong");
-      word.textContent = explained.match.matchedText;
-      const source = document.createElement("code");
-      source.textContent = `${explained.source.plugin} · ${explained.source.rule.id}`;
-      const reason = document.createElement("p");
-      reason.textContent = explained.reason.message;
-      const meta = document.createElement("span");
-      meta.className = "explanation-meta";
-      meta.textContent = `range ${explained.match.start}-${explained.match.end}`;
-      top.append(word, source);
-      item.append(top, reason, meta);
-      explanations.append(item);
-    }
+  if (explanation.matches.length === 0) renderEmpty(explanations, "No explanations available for clean text.");
+  else for (const explained of explanation.matches) {
+    const item = document.createElement("li");
+    item.className = "explanation-card";
+    const top = document.createElement("div");
+    top.className = "explanation-top";
+    const word = document.createElement("strong");
+    word.textContent = explained.match.matchedText;
+    const source = document.createElement("code");
+    source.textContent = `${explained.source.plugin} · ${explained.source.rule.id}`;
+    const reason = document.createElement("p");
+    reason.textContent = explained.reason.message;
+    const meta = document.createElement("span");
+    meta.className = "explanation-meta";
+    meta.textContent = `range ${explained.match.start}-${explained.match.end}`;
+    top.append(word, source);
+    item.append(top, reason, meta);
+    explanations.append(item);
   }
 
-  if (events.length === 0) {
-    renderEmpty(debugEvents, "No debug events recorded.");
-    return;
-  }
-
+  if (events.length === 0) { renderEmpty(debugEvents, "No debug events recorded."); return; }
   for (const [index, event] of events.entries()) {
     const item = document.createElement("li");
     const position = document.createElement("span");
@@ -223,4 +199,5 @@ loadExample.addEventListener("click", loadSelectedExample);
 scan.addEventListener("click", render);
 share.addEventListener("click", updateShareUrl);
 preset.addEventListener("change", render);
+detectorElements.forEach((detector) => detector.addEventListener("change", render));
 render();

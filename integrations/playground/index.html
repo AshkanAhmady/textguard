@@ -42,6 +42,19 @@
             <button id="scan" type="button">Scan text</button>
           </div>
         </div>
+
+        <fieldset id="detector-controls" class="detector-controls">
+          <legend>Enterprise detectors</legend>
+          <div class="detector-grid">
+            <label><input type="checkbox" data-detector="email" checked /> Email</label>
+            <label><input type="checkbox" data-detector="url" checked /> URL</label>
+            <label><input type="checkbox" data-detector="phone" checked /> Phone</label>
+            <label><input type="checkbox" data-detector="ip" checked /> IP</label>
+            <label><input type="checkbox" data-detector="uuid" checked /> UUID</label>
+            <label><input type="checkbox" data-detector="credit-card" checked /> Credit card</label>
+            <label><input type="checkbox" data-detector="iban" checked /> IBAN</label>
+          </div>
+        </fieldset>
         <p id="share-status" class="share-status" aria-live="polite"></p>
 
         <label class="input-label" for="input">Text to scan</label>
