@@ -6,12 +6,7 @@ import { stdin as input, stdout as output } from "node:process";
 const packagesRoot = join(process.cwd(), "packages");
 const npmRegistryBaseUrl = "https://registry.npmjs.org";
 const registryTimeoutMs = 5000;
-const ignoredDirectories = new Set([
-  "node_modules",
-  "dist",
-  "coverage",
-  ".turbo",
-]);
+const ignoredDirectories = new Set(["node_modules", "dist", "coverage", ".turbo"]);
 
 function findPackageJsonFiles(directory) {
   const result = [];
@@ -70,25 +65,18 @@ async function getRegistryVersion(name) {
   let response;
 
   try {
-    response = await fetch(
-      `${npmRegistryBaseUrl}/${encodeURIComponent(name)}`,
-      {
-        headers: {
-          accept: "application/vnd.npm.install-v1+json",
-        },
-        signal: AbortSignal.timeout(registryTimeoutMs),
+    response = await fetch(`${npmRegistryBaseUrl}/${encodeURIComponent(name)}`, {
+      headers: {
+        accept: "application/vnd.npm.install-v1+json",
       },
-    );
+      signal: AbortSignal.timeout(registryTimeoutMs),
+    });
   } catch (error) {
     if (error?.name === "TimeoutError" || error?.name === "AbortError") {
-      throw new Error(
-        `Timed out reading npm registry metadata for ${name} after ${registryTimeoutMs}ms`,
-      );
+      throw new Error(`Timed out reading npm registry metadata for ${name} after ${registryTimeoutMs}ms`);
     }
 
-    throw new Error(
-      `Failed to read npm registry metadata for ${name}: ${error?.message ?? error}`,
-    );
+    throw new Error(`Failed to read npm registry metadata for ${name}: ${error?.message ?? error}`);
   }
 
   if (response.status === 404) {
@@ -100,15 +88,12 @@ async function getRegistryVersion(name) {
       `Failed to read npm registry metadata for ${name}: ${response.status} ${response.statusText}`,
     );
   }
-  // test
 
   const metadata = await response.json();
   const latestVersion = metadata?.["dist-tags"]?.latest;
 
   if (typeof latestVersion !== "string") {
-    throw new Error(
-      `npm registry metadata for ${name} does not contain a latest dist-tag`,
-    );
+    throw new Error(`npm registry metadata for ${name} does not contain a latest dist-tag`);
   }
 
   return latestVersion;
@@ -117,10 +102,7 @@ async function getRegistryVersion(name) {
 const packageJsonFiles = findPackageJsonFiles(packagesRoot);
 const packages = packageJsonFiles
   .map((packageJsonPath) => JSON.parse(readFileSync(packageJsonPath, "utf8")))
-  .filter(
-    (packageJson) =>
-      !packageJson.private && packageJson.name && packageJson.version,
-  );
+  .filter((packageJson) => !packageJson.private && packageJson.name && packageJson.version);
 
 const registryResults = await Promise.all(
   packages.map(async (packageJson) => ({
