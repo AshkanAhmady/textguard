@@ -46,6 +46,19 @@ const debugCount = debugCountElement;
 const debugEvents = debugEventsElement;
 const debugTimeline = debugTimelineElement;
 
+function isPresetName(value: string | null): value is PresetName {
+  return value === "strict" || value === "enterprise" || value === "socialMedia";
+}
+
+function hydrateFromUrl(): void {
+  const params = new URLSearchParams(window.location.search);
+  const text = params.get("text");
+  const sharedPreset = params.get("preset");
+
+  if (text !== null) input.value = text;
+  if (isPresetName(sharedPreset)) preset.value = sharedPreset;
+}
+
 function getPreset(name: PresetName) {
   if (name === "enterprise") return enterprisePreset;
   if (name === "socialMedia") return socialMediaPreset;
@@ -99,23 +112,17 @@ function render(): void {
     for (const explained of explanation.matches) {
       const item = document.createElement("li");
       item.className = "explanation-card";
-
       const top = document.createElement("div");
       top.className = "explanation-top";
-
       const word = document.createElement("strong");
       word.textContent = explained.match.matchedText;
-
       const source = document.createElement("code");
       source.textContent = `${explained.source.plugin} · ${explained.source.rule.id}`;
-
       const reason = document.createElement("p");
       reason.textContent = explained.reason.message;
-
       const meta = document.createElement("span");
       meta.className = "explanation-meta";
       meta.textContent = `range ${explained.match.start}-${explained.match.end}`;
-
       top.append(word, source);
       item.append(top, reason, meta);
       explanations.append(item);
@@ -138,6 +145,7 @@ function render(): void {
   }
 }
 
+hydrateFromUrl();
 scan.addEventListener("click", render);
 preset.addEventListener("change", render);
 render();
