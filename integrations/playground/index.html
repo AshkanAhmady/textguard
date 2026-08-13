@@ -24,8 +24,12 @@
               <option value="socialMedia">Social Media</option>
             </select>
           </label>
-          <button id="scan" type="button">Scan text</button>
+          <div class="toolbar-actions">
+            <button id="share" type="button">Copy share link</button>
+            <button id="scan" type="button">Scan text</button>
+          </div>
         </div>
+        <p id="share-status" class="share-status" aria-live="polite"></p>
 
         <label class="input-label" for="input">Text to scan</label>
         <textarea id="input" rows="10" placeholder="Type or paste text here…">hello world</textarea>
