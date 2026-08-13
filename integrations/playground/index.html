@@ -42,6 +42,20 @@
             <button id="scan" type="button">Scan text</button>
           </div>
         </div>
+
+        <fieldset id="detector-controls" class="detector-controls">
+          <legend>Enterprise detectors</legend>
+          <div class="detector-grid">
+            <label><input type="checkbox" data-detector="email" checked /> Email</label>
+            <label><input type="checkbox" data-detector="url" checked /> URL</label>
+            <label><input type="checkbox" data-detector="phone" checked /> Phone</label>
+            <label><input type="checkbox" data-detector="ip" checked /> IP</label>
+            <label><input type="checkbox" data-detector="uuid" checked /> UUID</label>
+            <label><input type="checkbox" data-detector="credit-card" checked /> Credit card</label>
+            <label><input type="checkbox" data-detector="iban" checked /> IBAN</label>
+          </div>
+        </fieldset>
+
         <p id="share-status" class="share-status" aria-live="polite"></p>
 
         <label class="input-label" for="input">Text to scan</label>
@@ -53,44 +67,18 @@
         </div>
 
         <div class="results-grid">
-          <section>
-            <h2>Filtered output</h2>
-            <pre id="filtered">hello world</pre>
-          </section>
-          <section>
-            <h2>Matches</h2>
-            <ol id="matches" class="matches-list"><li class="empty">No matches found.</li></ol>
-          </section>
+          <section><h2>Filtered output</h2><pre id="filtered">hello world</pre></section>
+          <section><h2>Matches</h2><ol id="matches" class="matches-list"><li class="empty">No matches found.</li></ol></section>
         </div>
 
         <section class="explain-panel" aria-labelledby="explain-heading">
-          <div class="section-heading">
-            <div>
-              <p class="section-kicker">Explain API</p>
-              <h2 id="explain-heading">Why did TextGuard match?</h2>
-            </div>
-            <span class="explain-count" id="explain-count">0 explanations</span>
-          </div>
-          <ol id="explanations" class="explanations-list">
-            <li class="empty">No explanations available for clean text.</li>
-          </ol>
+          <div class="section-heading"><div><p class="section-kicker">Explain API</p><h2 id="explain-heading">Why did TextGuard match?</h2></div><span class="explain-count" id="explain-count">0 explanations</span></div>
+          <ol id="explanations" class="explanations-list"><li class="empty">No explanations available for clean text.</li></ol>
         </section>
 
         <section class="debug-panel" aria-labelledby="debug-heading">
-          <div class="section-heading">
-            <div>
-              <p class="section-kicker">Debug Engine</p>
-              <h2 id="debug-heading">Execution timeline</h2>
-            </div>
-            <span class="explain-count" id="debug-count">0 events</span>
-          </div>
-          <div class="debug-grid">
-            <ol id="debug-events" class="debug-events"><li class="empty">No debug events yet.</li></ol>
-            <div>
-              <h3>Timeline projection</h3>
-              <pre id="debug-timeline" class="debug-json">{}</pre>
-            </div>
-          </div>
+          <div class="section-heading"><div><p class="section-kicker">Debug Engine</p><h2 id="debug-heading">Execution timeline</h2></div><span class="explain-count" id="debug-count">0 events</span></div>
+          <div class="debug-grid"><ol id="debug-events" class="debug-events"><li class="empty">No debug events yet.</li></ol><div><h3>Timeline projection</h3><pre id="debug-timeline" class="debug-json">{}</pre></div></div>
         </section>
       </section>
     </main>
