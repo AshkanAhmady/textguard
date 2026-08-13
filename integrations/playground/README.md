@@ -31,4 +31,10 @@ For a production build:
 npm run build
 ```
 
-The Playground remains intentionally incremental. Deployment, shareable examples, and richer detection controls remain later milestones.
+## Public deployment
+
+The Playground is deployed through `.github/workflows/playground-pages.yml` using GitHub Pages. Production assets use relative URLs so the same build works from the repository Pages path and remains portable if a custom domain is introduced later.
+
+After the deployment workflow is merged, GitHub Pages must use **GitHub Actions** as its build/deployment source in repository settings. Subsequent changes under `integrations/playground` automatically rebuild and deploy from `main`.
+
+The Playground remains intentionally incremental. Shareable examples and richer detection controls remain later milestones.
