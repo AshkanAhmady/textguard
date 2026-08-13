@@ -199,5 +199,5 @@ loadExample.addEventListener("click", loadSelectedExample);
 scan.addEventListener("click", render);
 share.addEventListener("click", updateShareUrl);
 preset.addEventListener("change", render);
-for (const detector of detectorElements) detector.addEventListener("change", render);
+detectorElements.forEach((detector) => detector.addEventListener("change", render));
 render();
