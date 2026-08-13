@@ -1,4 +1,9 @@
-import { createFilter, enterprisePreset, socialMediaPreset, strictPreset } from "@textguard/all";
+import {
+  createFilter,
+  enterprisePreset,
+  socialMediaPreset,
+  strictPreset,
+} from "@textguard/all";
 import "./styles.css";
 
 type PresetName = "strict" | "enterprise" | "socialMedia";
@@ -6,20 +11,28 @@ type PresetName = "strict" | "enterprise" | "socialMedia";
 const inputElement = document.querySelector<HTMLTextAreaElement>("#input");
 const presetElement = document.querySelector<HTMLSelectElement>("#preset");
 const scanElement = document.querySelector<HTMLButtonElement>("#scan");
+const shareElement = document.querySelector<HTMLButtonElement>("#share");
+const shareStatusElement = document.querySelector<HTMLElement>("#share-status");
 const matchCountElement = document.querySelector<HTMLElement>("#match-count");
 const statusElement = document.querySelector<HTMLElement>("#status");
 const filteredElement = document.querySelector<HTMLElement>("#filtered");
 const matchesElement = document.querySelector<HTMLOListElement>("#matches");
-const explainCountElement = document.querySelector<HTMLElement>("#explain-count");
-const explanationsElement = document.querySelector<HTMLOListElement>("#explanations");
+const explainCountElement =
+  document.querySelector<HTMLElement>("#explain-count");
+const explanationsElement =
+  document.querySelector<HTMLOListElement>("#explanations");
 const debugCountElement = document.querySelector<HTMLElement>("#debug-count");
-const debugEventsElement = document.querySelector<HTMLOListElement>("#debug-events");
-const debugTimelineElement = document.querySelector<HTMLElement>("#debug-timeline");
+const debugEventsElement =
+  document.querySelector<HTMLOListElement>("#debug-events");
+const debugTimelineElement =
+  document.querySelector<HTMLElement>("#debug-timeline");
 
 if (
   !inputElement ||
   !presetElement ||
   !scanElement ||
+  !shareElement ||
+  !shareStatusElement ||
   !matchCountElement ||
   !statusElement ||
   !filteredElement ||
@@ -36,6 +49,8 @@ if (
 const input = inputElement;
 const preset = presetElement;
 const scan = scanElement;
+const share = shareElement;
+const shareStatus = shareStatusElement;
 const matchCount = matchCountElement;
 const status = statusElement;
 const filtered = filteredElement;
@@ -47,7 +62,9 @@ const debugEvents = debugEventsElement;
 const debugTimeline = debugTimelineElement;
 
 function isPresetName(value: string | null): value is PresetName {
-  return value === "strict" || value === "enterprise" || value === "socialMedia";
+  return (
+    value === "strict" || value === "enterprise" || value === "socialMedia"
+  );
 }
 
 function hydrateFromUrl(): void {
@@ -57,6 +74,16 @@ function hydrateFromUrl(): void {
 
   if (text !== null) input.value = text;
   if (isPresetName(sharedPreset)) preset.value = sharedPreset;
+}
+
+function updateShareUrl(): void {
+  const url = new URL(window.location.href);
+
+  url.searchParams.set("preset", preset.value);
+  url.searchParams.set("text", input.value);
+
+  window.history.replaceState(null, "", url);
+  shareStatus.textContent = "Share URL updated. Copy it from the address bar.";
 }
 
 function getPreset(name: PresetName) {
@@ -147,5 +174,10 @@ function render(): void {
 
 hydrateFromUrl();
 scan.addEventListener("click", render);
+
+share.addEventListener("click", () => {
+  updateShareUrl();
+});
+
 preset.addEventListener("change", render);
 render();
