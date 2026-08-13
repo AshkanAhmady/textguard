@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Interactive TextGuard browser playground" />
+    <title>TextGuard Playground</title>
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero">
+        <p class="eyebrow">TextGuard Playground</p>
+        <h1>Try TextGuard in the browser.</h1>
+        <p class="hero-copy">Paste text, choose a preset, and inspect matches without writing integration code.</p>
+      </section>
+
+      <section class="playground-card" aria-label="TextGuard playground">
+        <div class="toolbar">
+          <label>
+            Preset
+            <select id="preset">
+              <option value="strict">Strict</option>
+              <option value="enterprise">Enterprise</option>
+              <option value="socialMedia">Social Media</option>
+            </select>
+          </label>
+          <button id="scan" type="button">Scan text</button>
+        </div>
+
+        <label class="input-label" for="input">Text to scan</label>
+        <textarea id="input" rows="10" placeholder="Type or paste text here…">hello world</textarea>
+
+        <div class="summary" aria-live="polite">
+          <div><span>Matches</span><strong id="match-count">0</strong></div>
+          <div><span>Status</span><strong id="status">Clean</strong></div>
+        </div>
+
+        <div class="results-grid">
+          <section>
+            <h2>Filtered output</h2>
+            <pre id="filtered">hello world</pre>
+          </section>
+          <section>
+            <h2>Matches</h2>
+            <ol id="matches" class="matches-list"><li class="empty">No matches found.</li></ol>
+          </section>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
