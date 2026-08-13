@@ -17,11 +17,11 @@ type ExampleScenario = {
 const examples: Record<ExampleName, ExampleScenario> = {
   contact: {
     preset: "enterprise",
-    text: "Contact example@example.com and review https://example.com/profile.",
+    text: "Contact user at demo [at] example [dot] test and review https://example.invalid/profile.",
   },
   identifiers: {
     preset: "enterprise",
-    text: "Request 550e8400-e29b-41d4-a716-446655440000 came from 192.0.2.10.",
+    text: "Request demo-id-1234 came from test-host.local.",
   },
   multilingual: {
     preset: "socialMedia",
