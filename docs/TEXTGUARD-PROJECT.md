@@ -1,12 +1,12 @@
 # TextGuard — Project Documentation
 
-> Persistent ground-truth orientation for contributors and AI assistants. Implementation/tests are the runtime source of truth; `textguard-roadmap.md` is delivery-status truth; ADRs are architecture-decision truth; `GUARD-ECOSYSTEM.md` is stable product/business vision.
+> Persistent ground-truth orientation for contributors and AI assistants. Implementation/tests are the runtime source of truth; `textguard-roadmap.md` is delivery-status truth; ADRs are architecture-decision truth; `GUARD-ECOSYSTEM.md` is stable product/business vision; `PRODUCT-GROWTH-PLAN.md` records the post-foundation product-growth sequence.
 
 ## 1. Product
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI.
 
-Arabic implementation parity is complete for the current architecture. The current product focus is **adoption validation and evidence-driven roadmap reassessment** rather than automatic feature expansion.
+Arabic implementation parity is complete for the current architecture. The current product focus is **pre-launch consumer validation, adoption validation, and evidence-driven roadmap reassessment** rather than automatic feature expansion.
 
 ## 2. Repository and architecture
 
@@ -40,8 +40,9 @@ filter.use(plugin: Plugin): void;
 - DebugSession stores original input, normalized input, final overlap-resolved matches, and events.
 - Explain projects final accepted matches from the same debug-capable execution path.
 - Explain does not introduce a second detection engine.
-- The current public Debug renderer implementations are `ConsoleRenderer` and `JsonRenderer`.
-- ADR-001 describes Markdown and HTML as renderer targets, but they are not implemented in the current Core source and must not be documented as shipped behavior.
+- The current public Debug renderer implementations are `ConsoleRenderer`, `JsonRenderer`, `MarkdownRenderer`, and `HtmlRenderer`.
+- The renderer barrel exports all four implementations through the public Debug exports.
+- overlap ranking determinism is covered by regression tests: equal-priority/equal-length winners remain stable across reversed plugin registration order, while lower numeric rule priority still wins equal-length overlaps.
 
 ## 5. Package state
 
@@ -99,26 +100,38 @@ AR3 added a small high-confidence dialect vocabulary slice while preserving the 
 
 Arabic vocabulary is not treated as a finite “complete list.” Further coverage work should be driven by real false negatives, user reports, or other evidence rather than permanent roadmap expansion.
 
-## 9. Release safety and cadence
+## 9. Developer integrations
+
+The current developer-integration milestone is complete:
+
+- `@textguard/cli` provides scan, debug, explain, file/stdin input, batch scanning, JSON output, help/version metadata, and documented exit codes;
+- the VS Code extension is publicly released and supports manual/scan-on-save diagnostics, presets, whitelist settings, and Explain quick fixes;
+- the browser Playground supports presets, example scenarios, shareable URLs, Scan/Explain/Debug visualization, Enterprise detector controls, and GitHub Pages deployment.
+
+Future Chrome, AI, framework-specific, or other integrations are candidates only when adoption evidence justifies them.
+
+## 10. Release safety and cadence
 
 Release hardening is complete. The repository uses Changesets with release planning, explicit npm candidate checks, bounded registry lookup, canonical package taxonomy, and a documented procedure in `docs/RELEASING.md`.
 
 The latest published baseline includes `@textguard/core@1.0.3`, `@textguard/all@1.0.3`, `@textguard/ar@1.1.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2`.
 
-The repository now uses a **batched publishing cadence**: public behavior/API PRs still get Changesets, but npm publishing is normally deferred across several coherent milestones. Immediate publish is reserved for intentional stable checkpoints, consumer blockers, critical fixes, or independently valuable completed capabilities.
-
-The currently versioned Arabic parity batch is `@textguard/ar@1.2.0` and `@textguard/all@1.1.0`. These versions may remain ahead of npm while additional milestones are developed; future behavior changes should add new Changesets rather than forcing another immediate release cycle.
+The repository uses a **batched publishing cadence**: public behavior/API PRs still get Changesets, but npm publishing is normally deferred across several coherent milestones. Immediate publish is reserved for intentional stable checkpoints, consumer blockers, critical fixes, or independently valuable completed capabilities.
 
 Never run `npm publish` from the repository root. Review the release plan and final npm candidate list before every publish.
 
-## 10. Known technical debt
+## 11. Known technical debt / validation gaps
 
-- historical docs mention a separate `packages/presets/` ownership path, but that top-level directory is not present in the current repository; presets currently live under `packages/all`, so no ownership refactor should be started from the stale path alone.
-- ADR-001 renderer targets have drifted from implementation: Core currently exports Console and JSON renderers, while Markdown and HTML remain unimplemented targets.
-- overlap ranking can still be registration/order-dependent for some equal-span/equal-length cases.
-- future Debug renderer or integration work should be selected from concrete consumer/integration evidence rather than merely completing every item named in the original ADR.
+Current known work is deliberately narrower than speculative feature expansion:
 
-## 11. Development discipline
+- historical docs may mention a separate `packages/presets/` ownership path, but presets currently live under `packages/all`; that stale path alone is not a refactor requirement;
+- the product still needs a comprehensive consumer-style validation project that installs/uses public surfaces the way an external developer would;
+- launch-blocking issues found by that validation should be fixed before active promotion;
+- adoption evidence is still too weak to promote Chrome, AI, paid-team features, or another Guard product.
+
+The previous documentation claims that Markdown/HTML renderers were unimplemented and that equal-span/equal-length overlap selection remained registration-order-dependent are no longer current; source and regression tests now confirm those items are implemented/fixed.
+
+## 12. Development discipline
 
 Every coherent change-set should:
 
@@ -133,14 +146,22 @@ Every coherent change-set should:
 
 A merged Changeset means release impact is pending, not that npm must be updated immediately.
 
-## 12. Guard Ecosystem memory
+## 13. Product-growth discipline
+
+`docs/PRODUCT-GROWTH-PLAN.md` is the canonical operating sequence after the current engineering foundation:
+
+**pre-launch validation → launch surface → developer distribution → adoption measurement → evidence-driven iteration → monetization only after commercial signal → possible Guard Ecosystem expansion later.**
+
+The product should not become a feature factory. New work should be tied to a validated developer problem or to launch/reliability requirements for an already-shipped capability.
+
+## 14. Guard Ecosystem memory
 
 `docs/GUARD-ECOSYSTEM.md` is the canonical stable document for the wider product/business vision. It intentionally stays separate from this file and `textguard-roadmap.md`, which track TextGuard's changing implementation state.
 
 The wider ecosystem remains vision-stage. TextGuard should earn adoption and validate developer/business demand before implementation starts on additional Guard products.
 
-## 13. Long-term roadmap guardrail
+## 15. Long-term roadmap guardrail
 
 Near-term sequence is:
 
-**structured adoption intake → repository truth reconciliation → evidence-driven roadmap reassessment → one coherent implementation milestone → batched release when justified.**
+**documentation truth reconciliation → comprehensive consumer validation project → fix launch blockers → stable release checkpoint → lightweight landing/Playground launch surface → developer distribution → adoption measurement → evidence-driven roadmap reassessment → one coherent implementation milestone when justified → monetization only after repeated commercial demand.**

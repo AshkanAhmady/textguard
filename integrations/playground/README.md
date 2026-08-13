@@ -2,16 +2,18 @@
 
 Browser playground for trying TextGuard without writing integration code.
 
-## Current capability
+## Capabilities
 
-- paste or type text to scan;
+- paste or type text and scan it in the browser;
 - switch between `strict`, `enterprise`, and `socialMedia` presets;
-- inspect filtered output and match ranges;
-- inspect structured Explain metadata for each match, including source plugin, rule id, reason, and range;
-- inspect Debug Engine event order and the public timeline projection from the same scan;
-- run entirely in the browser through the public `@textguard/all` package.
+- load built-in example scenarios;
+- share the current text and preset through the page URL;
+- toggle individual Enterprise detectors for email, URL, phone, IP, UUID, credit card, and IBAN;
+- inspect filtered output and exact match ranges;
+- inspect structured Explain metadata for each match;
+- inspect Debug Engine event order and timeline output.
 
-The Explain and Debug panels call the same public `filter.explain(text)` and `filter.debug(text)` APIs used by other TextGuard integrations, so the Playground does not duplicate engine logic.
+The Playground uses the same public TextGuard APIs and official detector packages used by application integrations. Detection, Explain, and Debug behavior is not reimplemented in the UI.
 
 This integration is intentionally isolated from the root pnpm workspace so browser-tooling dependencies do not change the library release graph or root lockfile.
 
@@ -33,8 +35,10 @@ npm run build
 
 ## Public deployment
 
-The Playground is deployed through `.github/workflows/playground-pages.yml` using GitHub Pages. Production assets use relative URLs so the same build works from the repository Pages path and remains portable if a custom domain is introduced later.
+The Playground is deployed through `.github/workflows/playground-pages.yml` using GitHub Pages. Production assets use relative URLs so the same build works from the repository Pages path.
 
-After the deployment workflow is merged, GitHub Pages must use **GitHub Actions** as its build/deployment source in repository settings. Subsequent changes under `integrations/playground` automatically rebuild and deploy from `main`.
+GitHub Pages must use **GitHub Actions** as its build/deployment source. Changes under `integrations/playground` automatically rebuild and deploy from `main`.
 
-The Playground remains intentionally incremental. Shareable examples and richer detection controls remain later milestones.
+## Integration status
+
+The Playground is feature-complete for the current product milestone. Future changes should be driven by concrete adoption or developer-feedback needs rather than expanding it as a second application surface.
