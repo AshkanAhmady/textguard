@@ -15,7 +15,7 @@
 ### Patch Changes
 
 - fea501b: Connect the scan command to @textguard/core with stable output, JSON mode, custom-word scanning, and CI-friendly exit codes.
-- 9a2fc09: Prepare the CLI package for public npm publishing and use the canonical semver-compatible Core workspace dependency range.
+- 9a2fc09: Prepare the CLI package for public npm publishing.
 - Updated dependencies [3f6b7ba]
 - Updated dependencies [c3052be]
 - Updated dependencies [d6dd4cd]
