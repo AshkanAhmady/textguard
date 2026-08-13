@@ -12,6 +12,9 @@ const filteredElement = document.querySelector<HTMLElement>("#filtered");
 const matchesElement = document.querySelector<HTMLOListElement>("#matches");
 const explainCountElement = document.querySelector<HTMLElement>("#explain-count");
 const explanationsElement = document.querySelector<HTMLOListElement>("#explanations");
+const debugCountElement = document.querySelector<HTMLElement>("#debug-count");
+const debugEventsElement = document.querySelector<HTMLOListElement>("#debug-events");
+const debugTimelineElement = document.querySelector<HTMLElement>("#debug-timeline");
 
 if (
   !inputElement ||
@@ -22,7 +25,10 @@ if (
   !filteredElement ||
   !matchesElement ||
   !explainCountElement ||
-  !explanationsElement
+  !explanationsElement ||
+  !debugCountElement ||
+  !debugEventsElement ||
+  !debugTimelineElement
 ) {
   throw new Error("TextGuard playground failed to initialize.");
 }
@@ -36,6 +42,9 @@ const filtered = filteredElement;
 const matches = matchesElement;
 const explainCount = explainCountElement;
 const explanations = explanationsElement;
+const debugCount = debugCountElement;
+const debugEvents = debugEventsElement;
+const debugTimeline = debugTimelineElement;
 
 function getPreset(name: PresetName) {
   if (name === "enterprise") return enterprisePreset;
@@ -56,13 +65,19 @@ function render(): void {
   const filter = createFilter(getPreset(selectedPreset));
   const result = filter.filter(text);
   const explanation = filter.explain(text);
+  const debugSession = filter.debug(text);
+  const events = debugSession.getEvents();
+  const timeline = debugSession.timeline();
 
   matchCount.textContent = String(result.matches.length);
   status.textContent = result.matches.length > 0 ? "Matches found" : "Clean";
   filtered.textContent = result.filteredText;
   matches.replaceChildren();
   explanations.replaceChildren();
+  debugEvents.replaceChildren();
   explainCount.textContent = `${explanation.summary.matchCount} explanation${explanation.summary.matchCount === 1 ? "" : "s"}`;
+  debugCount.textContent = `${events.length} event${events.length === 1 ? "" : "s"}`;
+  debugTimeline.textContent = JSON.stringify(timeline, null, 2);
 
   if (result.matches.length === 0) {
     renderEmpty(matches, "No matches found.");
@@ -80,32 +95,46 @@ function render(): void {
 
   if (explanation.matches.length === 0) {
     renderEmpty(explanations, "No explanations available for clean text.");
+  } else {
+    for (const explained of explanation.matches) {
+      const item = document.createElement("li");
+      item.className = "explanation-card";
+
+      const top = document.createElement("div");
+      top.className = "explanation-top";
+
+      const word = document.createElement("strong");
+      word.textContent = explained.match.matchedText;
+
+      const source = document.createElement("code");
+      source.textContent = `${explained.source.plugin} · ${explained.source.rule.id}`;
+
+      const reason = document.createElement("p");
+      reason.textContent = explained.reason.message;
+
+      const meta = document.createElement("span");
+      meta.className = "explanation-meta";
+      meta.textContent = `range ${explained.match.start}-${explained.match.end}`;
+
+      top.append(word, source);
+      item.append(top, reason, meta);
+      explanations.append(item);
+    }
+  }
+
+  if (events.length === 0) {
+    renderEmpty(debugEvents, "No debug events recorded.");
     return;
   }
 
-  for (const explained of explanation.matches) {
+  for (const [index, event] of events.entries()) {
     const item = document.createElement("li");
-    item.className = "explanation-card";
-
-    const top = document.createElement("div");
-    top.className = "explanation-top";
-
-    const word = document.createElement("strong");
-    word.textContent = explained.match.matchedText;
-
-    const source = document.createElement("code");
-    source.textContent = `${explained.source.plugin} · ${explained.source.rule.id}`;
-
-    const reason = document.createElement("p");
-    reason.textContent = explained.reason.message;
-
-    const meta = document.createElement("span");
-    meta.className = "explanation-meta";
-    meta.textContent = `range ${explained.match.start}-${explained.match.end}`;
-
-    top.append(word, source);
-    item.append(top, reason, meta);
-    explanations.append(item);
+    const position = document.createElement("span");
+    const type = document.createElement("code");
+    position.textContent = String(index + 1).padStart(2, "0");
+    type.textContent = event.type;
+    item.append(position, type);
+    debugEvents.append(item);
   }
 }
 
