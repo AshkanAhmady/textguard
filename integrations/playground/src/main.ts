@@ -1,16 +1,16 @@
 import {
   createFilter,
-  creditCardPlugin,
-  emailPlugin,
   enterprisePreset,
-  ibanPlugin,
-  ipPlugin,
-  phonePlugin,
   socialMediaPreset,
   strictPreset,
-  urlPlugin,
-  uuidPlugin,
 } from "@textguard/all";
+import { creditCardPlugin } from "@textguard/plugin-credit-card";
+import { emailPlugin } from "@textguard/plugin-email";
+import { ibanPlugin } from "@textguard/plugin-iban";
+import { ipPlugin } from "@textguard/plugin-ip";
+import { phonePlugin } from "@textguard/plugin-phone";
+import { urlPlugin } from "@textguard/plugin-url";
+import { uuidPlugin } from "@textguard/plugin-uuid";
 import "./styles.css";
 
 type PresetName = "strict" | "enterprise" | "socialMedia";
