@@ -1,12 +1,14 @@
 {
   "name": "@textguard/cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Command line interface for TextGuard",
   "type": "module",
   "bin": {
     "textguard": "./dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
