@@ -3,17 +3,33 @@ import "./styles.css";
 
 type PresetName = "strict" | "enterprise" | "socialMedia";
 
-const input = document.querySelector<HTMLTextAreaElement>("#input");
-const preset = document.querySelector<HTMLSelectElement>("#preset");
-const scan = document.querySelector<HTMLButtonElement>("#scan");
-const matchCount = document.querySelector<HTMLElement>("#match-count");
-const status = document.querySelector<HTMLElement>("#status");
-const filtered = document.querySelector<HTMLElement>("#filtered");
-const matches = document.querySelector<HTMLOListElement>("#matches");
+const inputElement = document.querySelector<HTMLTextAreaElement>("#input");
+const presetElement = document.querySelector<HTMLSelectElement>("#preset");
+const scanElement = document.querySelector<HTMLButtonElement>("#scan");
+const matchCountElement = document.querySelector<HTMLElement>("#match-count");
+const statusElement = document.querySelector<HTMLElement>("#status");
+const filteredElement = document.querySelector<HTMLElement>("#filtered");
+const matchesElement = document.querySelector<HTMLOListElement>("#matches");
 
-if (!input || !preset || !scan || !matchCount || !status || !filtered || !matches) {
+if (
+  !inputElement ||
+  !presetElement ||
+  !scanElement ||
+  !matchCountElement ||
+  !statusElement ||
+  !filteredElement ||
+  !matchesElement
+) {
   throw new Error("TextGuard playground failed to initialize.");
 }
+
+const input = inputElement;
+const preset = presetElement;
+const scan = scanElement;
+const matchCount = matchCountElement;
+const status = statusElement;
+const filtered = filteredElement;
+const matches = matchesElement;
 
 function getPreset(name: PresetName) {
   if (name === "enterprise") return enterprisePreset;
