@@ -13,7 +13,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
 4. **Release cadence policy — ✅ batched.** Changesets remain per behavior/API change; npm publishing is intentionally deferred and grouped across several coherent milestones unless a critical/consumer-blocking release is justified.
 5. **Adoption validation — 🟡 current focus.** Gather real consumer signals through structured GitHub intake and package usage data, then use them to rank the next milestone.
-6. **Developer integration slice — 🟡 in progress.** The initial CLI milestone is feature-complete for current scope. The VS Code extension is publicly available on Marketplace, and the first browser Playground slice provides interactive preset-based scanning without adding dependencies to the library workspace.
+6. **Developer integration slice — 🟡 in progress.** The initial CLI milestone is feature-complete for current scope. The VS Code extension is publicly available on Marketplace, and the browser Playground now provides preset-based scanning, structured Explain metadata, Debug Engine timeline visibility, and a GitHub Pages deployment workflow without adding dependencies to the library workspace.
 7. **Roadmap reassessment — 🟡 in progress.** Small correctness work may proceed when it removes known engine nondeterminism without expanding product scope.
 
 ---
@@ -43,7 +43,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 | M3 — Timeline | ✅ Done | Timeline implemented. |
 | M4 — Performance Diagnostics | ✅ Done | Performance diagnostics implemented. |
 | M5 — Explain API | ✅ Done | Structured Explain domain, builder, public `filter.explain(text)`, tests and public core docs complete. |
-| M6 — Future Integrations | 🟡 Partial | `@textguard/cli` is complete for its initial scope. VS Code is publicly released, and the browser Playground has an initial interactive scan/preset shell with isolated CI. Chrome and AI integrations remain later. |
+| M6 — Future Integrations | 🟡 Partial | `@textguard/cli` is complete for its initial scope. VS Code is publicly released, and the browser Playground supports interactive scanning, structured Explain visualization, Debug event ordering, timeline projection, and GitHub Pages deployment automation with isolated CI. Chrome and AI integrations remain later. |
 
 ---
 
@@ -93,4 +93,4 @@ Structured GitHub issue forms are the primary qualitative intake surface for run
 
 ## Current product-quality focus
 
-**Playground validation → richer Explain/debug demo → deployment → adoption feedback.**
+**Playground public deployment → adoption feedback → shareable examples / richer controls only if evidence supports them.**
