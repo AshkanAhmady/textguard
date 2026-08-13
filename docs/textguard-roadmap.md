@@ -12,7 +12,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started
 2. **AR1/AR2 package release — ✅ complete.** `@textguard/core@1.0.3`, `@textguard/all@1.0.3`, `@textguard/ar@1.1.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2` are published.
 3. **Arabic language parity — ✅ complete for the current architecture.** AR1-AR4 cover baseline dictionaries, normalization hardening, tested dialect expansion, and bundle/preset inclusion.
 4. **Release cadence policy — ✅ batched.** Changesets remain per behavior/API change; npm publishing is intentionally deferred and grouped across several coherent milestones unless a critical/consumer-blocking release is justified.
-5. **Adoption validation — 🟡 current focus.** Gather real consumer signals through structured GitHub intake and package usage data, then use them to rank the next milestone.
+5. **Adoption validation — 🟡 current focus.** Gather real consumer signals through structured GitHub intake and package usage data, record them in the canonical adoption signal log (issue #65), then use repeated or high-impact evidence to rank the next milestone. The validation loop is documented in `docs/ADOPTION-VALIDATION.md`.
 6. **Developer integration slice — ✅ complete for the current milestone.** The initial CLI milestone is feature-complete, the VS Code extension is publicly available on Marketplace, and the browser Playground now covers preset-based scanning, built-in examples, shareable scans, structured Explain metadata, Debug Engine timeline visibility, Enterprise detector controls, and GitHub Pages deployment without adding dependencies to the library workspace.
 7. **Roadmap reassessment — 🟡 in progress.** Small correctness work may proceed when it removes known engine nondeterminism without expanding product scope.
 
@@ -66,7 +66,7 @@ Arabic profanity coverage is intentionally not treated as a finite “complete l
 
 ### Adoption validation — 🟡 current
 
-Structured GitHub issue forms are the primary qualitative intake surface for runtime bugs, detection quality, DX friction, and feature requests. A single issue is evidence, not automatic roadmap priority.
+Structured GitHub issue forms are the primary qualitative intake surface for runtime bugs, detection quality, DX friction, and feature requests. Issue #65 is the canonical living signal log, and `docs/ADOPTION-VALIDATION.md` defines the triage cadence and promotion rule. A single issue is evidence, not automatic roadmap priority.
 
 ### Release safety — ✅ hardened
 
@@ -93,4 +93,4 @@ Structured GitHub issue forms are the primary qualitative intake surface for run
 
 ## Current product-quality focus
 
-**Adoption feedback collection → validate real consumer workflows → rank the next integration or correctness milestone from evidence.**
+**Adoption feedback collection → record signals in issue #65 → validate real consumer workflows → rank the next integration or correctness milestone from evidence.**
