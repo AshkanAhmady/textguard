@@ -6,7 +6,7 @@ export const UuidRule = createRegexRule({
   name: "UUID Rule",
   category: "uuid",
   severity: "medium",
-  priority: 200,
+  priority: 50,
   regex: UUID_REGEX,
   word: "uuid",
 });
