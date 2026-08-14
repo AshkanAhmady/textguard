@@ -2,10 +2,10 @@ export * from "@textguard/fa";
 export * from "@textguard/en";
 export * from "@textguard/ar";
 
-export * from "@textguard/plugin-email";
-export * from "@textguard/plugin-url";
-export * from "@textguard/plugin-phone";
-export * from "@textguard/plugin-ip";
-export * from "@textguard/plugin-uuid";
-export * from "@textguard/plugin-credit-card";
-export * from "@textguard/plugin-iban";
+export { emailPlugin } from "@textguard/plugin-email";
+export { urlPlugin } from "@textguard/plugin-url";
+export { phonePlugin } from "@textguard/plugin-phone";
+export { ipPlugin } from "@textguard/plugin-ip";
+export { uuidPlugin } from "@textguard/plugin-uuid";
+export { creditCardPlugin } from "@textguard/plugin-credit-card";
+export { ibanPlugin } from "@textguard/plugin-iban";
