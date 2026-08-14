@@ -54,35 +54,32 @@ describe("Debug Engine contract", () => {
   });
 
   it("preserves original input, normalized input, and final matches", () => {
-    const shorterRule: Rule = {
-      id: "shorter",
-      name: "Shorter",
-      category: "test",
-      severity: "low",
-      priority: 1,
-      supports: () => true,
-      match: () => [{ word: "ab", matchedText: "ab", start: 0, end: 2 }],
-    };
-
-    const longerRule: Rule = {
-      id: "longer",
-      name: "Longer",
+    const normalizedRule: Rule = {
+      id: "normalized",
+      name: "Normalized",
       category: "test",
       severity: "high",
-      priority: 2,
+      priority: 1,
       supports: () => true,
-      match: () => [{ word: "abc", matchedText: "abc", start: 0, end: 3 }],
+      match: (context) => [
+        {
+          word: "é",
+          matchedText: context.text,
+          start: 0,
+          end: context.text.length,
+        },
+      ],
     };
 
     const input = "e\u0301";
     const session = createFilter({
-      plugins: [createTestPlugin(shorterRule, longerRule)],
+      plugins: [createTestPlugin(normalizedRule)],
     }).debug(input);
 
     expect(session.getInput()).toBe(input);
     expect(session.getNormalizedInput()).toBe("é");
     expect(session.getMatches()).toEqual([
-      { word: "abc", matchedText: "abc", start: 0, end: 3 },
+      { word: "é", matchedText: input, start: 0, end: input.length },
     ]);
     expect(Object.isFrozen(session.getMatches())).toBe(true);
   });

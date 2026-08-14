@@ -44,6 +44,7 @@ export function runRules(
   rules: readonly RegisteredRule[],
   context: MatchContext,
   observer?: ExecutionObserver,
+  projectMatch: (match: Match) => Match = (match) => match,
 ): Match[] {
   const matches: ResolvedMatch[] = [];
   const sortedRules = [...rules].sort(
@@ -63,7 +64,7 @@ export function runRules(
     const ruleMatches = rule.match(context);
 
     for (const match of ruleMatches) {
-      observer?.onMatchFound(registeredRule, match);
+      observer?.onMatchFound(registeredRule, projectMatch(match));
 
       const overlappedIndex = matches.findIndex(
         (existing) =>
@@ -89,12 +90,16 @@ export function runRules(
       if (currentWins) {
         observer?.onMatchRejected?.(
           existing.registeredRule,
-          existing.match,
-          match,
+          projectMatch(existing.match),
+          projectMatch(match),
         );
         matches[overlappedIndex] = currentResolved;
       } else {
-        observer?.onMatchRejected?.(registeredRule, match, existing.match);
+        observer?.onMatchRejected?.(
+          registeredRule,
+          projectMatch(match),
+          projectMatch(existing.match),
+        );
       }
     }
 
@@ -102,10 +107,14 @@ export function runRules(
   }
 
   const resolvedMatches = matches.sort((a, b) => a.match.start - b.match.start);
+  const projectedMatches = resolvedMatches.map((resolved) => ({
+    registeredRule: resolved.registeredRule,
+    match: projectMatch(resolved.match),
+  }));
 
-  for (const resolved of resolvedMatches) {
+  for (const resolved of projectedMatches) {
     observer?.onMatchAccepted?.(resolved.registeredRule, resolved.match);
   }
 
-  return resolvedMatches.map((resolved) => resolved.match);
+  return projectedMatches.map((resolved) => resolved.match);
 }
