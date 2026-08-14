@@ -8,7 +8,7 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started · ⏸️ Evid
 
 ## Current position
 
-TextGuard's current engineering foundation is largely complete. The product is moving from feature-building into **pre-launch validation and adoption discovery**.
+TextGuard's current engineering foundation is largely complete. The comprehensive external consumer-validation pass is complete, and the product is now in **launch-blocker cleanup and stable release preparation** before adoption work begins.
 
 The operating rule from this point is: **validate what exists → make it easy to try → promote it → measure real usage → collect feedback → build only evidence-backed improvements.**
 
@@ -20,10 +20,10 @@ The operating rule from this point is: **validate what exists → make it easy t
 2. **Core/language/detection foundation — ✅ complete for the current architecture.** Persian, English, Arabic parity, structured-data detectors, Debug, Explain, and overlap determinism are implemented for the current milestone.
 3. **PII open-source consumer DX — ✅ complete through M0.6.** Local commit protection, CI scanning, policy/configuration, reporting, setup, and external E2E validation exist.
 4. **Developer integration slice — ✅ complete for the current milestone.** CLI, public VS Code extension, and browser Playground are shipped for their current scopes.
-5. **Documentation truth reconciliation — ✅ addressed in the current roadmap-sync PR.** Current source exports Console/JSON/Markdown/HTML renderers, and overlap determinism has regression coverage. Stale Project Doc claims are being removed.
-6. **Comprehensive consumer validation project — ❌ next engineering milestone.** Create a fresh consumer-style project that installs and exercises the public TextGuard surfaces end to end, including packages/presets, detectors, languages, Debug/Explain, PII workflow, CLI, VS Code packaging/install flow, and Playground-facing behavior where practical.
-7. **Launch-blocker cleanup — ❌ after validation.** Fix only defects or documentation/install problems discovered by the comprehensive consumer validation. Do not expand feature scope during this pass.
-8. **Stable release checkpoint — ❌ after launch blockers are clear.** Review the Changesets/release plan and publish a coherent stable checkpoint when justified by the validation results.
+5. **Documentation truth reconciliation — 🟡 current.** Validation exposed stale release-baseline and validation-status claims; keep Project/Roadmap docs synchronized as blockers are fixed and the release is revalidated.
+6. **Comprehensive consumer validation project — ✅ complete for the current published surface.** The external `textguard-consumer-validation` repository exercises packages/presets, detectors, languages, Debug/Explain, PII workflow, CLI, browser/Vite, Marketplace VSIX plus a real VS Code extension host, and Playground build/deployment behavior.
+7. **Launch-blocker cleanup — 🟡 in progress.** Consumer validation reproduced three blockers: published `@textguard/all` detector exports, stale CLI version metadata, and non-operational Playground Pages deployment. Fix only these defects/infrastructure/documentation issues; do not expand feature scope during this pass.
+8. **Stable release checkpoint — 🟡 next after blocker fixes.** Publish only the affected package releases, rerun the complete external consumer-validation matrix against the new artifacts, and require a green result before promotion.
 9. **Lightweight launch surface — 🟡 partially available.** README and Playground already exist. Before broad promotion, provide a concise product/landing surface with value proposition, install path, core capabilities, Playground, GitHub/npm/Marketplace links, and feedback entry point. No auth/billing/dashboard is needed.
 10. **Developer distribution — ❌ after validation/launch readiness.** Promote through technical content and developer communities rather than paid advertising first.
 11. **Adoption validation — 🟡 infrastructure complete, real evidence still early.** Gather real consumer signals through issue #65, package usage trends, Marketplace data, optional feedback/survey responses, and direct early-user conversations.
@@ -64,7 +64,7 @@ The operating rule from this point is: **validate what exists → make it easy t
 
 ## Pre-launch validation checklist
 
-The next major engineering task is a dedicated consumer-style validation project. It should verify the product as an external developer experiences it, rather than only exercising monorepo source packages.
+The dedicated external consumer-style validation project has now evaluated the current published TextGuard surface as an external developer experiences it, rather than only exercising monorepo source packages.
 
 Required validation areas:
 
@@ -81,6 +81,8 @@ Required validation areas:
 - verify Playground production build and core scan/explain/debug/example/share/detector-control flows;
 - compare documentation examples against actual consumer behavior;
 - record every failure as either launch-blocking, documentation/DX, or non-blocking follow-up.
+
+Current validation result: the matrix is fully evaluated but remains **NO-GO for active promotion** until the reproduced launch blockers are fixed, affected artifacts are released, Pages deployment is operational, and the unchanged external validation suite passes against the corrected release.
 
 Exit criterion: all documented primary workflows work in a fresh consumer context, or any remaining limitations are explicitly documented and accepted before promotion.
 
@@ -204,4 +206,4 @@ Structured GitHub issue forms are the primary qualitative intake surface. Issue 
 
 ## Current product-quality focus
 
-**Finish documentation truth → build comprehensive consumer validation project → fix launch blockers → establish stable launch checkpoint → prepare lightweight product/Playground landing surface → begin developer distribution → collect adoption evidence → decide next feature from real user demand.**
+**Finish launch-blocker cleanup → publish the affected stable checkpoint → rerun the complete external consumer validation until green → prepare the lightweight product/Playground launch surface → begin developer distribution → collect adoption evidence → decide the next feature from real user demand.**
