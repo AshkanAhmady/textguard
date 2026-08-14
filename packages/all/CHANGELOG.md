@@ -1,5 +1,11 @@
 # @textguard/all
 
+## 1.1.2
+
+### Patch Changes
+
+- 23f83de: Generate unambiguous TypeScript declarations for detector factory exports in the all-in-one bundle.
+
 ## 1.1.1
 
 ### Patch Changes
