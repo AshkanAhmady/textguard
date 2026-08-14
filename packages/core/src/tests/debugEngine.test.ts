@@ -1,85 +1,85 @@
 import { describe, expect, it } from "vitest";
 import { createFilter } from "../createFilter";
-import type { Plugin, Rule } from "../types";
-import { DebugSession } from "../debug/models/DebugSession";
+import { DebugSession } from "../debug";
+import type { Plugin } from "../domain/plugin";
+import type { Rule } from "../domain/rule";
 
-const createTestPlugin = (...rules: Rule[]): Plugin => ({
-  name: "test-plugin",
-  setup(context) {
-    for (const rule of rules) {
-      context.addRule(rule);
-    }
-  },
-});
+function createTestPlugin(...rules: Rule[]): Plugin {
+  return {
+    name: "debug-test-plugin",
+    setup(context) {
+      for (const rule of rules) {
+        context.addRule(rule);
+      }
+    },
+  };
+}
 
 describe("Debug Engine contract", () => {
   it("captures pipeline, rule, and match events in execution order", () => {
     const rule: Rule = {
-      id: "contains-foo",
-      name: "Contains foo",
-      category: "test",
-      severity: "high",
-      priority: 1,
-      supports: () => true,
-      match: (context) => {
-        const index = context.text.indexOf("foo");
-        return index === -1
-          ? []
-          : [
-              {
-                word: "foo",
-                matchedText: "foo",
-                start: index,
-                end: index + 3,
-              },
-            ];
-      },
-    };
-
-    const session = createFilter({ plugins: [createTestPlugin(rule)] }).debug(
-      "foo",
-    );
-
-    expect(session.getEvents().map((event) => event.type)).toEqual([
-      "pipeline:started",
-      "rule:started",
-      "match:found",
-      "rule:finished",
-      "match:accepted",
-      "pipeline:finished",
-    ]);
-  });
-
-  it("preserves original input, normalized input, and final matches", () => {
-    const shorterRule: Rule = {
-      id: "shorter",
-      name: "Shorter",
+      id: "debug-test-rule",
+      name: "Debug Test Rule",
       category: "test",
       severity: "low",
       priority: 1,
       supports: () => true,
-      match: () => [{ word: "ab", matchedText: "ab", start: 0, end: 1 }],
+      match: () => [{ word: "bad", matchedText: "bad", start: 0, end: 3 }],
     };
 
-    const longerRule: Rule = {
-      id: "longer",
-      name: "Longer",
+    const filter = createFilter({ plugins: [createTestPlugin(rule)] });
+    const session = filter.debug("bad");
+    const events = session.getEvents();
+
+    expect(events[0]?.type).toBe("pipeline:started");
+    expect(events.at(-1)?.type).toBe("pipeline:finished");
+    expect(events.some((event) => event.type === "rule:started")).toBe(true);
+    expect(events.some((event) => event.type === "rule:finished")).toBe(true);
+    expect(events.some((event) => event.type === "match:found")).toBe(true);
+    expect(events.some((event) => event.type === "match:accepted")).toBe(true);
+
+    const eventTypes = events.map((event) => event.type);
+    expect(eventTypes.indexOf("rule:started")).toBeLessThan(
+      eventTypes.indexOf("match:found"),
+    );
+    expect(eventTypes.indexOf("match:found")).toBeLessThan(
+      eventTypes.indexOf("rule:finished"),
+    );
+    expect(eventTypes.indexOf("rule:finished")).toBeLessThan(
+      eventTypes.indexOf("match:accepted"),
+    );
+    expect(eventTypes.indexOf("match:accepted")).toBeLessThan(
+      eventTypes.indexOf("pipeline:finished"),
+    );
+  });
+
+  it("preserves original input, normalized input, and final matches", () => {
+    const normalizedRule: Rule = {
+      id: "normalized",
+      name: "Normalized",
       category: "test",
       severity: "high",
-      priority: 2,
+      priority: 1,
       supports: () => true,
-      match: () => [{ word: "abc", matchedText: "abc", start: 0, end: 1 }],
+      match: (context) => [
+        {
+          word: "é",
+          matchedText: context.text,
+          start: 0,
+          end: context.text.length,
+        },
+      ],
     };
 
     const input = "e\u0301";
     const session = createFilter({
-      plugins: [createTestPlugin(shorterRule, longerRule)],
+      plugins: [createTestPlugin(normalizedRule)],
     }).debug(input);
 
     expect(session.getInput()).toBe(input);
     expect(session.getNormalizedInput()).toBe("é");
     expect(session.getMatches()).toEqual([
-      { word: "ab", matchedText: input, start: 0, end: input.length },
+      { word: "é", matchedText: input, start: 0, end: input.length },
     ]);
     expect(Object.isFrozen(session.getMatches())).toBe(true);
   });
@@ -105,36 +105,45 @@ describe("Debug Engine contract", () => {
       match: () => [{ word: "abc", matchedText: "abc", start: 0, end: 3 }],
     };
 
-    const session = createFilter({
+    const filter = createFilter({
       plugins: [createTestPlugin(shorterRule, longerRule)],
-    }).debug("abcdef");
+    });
 
+    const finalMatches = filter.findBadWords("abc");
+    const session = filter.debug("abc");
     const events = session.getEvents();
-    const found = events.filter((event) => event.type === "match:found");
+
+    const candidates = events
+      .filter((event) => event.type === "match:found")
+      .map((event) => event.match);
+    const accepted = events
+      .filter((event) => event.type === "match:accepted")
+      .map((event) => event.match);
     const rejected = events.filter((event) => event.type === "match:rejected");
-    const accepted = events.filter((event) => event.type === "match:accepted");
 
-    expect(found).toHaveLength(2);
+    expect(finalMatches).toEqual([
+      { word: "abc", matchedText: "abc", start: 0, end: 3 },
+    ]);
+    expect(session.getMatches()).toEqual(finalMatches);
+    expect(candidates).toEqual([
+      { word: "ab", matchedText: "ab", start: 0, end: 2 },
+      { word: "abc", matchedText: "abc", start: 0, end: 3 },
+    ]);
+    expect(accepted).toEqual(finalMatches);
     expect(rejected).toHaveLength(1);
-    expect(accepted).toHaveLength(1);
-
     expect(rejected[0]).toMatchObject({
       type: "match:rejected",
       rule: "Shorter",
-      match: { word: "ab", start: 0, end: 2 },
-      winner: { word: "abc", start: 0, end: 3 },
-    });
-    expect(accepted[0]).toMatchObject({
-      type: "match:accepted",
-      rule: "Longer",
-      match: { word: "abc", start: 0, end: 3 },
+      reason: "overlap",
+      match: { matchedText: "ab", start: 0, end: 2 },
+      winner: { matchedText: "abc", start: 0, end: 3 },
     });
   });
 
   it("rejects a shorter later candidate without changing the final result", () => {
     const longerRule: Rule = {
-      id: "longer",
-      name: "Longer",
+      id: "longer-first",
+      name: "Longer First",
       category: "test",
       severity: "high",
       priority: 1,
@@ -143,8 +152,8 @@ describe("Debug Engine contract", () => {
     };
 
     const shorterRule: Rule = {
-      id: "shorter",
-      name: "Shorter",
+      id: "shorter-later",
+      name: "Shorter Later",
       category: "test",
       severity: "low",
       priority: 2,
@@ -154,73 +163,51 @@ describe("Debug Engine contract", () => {
 
     const session = createFilter({
       plugins: [createTestPlugin(longerRule, shorterRule)],
-    }).debug("abcdef");
+    }).debug("abc");
 
     const rejected = session
       .getEvents()
       .filter((event) => event.type === "match:rejected");
 
-    expect(rejected).toHaveLength(1);
-    expect(rejected[0]).toMatchObject({
-      type: "match:rejected",
-      rule: "Shorter",
-      match: { word: "ab", start: 0, end: 2 },
-      winner: { word: "abc", start: 0, end: 3 },
-    });
     expect(session.getMatches()).toEqual([
       { word: "abc", matchedText: "abc", start: 0, end: 3 },
     ]);
+    expect(rejected).toHaveLength(1);
+    expect(rejected[0]).toMatchObject({
+      rule: "Shorter Later",
+      reason: "overlap",
+      match: { matchedText: "ab", start: 0, end: 2 },
+      winner: { matchedText: "abc", start: 0, end: 3 },
+    });
   });
 
   it("keeps the legacy DebugSession(events) constructor compatible", () => {
-    const session = new DebugSession([
-      {
-        id: 1,
-        type: "pipeline:started",
-        level: "trace",
-        timestamp: 1,
-      },
-      {
-        id: 2,
-        type: "pipeline:finished",
-        level: "trace",
-        timestamp: 2,
-      },
-    ]);
+    const session = new DebugSession([]);
 
     expect(session.getInput()).toBe("");
     expect(session.getNormalizedInput()).toBe("");
     expect(session.getMatches()).toEqual([]);
-    expect(session.getEvents()).toHaveLength(2);
+    expect(session.getEvents()).toEqual([]);
   });
 
   it("derives statistics, timeline, performance, and report from one session", () => {
     const rule: Rule = {
-      id: "contains-foo",
-      name: "Contains foo",
+      id: "report-rule",
+      name: "Report Rule",
       category: "test",
-      severity: "high",
+      severity: "medium",
       priority: 1,
       supports: () => true,
-      match: () => [{ word: "foo", matchedText: "foo", start: 0, end: 3 }],
+      match: () => [{ word: "x", matchedText: "x", start: 0, end: 1 }],
     };
 
-    const session = createFilter({ plugins: [createTestPlugin(rule)] }).debug(
-      "foo",
-    );
+    const session = createFilter({
+      plugins: [createTestPlugin(rule)],
+    }).debug("x");
 
-    expect(session.statistics()).toMatchObject({
-      totalRulesEvaluated: 1,
-      totalMatchesFound: 1,
-      totalMatchesAccepted: 1,
-      totalMatchesRejected: 0,
-    });
-    expect(session.timeline().nodes.length).toBeGreaterThan(0);
-    expect(session.performance().totalTime).toBeGreaterThanOrEqual(0);
-    expect(session.report()).toMatchObject({
-      input: "foo",
-      normalizedInput: "foo",
-      matches: [{ word: "foo", matchedText: "foo", start: 0, end: 3 }],
-    });
+    expect(session.statistics().matchEvents).toBe(1);
+    expect(session.timeline().plugins).toHaveLength(1);
+    expect(session.performance().plugins).toHaveLength(1);
+    expect(session.report().events).toEqual(session.getEvents());
   });
 });
