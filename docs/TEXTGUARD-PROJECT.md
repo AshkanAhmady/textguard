@@ -106,7 +106,7 @@ The current developer-integration milestone is complete:
 
 - `@textguard/cli` provides scan, debug, explain, file/stdin input, batch scanning, JSON output, help/version metadata, and documented exit codes;
 - the VS Code extension is publicly released and supports manual/scan-on-save diagnostics, presets, whitelist settings, and Explain quick fixes;
-- the browser Playground supports presets, example scenarios, shareable URLs, Scan/Explain/Debug visualization, Enterprise detector controls, and a production Vite build. Its GitHub Pages deployment is currently a launch blocker because the repository Pages site is not configured for the deployment workflow.
+- the browser Playground supports presets, example scenarios, shareable URLs, Scan/Explain/Debug visualization, Enterprise detector controls, and a production Vite build. GitHub Pages is now enabled with GitHub Actions as the deployment source; the current deployment is blocked by a published `@textguard/all` TypeScript declaration defect rather than Pages configuration itself.
 
 Future Chrome, AI, framework-specific, or other integrations are candidates only when adoption evidence justifies them.
 
@@ -114,7 +114,7 @@ Future Chrome, AI, framework-specific, or other integrations are candidates only
 
 Release hardening is complete. The repository uses Changesets with release planning, explicit npm candidate checks, bounded registry lookup, canonical package taxonomy, and a documented procedure in `docs/RELEASING.md`.
 
-The current published validation baseline includes `@textguard/core@1.1.0`, `@textguard/all@1.1.0`, `@textguard/cli@0.2.0`, `@textguard/plugin-pii@0.3.0`, `@textguard/ar@1.2.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2`, with the direct detector packages at `1.0.2`.
+The current published validation baseline includes `@textguard/core@1.1.0`, `@textguard/all@1.1.1`, `@textguard/cli@0.2.1`, `@textguard/plugin-pii@0.3.0`, `@textguard/ar@1.2.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2`, with the direct detector packages at `1.0.2`.
 
 The repository uses a **batched publishing cadence**: public behavior/API PRs still get Changesets, but npm publishing is normally deferred across several coherent milestones. Immediate publish is reserved for intentional stable checkpoints, consumer blockers, critical fixes, or independently valuable completed capabilities.
 
@@ -122,17 +122,20 @@ Never run `npm publish` from the repository root. Review the release plan and fi
 
 ## 11. Consumer validation and current launch blockers
 
-The external `textguard-consumer-validation` repository has evaluated all defined validation phases for the current public surface. Passing consumer execution covers Core/languages/detectors, presets except for the published bundle export defect, Debug/Explain/renderers, PII workflows, browser/Vite bundling, and the published VS Code Marketplace extension including a real VS Code/Electron host smoke.
+The external `textguard-consumer-validation` repository has evaluated all defined validation phases for the current public surface. Published runtime behavior is green across Core/languages/detectors, presets, Debug/Explain/renderers, PII workflows, CLI, browser/Vite bundling, and the published VS Code Marketplace extension including a real VS Code/Electron host smoke.
 
-Current launch blockers from that validation are deliberately narrow:
+The corrected `@textguard/all@1.1.1` runtime bundle now exposes the documented detector factories, and `@textguard/cli@0.2.1` reports correct version metadata. During the first real Pages deployment attempt after Pages was enabled, the Playground exposed a new launch blocker: the generated `@textguard/all@1.1.1` declaration bundle resolves detector factory exports from `@textguard/fa`, producing TS2305 errors for detector symbols in a fresh TypeScript consumer.
 
-- `@textguard/all@1.1.0` does not expose documented detector factories from the published artifact even though current source contains the intended exports; a release correction and regression protection are required;
-- `@textguard/cli@0.2.0` reports stale hard-coded version metadata; the fix must derive version output from package metadata so later version bumps cannot reintroduce drift;
-- Playground production build succeeds, but GitHub Pages deployment is non-operational until Pages is enabled/configured for the repository workflow.
+Current launch-blocker cleanup is therefore deliberately narrow:
 
-Additional documentation debt discovered by validation is being reconciled in the same blocker-cleanup/release preparation work. Historical docs may still mention a separate `packages/presets/` ownership path, but presets currently live under `packages/all`; that stale path alone is not a refactor requirement.
+- make `@textguard/all` detector exports declaration-safe so generated `.d.ts` files reference their owning detector packages rather than an ambiguous language barrel;
+- publish the next patch of `@textguard/all` after CI/review;
+- rerun the external consumer-validation matrix against that published artifact;
+- rerun the GitHub Pages deployment and smoke-test the public Playground URL.
 
-Active promotion remains blocked until affected package fixes are published, Pages deployment is operational, and the complete external validation suite passes against the corrected release. Adoption evidence is still too weak to promote Chrome, AI, paid-team features, or another Guard product.
+Additional documentation debt discovered by validation is reconciled as blocker state changes. Historical docs may still mention a separate `packages/presets/` ownership path, but presets currently live under `packages/all`; that stale path alone is not a refactor requirement.
+
+Active promotion remains blocked until the declaration fix is published, the complete external validation suite passes against the corrected release, and the public Playground deployment is verified. Adoption evidence is still too weak to promote Chrome, AI, paid-team features, or another Guard product.
 
 ## 12. Development discipline
 
