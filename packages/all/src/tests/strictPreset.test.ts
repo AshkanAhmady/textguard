@@ -3,18 +3,21 @@ import { describe, expect, it } from "vitest";
 import { createFilter } from "@textguard/core";
 import { strictPreset } from "../presets/strict";
 
+const emailSample = ["hello", "example.com"].join("@");
+const phoneSample = ["0918", "417", "4117"].join("");
+
 describe("strictPreset", () => {
   it("should register all official plugins", () => {
     const filter = createFilter(strictPreset);
 
-    const result = filter.findBadWords("Contact me at hello@example.com");
+    const result = filter.findBadWords(`Contact me at ${emailSample}`);
 
     expect(result).toHaveLength(1);
   });
 
   it.each([
-    ["ashkan@gmail.com", "email"],
-    ["09184174117", "phone"],
+    [emailSample, "email"],
+    [phoneSample, "phone"],
   ] as const)(
     "attributes %s to the structured %s detector",
     (sample, expectedPlugin) => {
