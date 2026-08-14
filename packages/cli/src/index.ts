@@ -30,7 +30,15 @@ interface ExplainOptions extends InputOptions {
   json: boolean;
 }
 
-const CLI_VERSION = "0.1.0";
+const CLI_PACKAGE_JSON_URL = new URL("../package.json", import.meta.url);
+
+async function readCliVersion(): Promise<string> {
+  const packageJson = JSON.parse(await readFile(CLI_PACKAGE_JSON_URL, "utf8")) as { version?: unknown };
+  if (typeof packageJson.version !== "string" || packageJson.version.length === 0) {
+    throw new Error("TextGuard CLI package metadata does not contain a valid version");
+  }
+  return packageJson.version;
+}
 
 function printUsage(): void {
   console.log("TextGuard CLI");
@@ -169,7 +177,7 @@ async function main(): Promise<void> {
   }
 
   if (command === "version" || command === "--version" || command === "-v") {
-    console.log(CLI_VERSION);
+    console.log(await readCliVersion());
     process.exitCode = 0;
     return;
   }
