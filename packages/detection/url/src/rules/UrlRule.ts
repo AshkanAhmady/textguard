@@ -6,7 +6,7 @@ export const UrlRule = createRegexRule({
   name: "URL Rule",
   category: "url",
   severity: "low",
-  priority: 200,
+  priority: 50,
   regex: URL_REGEX,
   word: "url",
 });
