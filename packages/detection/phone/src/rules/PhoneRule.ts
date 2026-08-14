@@ -6,7 +6,7 @@ export const PhoneRule = createRegexRule({
   name: "Phone Rule",
   category: "phone",
   severity: "medium",
-  priority: 200,
+  priority: 50,
   regex: PHONE_REGEX,
   word: "phone",
 });
