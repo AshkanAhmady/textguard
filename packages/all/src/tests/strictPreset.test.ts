@@ -30,4 +30,16 @@ describe("strictPreset", () => {
       expect(explanation.matches[0]?.source.rule.category).toBe(expectedPlugin);
     },
   );
+
+  it.each([
+    ["a$$h0le", "asshole"],
+    ["sh1t", "shit"],
+    ["b1tch", "bitch"],
+  ] as const)("detects English leetspeak profanity %s", (sample, word) => {
+    const filter = createFilter(strictPreset);
+    const matches = filter.findBadWords(sample);
+
+    expect(matches.some((match) => match.word === word)).toBe(true);
+    expect(matches.some((match) => match.matchedText === sample)).toBe(true);
+  });
 });
