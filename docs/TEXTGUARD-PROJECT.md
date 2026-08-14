@@ -6,7 +6,7 @@
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI.
 
-Arabic implementation parity is complete for the current architecture. The comprehensive external consumer-validation pass is complete for the current published surface. The current product focus is **launch-blocker cleanup, stable release preparation, revalidation, and then adoption discovery** rather than automatic feature expansion.
+Arabic implementation parity is complete for the current architecture. The comprehensive external consumer-validation matrix is green for the current published surface. The current product focus is now **lightweight launch-surface clarity, developer distribution, and adoption discovery** rather than additional speculative feature expansion.
 
 ## 2. Repository and architecture
 
@@ -106,7 +106,8 @@ The current developer-integration milestone is complete:
 
 - `@textguard/cli` provides scan, debug, explain, file/stdin input, batch scanning, JSON output, help/version metadata, and documented exit codes;
 - the VS Code extension is publicly released and supports manual/scan-on-save diagnostics, presets, whitelist settings, and Explain quick fixes;
-- the browser Playground supports presets, example scenarios, shareable URLs, Scan/Explain/Debug visualization, Enterprise detector controls, and a production Vite build. GitHub Pages is now enabled with GitHub Actions as the deployment source; the current deployment is blocked by a published `@textguard/all` TypeScript declaration defect rather than Pages configuration itself.
+- the browser Playground supports presets, example scenarios, shareable URLs, Scan/Explain/Debug visualization, Enterprise detector controls, and a production Vite build;
+- GitHub Pages is enabled with GitHub Actions as the deployment source, and the Playground deployment is operational at `https://ashkanahmady.github.io/textguard/`.
 
 Future Chrome, AI, framework-specific, or other integrations are candidates only when adoption evidence justifies them.
 
@@ -114,28 +115,37 @@ Future Chrome, AI, framework-specific, or other integrations are candidates only
 
 Release hardening is complete. The repository uses Changesets with release planning, explicit npm candidate checks, bounded registry lookup, canonical package taxonomy, and a documented procedure in `docs/RELEASING.md`.
 
-The current published validation baseline includes `@textguard/core@1.1.0`, `@textguard/all@1.1.1`, `@textguard/cli@0.2.1`, `@textguard/plugin-pii@0.3.0`, `@textguard/ar@1.2.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2`, with the direct detector packages at `1.0.2`.
+The current published validation baseline includes `@textguard/core@1.1.0`, `@textguard/all@1.1.2`, `@textguard/cli@0.2.1`, `@textguard/plugin-pii@0.3.0`, `@textguard/ar@1.2.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2`, with the direct detector packages at `1.0.2`.
 
 The repository uses a **batched publishing cadence**: public behavior/API PRs still get Changesets, but npm publishing is normally deferred across several coherent milestones. Immediate publish is reserved for intentional stable checkpoints, consumer blockers, critical fixes, or independently valuable completed capabilities.
 
 Never run `npm publish` from the repository root. Review the release plan and final npm candidate list before every publish.
 
-## 11. Consumer validation and current launch blockers
+## 11. Consumer validation and launch readiness
 
-The external `textguard-consumer-validation` repository has evaluated all defined validation phases for the current public surface. Published runtime behavior is green across Core/languages/detectors, presets, Debug/Explain/renderers, PII workflows, CLI, browser/Vite bundling, and the published VS Code Marketplace extension including a real VS Code/Electron host smoke.
+The external `textguard-consumer-validation` repository has evaluated all defined validation phases for the current public surface. The final matrix is **GREEN / GO**.
 
-The corrected `@textguard/all@1.1.1` runtime bundle now exposes the documented detector factories, and `@textguard/cli@0.2.1` reports correct version metadata. During the first real Pages deployment attempt after Pages was enabled, the Playground exposed a new launch blocker: the generated `@textguard/all@1.1.1` declaration bundle resolves detector factory exports from `@textguard/fa`, producing TS2305 errors for detector symbols in a fresh TypeScript consumer.
+Passing external consumer execution covers:
 
-Current launch-blocker cleanup is therefore deliberately narrow:
+- package installation/module resolution on Node 20 and 22;
+- Core APIs, languages, detectors, presets, Debug, Explain, renderers, and editor diagnostics;
+- `@textguard/all@1.1.2` runtime exports and strict TypeScript declaration consumption;
+- `@textguard/cli@0.2.1`, including its comprehensive process-level harness and correct version metadata;
+- PII pre-commit/CI workflow behavior;
+- browser/Vite bundling;
+- the published VS Code Marketplace extension plus a real VS Code/Electron host smoke;
+- Playground type-check, production build, Pages configuration, artifact upload, and successful public deployment.
 
-- make `@textguard/all` detector exports declaration-safe so generated `.d.ts` files reference their owning detector packages rather than an ambiguous language barrel;
-- publish the next patch of `@textguard/all` after CI/review;
-- rerun the external consumer-validation matrix against that published artifact;
-- rerun the GitHub Pages deployment and smoke-test the public Playground URL.
+Launch-blocking findings discovered during validation are resolved:
 
-Additional documentation debt discovered by validation is reconciled as blocker state changes. Historical docs may still mention a separate `packages/presets/` ownership path, but presets currently live under `packages/all`; that stale path alone is not a refactor requirement.
+- `@textguard/all@1.1.0` runtime detector exports were corrected;
+- `@textguard/cli@0.2.0` stale version metadata was corrected;
+- GitHub Pages was enabled for the Playground deployment workflow;
+- `@textguard/all@1.1.1` declaration ambiguity was corrected and released as `1.1.2`.
 
-Active promotion remains blocked until the declaration fix is published, the complete external validation suite passes against the corrected release, and the public Playground deployment is verified. Adoption evidence is still too weak to promote Chrome, AI, paid-team features, or another Guard product.
+The pre-launch validation gate is therefore complete for the current published surface. The next step is not more speculative engineering; it is the documented Launch Surface → Developer Distribution → Adoption Validation sequence.
+
+Historical docs may still mention a separate `packages/presets/` ownership path, but presets currently live under `packages/all`; that stale path alone is not a refactor requirement.
 
 ## 12. Development discipline
 
@@ -158,6 +168,8 @@ A merged Changeset means release impact is pending, not that npm must be updated
 
 **pre-launch validation → launch surface → developer distribution → adoption measurement → evidence-driven iteration → monetization only after commercial signal → possible Guard Ecosystem expansion later.**
 
+Pre-launch validation is now complete. The current active phase is **Launch Surface**.
+
 The product should not become a feature factory. New work should be tied to a validated developer problem or to launch/reliability requirements for an already-shipped capability.
 
 ## 14. Guard Ecosystem memory
@@ -170,4 +182,4 @@ The wider ecosystem remains vision-stage. TextGuard should earn adoption and val
 
 Near-term sequence is:
 
-**complete launch-blocker cleanup → publish the affected stable checkpoint → rerun external consumer validation until green → lightweight landing/Playground launch surface → developer distribution → adoption measurement → evidence-driven roadmap reassessment → one coherent implementation milestone when justified → monetization only after repeated commercial demand.**
+**polish the lightweight launch surface → begin developer distribution → measure usage and collect feedback → identify repeated/high-impact developer pain → promote only that pain into the next implementation milestone → monetize only after repeated commercial/team demand.**
