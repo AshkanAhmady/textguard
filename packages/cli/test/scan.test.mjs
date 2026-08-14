@@ -1,11 +1,13 @@
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 const cliPath = fileURLToPath(new URL("../dist/index.js", import.meta.url));
+const packageJsonPath = fileURLToPath(new URL("../package.json", import.meta.url));
+const cliVersion = JSON.parse(readFileSync(packageJsonPath, "utf8")).version;
 const tempDirs = [];
 function runCli(args, input) { return spawnSync(process.execPath, [cliPath, ...args], { encoding: "utf8", input }); }
 function createInputFile(content) { const dir = mkdtempSync(join(tmpdir(), "textguard-cli-")); tempDirs.push(dir); const path = join(dir, "input.txt"); writeFileSync(path, content, "utf8"); return path; }
@@ -23,10 +25,10 @@ describe("textguard cli metadata", () => {
     expect(result.status).toBe(0);
     expect(result.stdout).toMatch(/Usage:/);
   });
-  it("prints the cli version", () => {
+  it("prints the package version", () => {
     const result = runCli(["--version"]);
     expect(result.status).toBe(0);
-    expect(result.stdout.trim()).toBe("0.1.0");
+    expect(result.stdout.trim()).toBe(cliVersion);
   });
 });
 
