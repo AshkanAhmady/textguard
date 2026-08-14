@@ -8,9 +8,11 @@ Legend: ✅ Done · 🟡 Partial / in progress · ❌ Not started · ⏸️ Evid
 
 ## Current position
 
-TextGuard's current engineering foundation is largely complete. The comprehensive external consumer-validation pass is complete, the first corrective npm checkpoint has been published, and revalidation exposed one remaining `@textguard/all` TypeScript declaration blocker before the public Playground can deploy.
+TextGuard's current engineering foundation is complete for the present architecture. The comprehensive external consumer-validation matrix is now **green**, the corrective npm releases are published, and the public Playground is deployed successfully through GitHub Pages.
 
-The operating rule from this point is: **validate what exists → make it easy to try → promote it → measure real usage → collect feedback → build only evidence-backed improvements.**
+The product is now entering the **lightweight Launch Surface** phase. The operating rule from this point is: **make it easy to understand and try → promote it → measure real usage → collect feedback → build only evidence-backed improvements.**
+
+Public Playground: `https://ashkanahmady.github.io/textguard/`
 
 ---
 
@@ -20,12 +22,12 @@ The operating rule from this point is: **validate what exists → make it easy t
 2. **Core/language/detection foundation — ✅ complete for the current architecture.** Persian, English, Arabic parity, structured-data detectors, Debug, Explain, and overlap determinism are implemented for the current milestone.
 3. **PII open-source consumer DX — ✅ complete through M0.6.** Local commit protection, CI scanning, policy/configuration, reporting, setup, and external E2E validation exist.
 4. **Developer integration slice — ✅ complete for the current milestone.** CLI, public VS Code extension, and browser Playground are shipped for their current scopes.
-5. **Documentation truth reconciliation — 🟡 current.** Keep Project/Roadmap docs synchronized as validation exposes and closes launch blockers.
-6. **Comprehensive consumer validation project — ✅ complete for the current published surface.** The external `textguard-consumer-validation` repository exercises packages/presets, detectors, languages, Debug/Explain, PII workflow, CLI, browser/Vite, Marketplace VSIX plus a real VS Code extension host, and Playground build/deployment behavior.
-7. **Launch-blocker cleanup — 🟡 in progress.** The original `@textguard/all` runtime-export and CLI version-metadata defects are fixed and published. GitHub Pages is enabled. The remaining blocker is the generated `@textguard/all@1.1.1` declaration bundle, which resolves detector exports from `@textguard/fa` and breaks a fresh TypeScript consumer/Playground type-check.
-8. **Stable release checkpoint — 🟡 one patch remaining.** Publish the next patch of `@textguard/all` after the declaration fix, rerun the complete external consumer-validation matrix against the new artifact, then require a successful Pages deployment and public Playground smoke before promotion.
-9. **Lightweight launch surface — 🟡 partially available.** README and Playground already exist. Before broad promotion, provide a concise product/landing surface with value proposition, install path, core capabilities, Playground, GitHub/npm/Marketplace links, and feedback entry point. No auth/billing/dashboard is needed.
-10. **Developer distribution — ❌ after validation/launch readiness.** Promote through technical content and developer communities rather than paid advertising first.
+5. **Documentation truth reconciliation — ✅ complete for the launch-readiness checkpoint.** Project/Roadmap docs reflect the final corrective release baseline, green validation state, and deployed Playground.
+6. **Comprehensive consumer validation project — ✅ green for the current published surface.** The external `textguard-consumer-validation` repository exercises packages/presets, detectors, languages, Debug/Explain, PII workflow, CLI, browser/Vite, Marketplace VSIX plus a real VS Code extension host, and Playground deployment behavior.
+7. **Launch-blocker cleanup — ✅ complete.** The `@textguard/all` runtime export defect, CLI version metadata defect, declaration-bundle regression, and Pages configuration blocker are fixed and externally revalidated.
+8. **Stable release checkpoint — ✅ complete.** `@textguard/all@1.1.2` and `@textguard/cli@0.2.1` are published as the corrected release baseline and the external matrix passes against published artifacts.
+9. **Lightweight launch surface — 🟡 current.** README and Playground exist. Before broad promotion, make the product immediately understandable with concise positioning, install path, core capabilities, Playground, GitHub/npm/Marketplace links, and a clear feedback entry point. No auth/billing/dashboard is needed.
+10. **Developer distribution — ❌ next after launch-surface polish.** Promote through technical content and developer communities rather than paid advertising first.
 11. **Adoption validation — 🟡 infrastructure complete, real evidence still early.** Gather real consumer signals through issue #65, package usage trends, Marketplace data, optional feedback/survey responses, and direct early-user conversations.
 12. **Evidence-driven roadmap reassessment — 🟡 standing process.** Select the next product milestone only when repeated or high-impact evidence identifies a developer problem worth solving.
 13. **Monetization / paid team capability — ⏸️ evidence-gated.** Billing, SaaS, organization features, and AI-assisted paid capabilities remain deferred until repeated commercial demand exists.
@@ -64,7 +66,7 @@ The operating rule from this point is: **validate what exists → make it easy t
 
 ## Pre-launch validation checklist
 
-The dedicated external consumer-style validation project has now evaluated the current published TextGuard surface as an external developer experiences it, rather than only exercising monorepo source packages.
+The dedicated external consumer-style validation project has evaluated the current published TextGuard surface as an external developer experiences it, rather than only exercising monorepo source packages.
 
 Required validation areas:
 
@@ -78,26 +80,26 @@ Required validation areas:
 - verify PII scanning, allowlists/configuration, pre-commit initialization, and CI-oriented behavior;
 - verify CLI inline/stdin/file/batch inputs, JSON output, Debug/Explain modes, and exit codes;
 - verify VS Code extension package/install and key user flows;
-- verify Playground production build and core scan/explain/debug/example/share/detector-control flows;
+- verify Playground production build and deployed public site;
 - compare documentation examples against actual consumer behavior;
 - record every failure as either launch-blocking, documentation/DX, or non-blocking follow-up.
 
-Current validation result: npm/runtime revalidation is green for the first corrective release, but active promotion remains **NO-GO** because a real Pages deployment exposed a declaration-level regression in `@textguard/all@1.1.1`. The remaining exit work is to publish the declaration fix, rerun consumer validation, deploy the Playground, and smoke-test the public URL.
+Current validation result: **GREEN / GO**. All 12 defined phases pass against the corrected published release baseline. `@textguard/all@1.1.2` passes runtime and strict TypeScript consumer validation, `@textguard/cli@0.2.1` passes the complete CLI harness, and the Playground deploys successfully to GitHub Pages.
 
-Exit criterion: all documented primary workflows work in a fresh consumer context, or any remaining limitations are explicitly documented and accepted before promotion.
+Exit criterion: **met** for the current published surface.
 
 ---
 
 ## Launch / distribution plan
 
-After consumer validation and launch-blocker fixes, shift engineering capacity toward distribution.
+Consumer validation and launch-blocker cleanup are complete. Shift engineering capacity toward launch-surface clarity and distribution.
 
 Priority channels:
 
 1. GitHub repository and npm package pages — clear positioning, examples, Playground, and feedback entry points.
 2. Technical articles — explain real problems TextGuard solves, such as PII in commits, multilingual moderation, Debug/Explain, or structured-data detection.
 3. Relevant Reddit communities — technical/value-first posts, not promotion-only spam.
-4. Hacker News / Show HN — once the product can be tried quickly and the validation project is green.
+4. Hacker News / Show HN — the product can now be tried quickly and the validation project is green.
 5. DEV Community and similar developer publishing channels.
 6. Product Hunt — secondary discovery/launch channel, not the primary source of technical validation.
 7. LinkedIn/X — demo-driven build-in-public content and real developer use cases.
@@ -157,7 +159,7 @@ The current TextGuard roadmap is considered product-complete when:
 - adoption measurement and feedback collection are operating;
 - the next feature is selected from real evidence rather than speculative standing scope.
 
-At that point TextGuard moves from **build mode** to **growth mode**. The roadmap does not become an endless checklist of every imaginable integration.
+The first four conditions are now met. The current focus is launch-surface clarity, distribution, and adoption learning.
 
 ---
 
@@ -206,4 +208,4 @@ Structured GitHub issue forms are the primary qualitative intake surface. Issue 
 
 ## Current product-quality focus
 
-**Fix the `@textguard/all` declaration bundle → publish the patch → rerun complete external consumer validation → deploy and smoke-test the public Playground → prepare the lightweight launch surface → begin developer distribution → collect adoption evidence → decide the next feature from real user demand.**
+**Polish the lightweight launch surface → begin developer distribution → collect adoption evidence → identify repeated/high-impact developer pain → promote only that pain into the next implementation milestone → consider monetization only after repeated commercial/team demand.**
