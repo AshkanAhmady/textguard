@@ -8,7 +8,7 @@ export const IbanRule = createRegexRule({
   name: "IBAN Rule",
   category: "iban",
   severity: "high",
-  priority: 200,
+  priority: 50,
   regex: IBAN_REGEX,
   word: "iban",
   validator: isValidIban,

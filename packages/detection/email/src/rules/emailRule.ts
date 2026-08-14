@@ -6,7 +6,7 @@ export const EmailRule = createRegexRule({
   name: "Email Rule",
   category: "email",
   severity: "low",
-  priority: 200,
+  priority: 50,
   regex: EMAIL_REGEX,
   word: "email",
 });

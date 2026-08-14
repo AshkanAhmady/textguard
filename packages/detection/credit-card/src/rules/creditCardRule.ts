@@ -7,7 +7,7 @@ export const CreditCardRule = createRegexRule({
   name: "Credit Card Rule",
   category: "credit-card",
   severity: "high",
-  priority: 200,
+  priority: 50,
   regex: CREDIT_CARD_REGEX,
   word: "credit-card",
   validator: isValidCreditCard,

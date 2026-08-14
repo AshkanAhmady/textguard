@@ -6,7 +6,7 @@ export const IpRule = createRegexRule({
   name: "IP Rule",
   category: "ip",
   severity: "medium",
-  priority: 200,
+  priority: 50,
   regex: IP_REGEX,
   word: "ip",
 });
