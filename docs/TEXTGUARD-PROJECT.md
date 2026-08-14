@@ -6,7 +6,9 @@
 
 TextGuard is an extensible TypeScript text-processing/detection engine. It supports profanity/language rules, structured-data detection, filtering/masking, Debug diagnostics, a structured Explain API, and a PII guard for local commits and pull-request CI.
 
-Arabic implementation parity is complete for the current architecture. The comprehensive external consumer-validation matrix is green for the current published surface. The current product focus is now **lightweight launch-surface clarity, developer distribution, and adoption discovery** rather than additional speculative feature expansion.
+The original comprehensive external consumer-validation matrix is green for the current published integration surface, and the public Playground is operational. Real Playground usage then exposed quality weaknesses that the original integration matrix did not attempt to prove. The current product focus is therefore **Quality Hardening / Adversarial Validation / Benchmarking before broad promotion**.
+
+This is evidence-backed reliability work on already-shipped behavior, not speculative feature expansion.
 
 ## 2. Repository and architecture
 
@@ -20,7 +22,7 @@ Key packages:
 - detection plugins: Email, URL, Phone, IP, UUID, Credit Card, IBAN
 - `packages/guards/pii` → `@textguard/plugin-pii`
 
-Core remains plugin-oriented. Language packages use the shared `Dictionary` contract and normalization pipeline; no Arabic-specific Core API was introduced.
+Core remains plugin-oriented. Language packages use the shared `Dictionary` contract and normalization pipeline; no language-specific second engine should be introduced during hardening.
 
 ## 3. Current public core API
 
@@ -35,22 +37,26 @@ filter.explain(text: string): ExplainResult;
 filter.use(plugin: Plugin): void;
 ```
 
+Backward compatibility of this surface remains a hardening constraint.
+
 ## 4. Debug and Explain architecture
 
 - DebugSession stores original input, normalized input, final overlap-resolved matches, and events.
 - Explain projects final accepted matches from the same debug-capable execution path.
 - Explain does not introduce a second detection engine.
-- The current public Debug renderer implementations are `ConsoleRenderer`, `JsonRenderer`, `MarkdownRenderer`, and `HtmlRenderer`.
-- The renderer barrel exports all four implementations through the public Debug exports.
-- overlap ranking determinism is covered by regression tests: equal-priority/equal-length winners remain stable across reversed plugin registration order, while lower numeric rule priority still wins equal-length overlaps.
+- Public Debug renderers are `ConsoleRenderer`, `JsonRenderer`, `MarkdownRenderer`, and `HtmlRenderer`.
+- overlap ranking determinism has regression coverage.
+
+New adversarial evidence adds two active requirements:
+
+- structured detector matches must retain truthful detector/rule attribution through Explain;
+- developer-facing Debug output must have usable signal-to-noise at normal input sizes while preserving compatibility for raw diagnostics where required.
 
 ## 5. Package state
 
 ### Language packages
 
-- Persian: established/full relative to the current language architecture.
-- English: established/full relative to the current language architecture.
-- Arabic: AR1-AR4 provide baseline dictionaries, normalization hardening, high-confidence coverage, a first tested dialect slice, and inclusion in `strictPreset` / `enterprisePreset`.
+Persian, English, and Arabic are implemented for the current language architecture. Vocabulary remains evidence-driven; no language dictionary is treated as permanently complete.
 
 ### Structured-data detection
 
@@ -58,128 +64,112 @@ Email, URL, Phone, IP, UUID, Credit Card, and IBAN plugins exist. Credit Card us
 
 ### PII package
 
-`@textguard/plugin-pii` provides strict scanning plus consumer policy for commits/CI. Consumer DX is complete through M0.6.
+`@textguard/plugin-pii` provides strict scanning plus consumer policy for commits/CI. Consumer DX is complete through M0.6. Paid/team expansion remains evidence-gated.
 
-## 6. Completed milestone — PII Consumer DX Hardening
+## 6. Completed foundation milestones
 
-Consumer init, shared policy configuration, external E2E validation, and final public documentation are complete through M0.6. M0.7 remains intentionally later until usage validates demand.
+The following foundation work remains complete:
 
-## 7. Completed milestone — Package README standardization
+- PII Consumer DX through M0.6;
+- npm-facing package README standardization;
+- Arabic implementation parity for the current architecture;
+- CLI current scope;
+- public VS Code extension current scope;
+- browser Playground current scope;
+- release hardening and Changesets workflow;
+- original external consumer-integration matrix;
+- GitHub Pages deployment at `https://ashkanahmady.github.io/textguard/`.
 
-The npm-facing documentation cleanup is complete. Public behavior/API changes must continue updating affected documentation in the same PR.
+## 7. Current published validation baseline
 
-## 8. Completed milestone — Arabic implementation parity
+The current published baseline includes:
 
-Arabic parity was delivered incrementally and without a second language-specific Core path.
+- `@textguard/core@1.1.0`
+- `@textguard/all@1.1.2`
+- `@textguard/cli@0.2.1`
+- `@textguard/plugin-pii@0.3.0`
+- `@textguard/ar@1.2.0`
+- `@textguard/en@1.0.2`
+- `@textguard/fa@1.0.2`
+- direct detector packages at `1.0.2`.
 
-### AR1 — usable dictionary baseline — ✅ complete
+The original external integration matrix passes this baseline. The newer adversarial quality matrix intentionally does not.
 
-- `arProfanity` and `arInsults` added;
-- existing `arDictionary`, `arPack`, and `arLanguage` preserved;
-- public `createFilter()` integration tests added;
-- package README and release metadata updated.
+## 8. Active milestone — Quality Hardening / Adversarial Validation / Benchmarking
 
-### AR2 — normalization + coverage hardening — ✅ complete and released
+### Trigger
 
-- existing Core `ArabicNormalizer` audited instead of introducing a second normalization path;
-- common Arabic diacritics removed before matching;
-- Alef Maqsura normalized consistently;
-- high-confidence profanity/insult coverage expanded;
-- public regression coverage added for variants and benign Arabic text.
+Manual use of the deployed public Playground produced credible product evidence that integration-green was not equivalent to moderation-quality complete. The findings were converted into executable tests in `textguard-consumer-validation/main` and reproduced against published npm artifacts.
 
-### AR3 — dialect coverage slice 1 — ✅ complete
+### Reproduced findings
 
-AR3 added a small high-confidence dialect vocabulary slice while preserving the public API and conservative false-positive policy.
+- invisible Unicode controls (including U+200B and U+2060) bypass tested English/Persian/Arabic dictionary words;
+- tested English full-width compatibility forms and common leetspeak bypass detection;
+- `Scunthorpe is a town in England` produces a substring false positive;
+- Explain attributes tested email and phone matches to a generic dictionary source;
+- a five-token realistic input produces roughly 794 raw Debug events;
+- Playground uses `strict` as the default user-facing preset label, which is not an ideal newcomer mental model.
 
-### AR4 — bundle/preset parity — ✅ complete
+The adversarial suite also confirms useful behavior already present: tested spacing/punctuation/repetition obfuscations work, invalid structured-data lookalikes are rejected, duplicate detector registration is deduplicated, filter/Explain accepted matches agree, and tested Unicode/RTL match ranges map correctly back to the original input.
 
-- `arDictionary` is included in `strictPreset` and `enterprisePreset`;
-- Arabic moderation is verified through preset-level tests;
-- `socialMediaPreset` remains unchanged because it is an unrelated placeholder;
-- no Core changes or second Arabic configuration path were introduced.
+### Engineering principles for fixes
 
-Arabic vocabulary is not treated as a finite “complete list.” Further coverage work should be driven by real false negatives, user reports, or other evidence rather than permanent roadmap expansion.
+- preserve original-input match ranges across normalization changes;
+- do not introduce ASCII-only boundary semantics into a multilingual engine;
+- treat leetspeak/compatibility normalization as a false-positive-sensitive decision, not an unconditional global substitution table;
+- keep Explain on the same authoritative execution path and repair metadata provenance instead of creating separate explanation logic;
+- preserve Debug compatibility and prefer explicit aggregation/verbosity over silent loss of diagnostics;
+- preserve `strictPreset` as a public API unless a future alias/deprecation plan justifies a rename; improve Playground wording independently first.
 
-## 9. Developer integrations
+### Benchmark
 
-The current developer-integration milestone is complete:
+A reproducible published-artifact benchmark now runs in `textguard-consumer-validation` for `filter()`, `explain()`, and `debug().report()` at 1 KB, 10 KB, and 100 KB workloads. It records median/p95 latency, throughput, and Debug event volume.
 
-- `@textguard/cli` provides scan, debug, explain, file/stdin input, batch scanning, JSON output, help/version metadata, and documented exit codes;
-- the VS Code extension is publicly released and supports manual/scan-on-save diagnostics, presets, whitelist settings, and Explain quick fixes;
-- the browser Playground supports presets, example scenarios, shareable URLs, Scan/Explain/Debug visualization, Enterprise detector controls, and a production Vite build;
-- GitHub Pages is enabled with GitHub Actions as the deployment source, and the Playground deployment is operational at `https://ashkanahmady.github.io/textguard/`.
+The current baseline shows Debug is materially more expensive/noisy than filter/explain, reinforcing the Debug UX finding. Shared-runner timings are directional, not a public SLA. Product-side benchmark fixtures should accompany performance-sensitive architecture work.
 
-Future Chrome, AI, framework-specific, or other integrations are candidates only when adoption evidence justifies them.
+## 9. Consumer validation truth
+
+There are now two different gates and they must not be conflated:
+
+1. **Integration/consumer compatibility gate — GREEN.** Packages install, APIs execute, CLI/PII/browser/VS Code work, and Playground deploys.
+2. **Quality/adversarial gate — RED while hardening is active.** Hostile normalization, precision, Explain attribution, Debug signal quality and related edge cases still have reproduced failures.
+
+Broad promotion is paused until the quality gate is green or any remaining limitations are explicitly documented and accepted.
+
+`textguard-consumer-validation/REPORT.md` and `QUALITY-HARDENING-MATRIX.md` are the external executable evidence source for this milestone.
 
 ## 10. Release safety and cadence
 
-Release hardening is complete. The repository uses Changesets with release planning, explicit npm candidate checks, bounded registry lookup, canonical package taxonomy, and a documented procedure in `docs/RELEASING.md`.
+The repository uses Changesets with release planning, explicit npm candidate checks, bounded registry lookup, canonical package taxonomy, and `docs/RELEASING.md` as the release procedure.
 
-The current published validation baseline includes `@textguard/core@1.1.0`, `@textguard/all@1.1.2`, `@textguard/cli@0.2.1`, `@textguard/plugin-pii@0.3.0`, `@textguard/ar@1.2.0`, `@textguard/en@1.0.2`, and `@textguard/fa@1.0.2`, with the direct detector packages at `1.0.2`.
+Public behavior/API fixes still receive Changesets. Publish a quality checkpoint only after a coherent set of reproduced fixes is ready; do not republish unaffected packages. Never run root `npm publish`.
 
-The repository uses a **batched publishing cadence**: public behavior/API PRs still get Changesets, but npm publishing is normally deferred across several coherent milestones. Immediate publish is reserved for intentional stable checkpoints, consumer blockers, critical fixes, or independently valuable completed capabilities.
+## 11. Development discipline
 
-Never run `npm publish` from the repository root. Review the release plan and final npm candidate list before every publish.
-
-## 11. Consumer validation and launch readiness
-
-The external `textguard-consumer-validation` repository has evaluated all defined validation phases for the current public surface. The final matrix is **GREEN / GO**.
-
-Passing external consumer execution covers:
-
-- package installation/module resolution on Node 20 and 22;
-- Core APIs, languages, detectors, presets, Debug, Explain, renderers, and editor diagnostics;
-- `@textguard/all@1.1.2` runtime exports and strict TypeScript declaration consumption;
-- `@textguard/cli@0.2.1`, including its comprehensive process-level harness and correct version metadata;
-- PII pre-commit/CI workflow behavior;
-- browser/Vite bundling;
-- the published VS Code Marketplace extension plus a real VS Code/Electron host smoke;
-- Playground type-check, production build, Pages configuration, artifact upload, and successful public deployment.
-
-Launch-blocking findings discovered during validation are resolved:
-
-- `@textguard/all@1.1.0` runtime detector exports were corrected;
-- `@textguard/cli@0.2.0` stale version metadata was corrected;
-- GitHub Pages was enabled for the Playground deployment workflow;
-- `@textguard/all@1.1.1` declaration ambiguity was corrected and released as `1.1.2`.
-
-The pre-launch validation gate is therefore complete for the current published surface. The next step is not more speculative engineering; it is the documented Launch Surface → Developer Distribution → Adoption Validation sequence.
-
-Historical docs may still mention a separate `packages/presets/` ownership path, but presets currently live under `packages/all`; that stale path alone is not a refactor requirement.
-
-## 12. Development discipline
-
-Every coherent change-set should:
+Every coherent TextGuard product change should:
 
 1. start from latest `main` on its own branch;
-2. include relevant tests when behavior changes;
-3. update stale roadmap/project/ADR/README/example documentation in the same branch;
-4. include Changesets when published package behavior changes;
-5. follow `docs/RELEASING.md` when an intentional release batch is opened;
-6. open a PR for maintainer review;
-7. merge only with required checks green;
-8. delete the feature branch after merge.
+2. be driven by a reproduced test/finding where practical;
+3. include relevant product regression tests;
+4. update stale roadmap/project/ADR/README/example documentation in the same PR;
+5. include Changesets when published package behavior changes;
+6. explain tradeoffs before major normalization/matcher/Debug architecture changes;
+7. open a PR for maintainer review and merge only with required checks green.
 
-A merged Changeset means release impact is pending, not that npm must be updated immediately.
+The external `textguard-consumer-validation` repository is intentionally different: it is a test lab and its validation work is maintained directly on `main` as requested by the maintainer.
 
-## 13. Product-growth discipline
+## 12. Product-growth discipline
 
-`docs/PRODUCT-GROWTH-PLAN.md` is the canonical operating sequence after the current engineering foundation:
+`docs/PRODUCT-GROWTH-PLAN.md` remains canonical for the growth sequence:
 
-**pre-launch validation → launch surface → developer distribution → adoption measurement → evidence-driven iteration → monetization only after commercial signal → possible Guard Ecosystem expansion later.**
+**validation → launch surface → developer distribution → adoption measurement → evidence-driven iteration → monetization only after commercial signal.**
 
-Pre-launch validation is now complete. The current active phase is **Launch Surface**.
+The current Quality Hardening milestone does not violate that sequence. It was triggered by real use of the public Playground and protects already-shipped behavior. After this gate is green, resume Launch Surface rather than inventing unrelated features.
 
-The product should not become a feature factory. New work should be tied to a validated developer problem or to launch/reliability requirements for an already-shipped capability.
+## 13. Guard Ecosystem memory
 
-## 14. Guard Ecosystem memory
+`docs/GUARD-ECOSYSTEM.md` remains the stable wider-product vision. Additional Guard products, team SaaS, billing, AI/provider integrations, Chrome/framework adapters, and other expansion remain evidence-gated.
 
-`docs/GUARD-ECOSYSTEM.md` is the canonical stable document for the wider product/business vision. It intentionally stays separate from this file and `textguard-roadmap.md`, which track TextGuard's changing implementation state.
+## 14. Near-term sequence
 
-The wider ecosystem remains vision-stage. TextGuard should earn adoption and validate developer/business demand before implementation starts on additional Guard products.
-
-## 15. Long-term roadmap guardrail
-
-Near-term sequence is:
-
-**polish the lightweight launch surface → begin developer distribution → measure usage and collect feedback → identify repeated/high-impact developer pain → promote only that pain into the next implementation milestone → monetize only after repeated commercial/team demand.**
+**expand adversarial validation → fix reproduced quality defects in small reviewable slices → benchmark sensitive changes → publish affected quality checkpoint → rerun complete published consumer/adversarial validation → torture-test deployed Playground → resume Launch Surface → developer distribution → adoption evidence → next feature only from repeated/high-impact pain → monetization only after repeated commercial/team demand.**
