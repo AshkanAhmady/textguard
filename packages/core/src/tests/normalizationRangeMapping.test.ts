@@ -51,6 +51,32 @@ describe("normalization range mapping", () => {
     );
   });
 
+  it.each(["\u200B", "\u2060", "\uFEFF"])(
+    "removes invisible obfuscation %s while preserving original ranges",
+    (invisible) => {
+      const filter = createFilter({ customWords: ["asshole"] });
+      const originalWord = `ass${invisible}hole`;
+      const input = `prefix ${originalWord} suffix`;
+      const result = filter.filter(input);
+
+      expect(result.matches).toHaveLength(1);
+      expectOriginalRange(input, result.matches[0], originalWord);
+      expect(result.filteredText).toBe(
+        input.replace(originalWord, "*".repeat(originalWord.length)),
+      );
+    },
+  );
+
+  it("folds full-width compatibility characters with NFKC and preserves ranges", () => {
+    const filter = createFilter({ customWords: ["asshole"] });
+    const originalWord = "ａｓｓｈｏｌｅ";
+    const input = `prefix ${originalWord} suffix`;
+    const result = filter.filter(input);
+
+    expect(result.matches).toHaveLength(1);
+    expectOriginalRange(input, result.matches[0], originalWord);
+  });
+
   it("uses original ranges consistently in Debug and Explain", () => {
     const filter = createFilter({ customWords: ["évil"] });
     const originalWord = "e\u0301vil";
