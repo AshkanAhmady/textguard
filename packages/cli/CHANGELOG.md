@@ -1,5 +1,11 @@
 # @textguard/cli
 
+## 0.2.1
+
+### Patch Changes
+
+- 44d7280: Report the installed package version from CLI metadata instead of a stale hard-coded value.
+
 ## 0.2.0
 
 ### Minor Changes

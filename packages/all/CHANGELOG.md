@@ -1,5 +1,11 @@
 # @textguard/all
 
+## 1.1.1
+
+### Patch Changes
+
+- a515aef: Preserve documented detector factory exports in the published bundle entrypoint.
+
 ## 1.1.0
 
 ### Minor Changes
