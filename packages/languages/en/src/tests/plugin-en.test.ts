@@ -20,6 +20,11 @@ describe("TextGuard Engine - English & Leetspeak Detection", () => {
     expect(res1.filteredText).toContain("*****");
   });
 
+  it("detects the canonical English profanity entry and its leetspeak form", () => {
+    expect(filterEngine.hasBadWord("shit")).toBe(true);
+    expect(filterEngine.hasBadWord("sh1t")).toBe(true);
+  });
+
   it("should ignore overlapped matches", () => {
     const dictionary: Dictionary = {
       name: "test",

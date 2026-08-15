@@ -1,7 +1,7 @@
 import type { FilterOptions } from "@textguard/core";
 
 import { faDictionary } from "@textguard/fa";
-import { enDictionary } from "@textguard/en";
+import { enDictionary, enLeetspeakMapping } from "@textguard/en";
 import { arDictionary } from "@textguard/ar";
 
 import { emailPlugin } from "@textguard/plugin-email";
@@ -14,6 +14,7 @@ import { ibanPlugin } from "@textguard/plugin-iban";
 
 export const strictPreset: FilterOptions = {
   dictionaries: [faDictionary, enDictionary, arDictionary],
+  leetspeakMapping: enLeetspeakMapping,
   plugins: [
     emailPlugin(),
     urlPlugin(),
