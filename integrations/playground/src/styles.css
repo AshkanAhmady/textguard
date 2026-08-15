@@ -71,6 +71,17 @@ h1 {
   gap: 16px;
   margin-bottom: 18px;
 }
+.preset-control {
+  display: grid;
+  gap: 6px;
+  max-width: 520px;
+}
+.preset-help {
+  margin: 0;
+  color: #8298b2;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
 label {
   display: grid;
   gap: 8px;
@@ -89,6 +100,9 @@ textarea {
 select {
   min-width: 190px;
   padding: 10px 12px;
+}
+.preset-control select {
+  min-width: 300px;
 }
 textarea {
   width: 100%;
@@ -323,6 +337,10 @@ pre {
     flex-direction: column;
   }
   .toolbar button {
+    width: 100%;
+  }
+  .preset-control select {
+    min-width: 0;
     width: 100%;
   }
   .results-grid,
