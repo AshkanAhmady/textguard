@@ -9,7 +9,8 @@ export function buildWordRegex(
   word: string,
   options: BuildWordRegexOptions,
 ): RegExp {
-  const separator = "[\\s\\._\\-*\\u200c\\u0640]*";
+  const separator = "[\\s\\p{P}\\p{S}\\u200c\\u200d\\u0640]*";
+  const wordContinuation = "[\\p{L}\\p{N}\\p{M}\\u200c\\u200d]";
 
   const parts = Array.from(word).map((char) => {
     const lowerChar = char.toLowerCase();
@@ -30,5 +31,10 @@ export function buildWordRegex(
     return `${escapeRegExp(char)}+`;
   });
 
-  return new RegExp(parts.join(separator), "gi");
+  const body = parts.join(separator);
+
+  return new RegExp(
+    `(?<!${wordContinuation})${body}(?!${wordContinuation})`,
+    "giu",
+  );
 }
