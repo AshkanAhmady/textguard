@@ -35,6 +35,17 @@ describe("TextGuard Engine - English & Leetspeak Detection", () => {
     expect(matchedText).toEqual(expect.arrayContaining(["fuck", "asshole"]));
   });
 
+  it("detects common vowel-substitution profanity variants inside a sentence", () => {
+    const matches = filterEngine.findBadWords(
+      "son of the betch mother fucker i want to put my deck to your ass and pussy asshole",
+    );
+    const matchedText = matches.map((match) => match.matchedText.toLowerCase());
+
+    expect(matchedText).toEqual(
+      expect.arrayContaining(["betch", "mother fucker", "deck", "pussy", "asshole"]),
+    );
+  });
+
   it("keeps English structured patterns as explicit RegExp entries", () => {
     expect(enPatterns.words.every((entry) => entry.word instanceof RegExp)).toBe(true);
   });
