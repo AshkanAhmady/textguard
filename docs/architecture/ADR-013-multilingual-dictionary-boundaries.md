@@ -1,4 +1,4 @@
-# ADR-013: Unicode-Aware Dictionary Boundaries
+# ADR-013: Script-Aware Dictionary Boundaries
 
 ## Status
 
@@ -6,40 +6,46 @@ Accepted for the Quality Hardening phase.
 
 ## Context
 
-Dictionary string rules intentionally tolerate internal obfuscation such as repeated characters, whitespace, punctuation, Persian ZWNJ, Arabic tatweel, and configured leetspeak alternatives. Before this decision, the generated regex had no outer token boundary at all. A prohibited entry could therefore match as a substring of a larger benign word; consumer validation reproduced this with `Scunthorpe` and `class assignment`.
+Dictionary string rules intentionally tolerate internal obfuscation such as repeated characters, whitespace, punctuation, Persian ZWNJ, Arabic tatweel, and configured leetspeak alternatives. Before this decision, generated string regexes had no outer token boundary at all. Consumer validation reproduced benign Latin false positives with `Scunthorpe` and `class assignment`.
 
-A simple ASCII `\b` boundary is insufficient because TextGuard is multilingual and must behave consistently around Persian, Arabic, combining marks, and Unicode digits.
+The first implementation attempted one Unicode-wide outer-boundary rule. CI immediately demonstrated that this is not backward-compatible for languages with productive morphology: the Persian dictionary entry `احمق` is intentionally expected to match the derived form `احمقانه`. Treating every adjacent Persian letter as a hard boundary incorrectly removed that behavior.
+
+A single language-agnostic token-boundary policy is therefore not sufficient for all supported scripts.
 
 ## Decision
 
-String dictionary matching uses Unicode-aware outer boundaries while keeping the existing tolerant matching inside the candidate word.
+TextGuard introduces script-aware boundary hardening incrementally.
 
-- Unicode letters, numbers, and combining marks are treated as word continuation characters.
-- U+200C ZERO WIDTH NON-JOINER and U+200D ZERO WIDTH JOINER are also treated as word continuation characters at the outer edges so a dictionary entry is not extracted from a larger Persian/Arabic orthographic token.
-- Inside a candidate, whitespace, Unicode punctuation/symbols, ZWNJ, ZWJ, and Arabic tatweel may separate expected characters. This preserves deliberate-obfuscation detection without globally deleting semantically meaningful join controls.
-- Matching uses Unicode regex mode.
+For string entries containing Latin-script letters:
 
-This policy applies to string dictionary entries and custom string words. Explicit `RegExp` dictionary entries retain their author-defined boundary semantics.
+- outer continuation includes Latin-script letters, Unicode numbers, combining marks, ZWNJ, and ZWJ;
+- a Latin dictionary entry cannot be extracted as an arbitrary substring from a larger Latin token;
+- internal whitespace, Unicode punctuation/symbols, ZWNJ, ZWJ, and Arabic tatweel may still separate expected characters, preserving deliberate-obfuscation detection;
+- matching uses Unicode regex mode.
+
+For non-Latin string entries, existing outer-boundary behavior is preserved for now. This is deliberate backward compatibility, not a claim that Persian/Arabic boundary semantics are solved. A future morphology-aware language policy must define suffix/derivation behavior before Core can safely tighten those boundaries.
+
+Explicit `RegExp` dictionary entries retain their author-defined boundary semantics in all scripts.
 
 ## Consequences
 
 ### Positive
 
-- benign substring cases such as `Scunthorpe` and `class assignment` no longer trigger string dictionary entries;
-- Persian and Arabic word continuation semantics are respected better than with ASCII `\b`;
-- spaced, punctuated, repeated-character, ZWNJ, ZWJ, tatweel, and leetspeak obfuscations can still be detected;
-- no language-specific whitelist is required in Core.
+- reproduced Latin false positives such as `Scunthorpe` and `class assignment` are fixed generically without hard-coded whitelists;
+- English leetspeak, spacing, punctuation, repeated-character, ZWNJ, and ZWJ obfuscations remain detectable;
+- existing Persian derivational behavior such as `احمق` matching `احمقانه` is not broken;
+- the policy can evolve per language/script instead of pretending one Unicode boundary is linguistically correct everywhere.
 
 ### Tradeoffs
 
-- string dictionary entries no longer intentionally match arbitrary substrings inside larger alphanumeric words;
-- broad internal punctuation tolerance remains an aggressive behavior and must be protected by false-positive regression tests;
-- regex dictionary entries are intentionally unaffected and can still match substrings if their pattern allows it.
+- Persian and Arabic substring false positives are not globally solved by this slice;
+- Core now distinguishes Latin-script entries for boundary purposes;
+- morphology-aware non-Latin boundary behavior remains future hardening work and requires evidence-driven language tests.
 
 ## Guardrails
 
-- do not solve generic boundary false positives with hard-coded place names or English-only whitelists;
-- keep outer boundaries Unicode-aware;
-- treat ZWNJ/ZWJ differently at outer boundaries versus internal obfuscation;
-- any future separator expansion must include both positive evasion tests and negative false-positive tests;
+- do not solve boundary false positives with hard-coded place names or phrase whitelists;
+- do not impose Latin token assumptions on Persian or Arabic;
+- preserve published language-pack morphology unless a language-specific change is explicitly tested and released;
+- any future separator or boundary expansion must include both positive evasion tests and negative false-positive tests;
 - consumer-validation remains the external adversarial release gate.
