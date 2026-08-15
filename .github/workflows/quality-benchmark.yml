@@ -1,0 +1,45 @@
+name: Quality Benchmark
+
+on:
+  pull_request:
+    paths:
+      - "packages/core/**"
+      - "packages/all/**"
+      - "scripts/benchmark-quality.mjs"
+      - "package.json"
+      - "docs/QUALITY-BENCHMARK.md"
+      - ".github/workflows/quality-benchmark.yml"
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Run quality benchmark
+        run: pnpm benchmark:quality | tee quality-benchmark.json
+
+      - name: Upload benchmark result
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-benchmark
+          path: quality-benchmark.json
+          retention-days: 14
+
+# Observational only: shared-runner timing is noisy. Do not add hard latency
+# thresholds without repeated evidence and an explicit performance contract.
