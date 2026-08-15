@@ -26,8 +26,15 @@ const examples: Record<ExampleName, ExampleScenario> = {
   clean: { preset: "strict", text: "TextGuard helps developers inspect text filtering behavior in a reproducible way." },
 };
 
+const presetDescriptions: Record<PresetName, string> = {
+  strict: "Balanced default for profanity and multilingual moderation using TextGuard's strictPreset API.",
+  enterprise: "Adds structured-data detectors for email, URL, phone, IP, UUID, credit card, and IBAN use cases.",
+  socialMedia: "Moderation-focused preset for social and multilingual text with language dictionaries enabled.",
+};
+
 const inputElement = document.querySelector<HTMLTextAreaElement>("#input");
 const presetElement = document.querySelector<HTMLSelectElement>("#preset");
+const presetHelpElement = document.querySelector<HTMLElement>("#preset-help");
 const exampleElement = document.querySelector<HTMLSelectElement>("#example");
 const loadExampleElement = document.querySelector<HTMLButtonElement>("#load-example");
 const detectorControlsElement = document.querySelector<HTMLFieldSetElement>("#detector-controls");
@@ -45,12 +52,13 @@ const debugCountElement = document.querySelector<HTMLElement>("#debug-count");
 const debugEventsElement = document.querySelector<HTMLOListElement>("#debug-events");
 const debugTimelineElement = document.querySelector<HTMLElement>("#debug-timeline");
 
-if (!inputElement || !presetElement || !exampleElement || !loadExampleElement || !detectorControlsElement || !scanElement || !shareElement || !shareStatusElement || !matchCountElement || !statusElement || !filteredElement || !matchesElement || !explainCountElement || !explanationsElement || !debugCountElement || !debugEventsElement || !debugTimelineElement) {
+if (!inputElement || !presetElement || !presetHelpElement || !exampleElement || !loadExampleElement || !detectorControlsElement || !scanElement || !shareElement || !shareStatusElement || !matchCountElement || !statusElement || !filteredElement || !matchesElement || !explainCountElement || !explanationsElement || !debugCountElement || !debugEventsElement || !debugTimelineElement) {
   throw new Error("TextGuard playground failed to initialize.");
 }
 
 const input = inputElement;
 const preset = presetElement;
+const presetHelp = presetHelpElement;
 const example = exampleElement;
 const loadExample = loadExampleElement;
 const detectorControls = detectorControlsElement;
@@ -82,6 +90,10 @@ function hydrateFromUrl(): void {
   const sharedPreset = params.get("preset");
   if (text !== null) input.value = text;
   if (isPresetName(sharedPreset)) preset.value = sharedPreset;
+}
+
+function updatePresetHelp(name: PresetName): void {
+  presetHelp.textContent = presetDescriptions[name];
 }
 
 function updateShareUrl(): void {
@@ -134,6 +146,7 @@ function renderEmpty(list: HTMLOListElement, message: string): void {
 function render(): void {
   const text = input.value;
   const selectedPreset = preset.value as PresetName;
+  updatePresetHelp(selectedPreset);
   const filter = createFilter(getFilterOptions(selectedPreset));
   const result = filter.filter(text);
   const explanation = filter.explain(text);
