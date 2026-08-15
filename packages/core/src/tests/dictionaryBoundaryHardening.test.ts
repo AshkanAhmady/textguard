@@ -6,7 +6,7 @@ describe("dictionary boundary hardening", () => {
   it.each([
     "Scunthorpe is a town in England",
     "The class assignment is ready",
-  ])("does not match profanity substrings inside benign words: %s", (input) => {
+  ])("does not match Latin profanity substrings inside benign words: %s", (input) => {
     const filter = createFilter({ customWords: ["cunt", "ass"] });
 
     expect(filter.hasBadWord(input)).toBe(false);
@@ -34,15 +34,21 @@ describe("dictionary boundary hardening", () => {
     "fuck\u200csuffix",
     "prefix\u200dfuck",
     "fuck\u200dsuffix",
-  ])("does not cross an outer word continuation boundary: %s", (input) => {
+  ])("does not cross a Latin outer word continuation boundary: %s", (input) => {
     const filter = createFilter({ customWords: ["fuck"] });
 
     expect(filter.hasBadWord(input)).toBe(false);
   });
 
-  it("treats punctuation around a standalone match as a boundary", () => {
+  it("treats punctuation around a standalone Latin match as a boundary", () => {
     const filter = createFilter({ customWords: ["fuck"] });
 
-    expect(filter.hasBadWord("(fuck)!")) .toBe(true);
+    expect(filter.hasBadWord("(fuck)!")).toBe(true);
+  });
+
+  it("preserves existing Persian derivational matching until morphology is explicit", () => {
+    const filter = createFilter({ customWords: ["احمق"] });
+
+    expect(filter.hasBadWord("این یک متن احمقانه است")).toBe(true);
   });
 });
