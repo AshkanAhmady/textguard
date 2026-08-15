@@ -8,14 +8,34 @@ interface MutableTimelinePlugin {
   rules: TimelineRule[];
 }
 
-export class TimelineBuilder {
-  public build(session: DebugSession): Timeline {
-    const events = session.getEvents();
+export interface TimelineBuildOptions {
+  readonly includeEmptyRules?: boolean;
+}
 
+export class TimelineBuilder {
+  public build(
+    session: DebugSession,
+    options: TimelineBuildOptions = {},
+  ): Timeline {
+    const events = session.getEvents();
+    const includeEmptyRules = options.includeEmptyRules ?? true;
     const pluginMap = new Map<string, MutableTimelinePlugin>();
 
     for (const event of events) {
       if (event.type !== "rule:finished") {
+        continue;
+      }
+
+      const matches = events
+        .filter(
+          (e): e is MatchFoundEvent =>
+            e.type === "match:found" &&
+            e.plugin === event.plugin &&
+            e.rule === event.rule,
+        )
+        .map((e) => e.match);
+
+      if (!includeEmptyRules && matches.length === 0) {
         continue;
       }
 
@@ -29,15 +49,6 @@ export class TimelineBuilder {
 
         pluginMap.set(event.plugin, plugin);
       }
-
-      const matches = events
-        .filter(
-          (e): e is MatchFoundEvent =>
-            e.type === "match:found" &&
-            e.plugin === event.plugin &&
-            e.rule === event.rule,
-        )
-        .map((e) => e.match);
 
       plugin.rules.push({
         name: event.rule,
