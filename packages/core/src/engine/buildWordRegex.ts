@@ -6,13 +6,14 @@ export interface BuildWordRegexOptions {
 }
 
 const latinLetter = /\p{Script=Latin}/u;
-const MAX_INTERNAL_SEPARATOR_LENGTH = 2;
+const MAX_GENERAL_SEPARATOR_LENGTH = 3;
+const MAX_KASHIDA_SEPARATOR_LENGTH = 8;
 
 export function buildWordRegex(
   word: string,
   options: BuildWordRegexOptions,
 ): RegExp {
-  const separator = `[\\s\\p{P}\\p{S}\\u200c\\u200d\\u0640]{0,${MAX_INTERNAL_SEPARATOR_LENGTH}}`;
+  const separator = `(?:[\\s\\p{P}\\p{S}\\u200c\\u200d]{0,${MAX_GENERAL_SEPARATOR_LENGTH}}|\\u0640{0,${MAX_KASHIDA_SEPARATOR_LENGTH}})`;
 
   const parts = Array.from(word).map((char) => {
     const lowerChar = char.toLowerCase();
