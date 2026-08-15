@@ -1,5 +1,16 @@
 # @textguard/cli
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [3295454]
+- Updated dependencies [1d394c2]
+- Updated dependencies [b42ebb9]
+- Updated dependencies [0a43704]
+- Updated dependencies [a354a2f]
+  - @textguard/core@1.1.1
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @textguard/core
 
+## 1.1.1
+
+### Patch Changes
+
+- 3295454: Add a backward-compatible concise Debug signal projection and an opt-in timeline mode that omits rules with no matches while preserving the existing raw trace and default timeline semantics.
+- 1d394c2: Prevent generated dictionary matches from stretching across sparse sentence context, and treat English Email/URL patterns as explicit regular expressions.
+- b42ebb9: Harden Unicode normalization against full-width compatibility forms and invisible obfuscation while preserving original-source match ranges.
+- 0a43704: Use script-aware outer boundaries for Latin string dictionary matching so benign larger words are not flagged while internal obfuscation remains detectable and existing Persian/Arabic morphology stays backward compatible.
+- a354a2f: Preserve public match ranges and matched text against the original input when built-in Unicode or Arabic normalization changes string length.
+
 ## 1.1.0
 
 ### Minor Changes

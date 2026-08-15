@@ -1,5 +1,11 @@
 # @textguard/plugin-pii
 
+## 0.3.1
+
+### Patch Changes
+
+- 8e72afa: Support narrowly scoped regex suppressions in PII policy configuration so generated seven-digit Changeset hashes in CHANGELOG files can be ignored without disabling phone detection elsewhere.
+
 ## 0.3.0
 
 ### Minor Changes
