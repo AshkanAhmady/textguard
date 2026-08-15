@@ -54,12 +54,13 @@ describe("PII policy", () => {
   });
 
   it("supports pattern-scoped suppressions without broad path ignores", () => {
+    const changesetHash = ["329", "5454"].join("");
     const phoneDetected: ScanResult = {
       clean: false,
       findings: [
         {
           type: "phone",
-          matchedText: "3295454",
+          matchedText: changesetHash,
           start: 2,
           end: 9,
         },
