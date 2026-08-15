@@ -5,12 +5,13 @@ export interface BuildWordRegexOptions {
   faLookalikesMapping: Record<string, string>;
 }
 
+const latinLetter = /\p{Script=Latin}/u;
+
 export function buildWordRegex(
   word: string,
   options: BuildWordRegexOptions,
 ): RegExp {
   const separator = "[\\s\\p{P}\\p{S}\\u200c\\u200d\\u0640]*";
-  const wordContinuation = "[\\p{L}\\p{N}\\p{M}\\u200c\\u200d]";
 
   const parts = Array.from(word).map((char) => {
     const lowerChar = char.toLowerCase();
@@ -32,9 +33,18 @@ export function buildWordRegex(
   });
 
   const body = parts.join(separator);
+  const usesLatinBoundary = Array.from(word).some((char) =>
+    latinLetter.test(char),
+  );
+
+  if (!usesLatinBoundary) {
+    return new RegExp(body, "giu");
+  }
+
+  const latinContinuation = "[\\p{Script=Latin}\\p{N}\\p{M}\\u200c\\u200d]";
 
   return new RegExp(
-    `(?<!${wordContinuation})${body}(?!${wordContinuation})`,
+    `(?<!${latinContinuation})${body}(?!${latinContinuation})`,
     "giu",
   );
 }
