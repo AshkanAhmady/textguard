@@ -1,29 +1,43 @@
 import type { DebugEvent } from "../events";
 import type { DebugSession } from "../models/DebugSession";
 
-function ruleKey(plugin: string, rule: string): string {
-  return `${plugin}\u0000${rule}`;
-}
-
 export class SignalEventsBuilder {
   public build(session: DebugSession): readonly DebugEvent[] {
     const events = session.getEvents();
-    const activeRules = new Set<string>();
+    const keepLifecycleIndexes = new Set<number>();
     const activePlugins = new Set<string>();
+    let activeRuleStartIndex: number | undefined;
+    let activeRuleHasActivity = false;
 
-    for (const event of events) {
+    for (const [index, event] of events.entries()) {
+      if (event.type === "rule:started") {
+        activeRuleStartIndex = index;
+        activeRuleHasActivity = false;
+        continue;
+      }
+
       if (
         event.type === "match:found" ||
         event.type === "match:accepted" ||
         event.type === "match:rejected"
       ) {
-        activeRules.add(ruleKey(event.plugin, event.rule));
+        activeRuleHasActivity = true;
         activePlugins.add(event.plugin);
+        continue;
+      }
+
+      if (event.type === "rule:finished") {
+        if (activeRuleStartIndex !== undefined && activeRuleHasActivity) {
+          keepLifecycleIndexes.add(activeRuleStartIndex);
+          keepLifecycleIndexes.add(index);
+        }
+        activeRuleStartIndex = undefined;
+        activeRuleHasActivity = false;
       }
     }
 
     return Object.freeze(
-      events.filter((event) => {
+      events.filter((event, index) => {
         switch (event.type) {
           case "pipeline:started":
           case "pipeline:finished":
@@ -38,7 +52,7 @@ export class SignalEventsBuilder {
 
           case "rule:started":
           case "rule:finished":
-            return activeRules.has(ruleKey(event.plugin, event.rule));
+            return keepLifecycleIndexes.has(index);
         }
       }),
     );
