@@ -46,9 +46,9 @@ describe("strictPreset", () => {
   it("keeps a known Persian profanity visible inside realistic sentence context", () => {
     const filter = createFilter(strictPreset);
     const input = "این یک جمله آزمایشی است که کلمه کیر را در میانه متن دارد.";
-    const matches = filter.findBadWords(input);
+    const matchedText = filter.findBadWords(input).map((match) => match.matchedText);
 
-    expect(matches.some((match) => match.matchedText === "کیر")).toBe(true);
+    expect(matchedText).toEqual(expect.arrayContaining(["کیر"]));
   });
 
   it("keeps multiple known Persian matches independently visible in one sentence", () => {
