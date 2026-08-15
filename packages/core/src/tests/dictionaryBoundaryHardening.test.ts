@@ -64,6 +64,16 @@ describe("dictionary boundary hardening", () => {
     expect(matches.some((match) => match.matchedText === word)).toBe(true);
   });
 
+  it("rejects a single-token match that steals its final character from the next word", () => {
+    const filter = createFilter({ customWords: ["کیر", "کیرر"] });
+    const matchedText = filter
+      .findBadWords("این کلمه کیر را در جمله نگه می‌دارد")
+      .map((match) => match.matchedText);
+
+    expect(matchedText).toContain("کیر");
+    expect(matchedText).not.toContain("کیر ر");
+  });
+
   it("does not synthesize a short Persian profanity across a long separator run", () => {
     const filter = createFilter({ customWords: ["کس"] });
 
