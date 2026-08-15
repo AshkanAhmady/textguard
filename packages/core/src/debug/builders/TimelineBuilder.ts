@@ -1,4 +1,4 @@
-import type { MatchFoundEvent } from "../events";
+import type { Match } from "../../domain/match";
 import type { DebugSession } from "../models/DebugSession";
 import type { Timeline } from "../models/Timeline";
 import type { TimelineRule } from "../models/TimelineRule";
@@ -8,41 +8,75 @@ interface MutableTimelinePlugin {
   rules: TimelineRule[];
 }
 
+interface ActiveRuleExecution {
+  plugin: string;
+  rule: string;
+  matches: Match[];
+}
+
+export interface TimelineBuildOptions {
+  readonly includeEmptyRules?: boolean;
+}
+
 export class TimelineBuilder {
-  public build(session: DebugSession): Timeline {
-    const events = session.getEvents();
-
+  public build(
+    session: DebugSession,
+    options: TimelineBuildOptions = {},
+  ): Timeline {
+    const includeEmptyRules = options.includeEmptyRules ?? true;
     const pluginMap = new Map<string, MutableTimelinePlugin>();
+    let activeRule: ActiveRuleExecution | undefined;
 
-    for (const event of events) {
-      if (event.type !== "rule:finished") {
-        continue;
+    const appendRule = (execution: ActiveRuleExecution): void => {
+      if (!includeEmptyRules && execution.matches.length === 0) {
+        return;
       }
 
-      let plugin = pluginMap.get(event.plugin);
+      let plugin = pluginMap.get(execution.plugin);
 
       if (!plugin) {
         plugin = {
-          name: event.plugin,
+          name: execution.plugin,
           rules: [],
         };
-
-        pluginMap.set(event.plugin, plugin);
+        pluginMap.set(execution.plugin, plugin);
       }
 
-      const matches = events
-        .filter(
-          (e): e is MatchFoundEvent =>
-            e.type === "match:found" &&
-            e.plugin === event.plugin &&
-            e.rule === event.rule,
-        )
-        .map((e) => e.match);
-
       plugin.rules.push({
-        name: event.rule,
-        matches,
+        name: execution.rule,
+        matches: execution.matches,
       });
+    };
+
+    for (const event of session.getEvents()) {
+      if (event.type === "rule:started") {
+        activeRule = {
+          plugin: event.plugin,
+          rule: event.rule,
+          matches: [],
+        };
+        continue;
+      }
+
+      if (event.type === "match:found" && activeRule) {
+        if (
+          event.plugin === activeRule.plugin &&
+          event.rule === activeRule.rule
+        ) {
+          activeRule.matches.push(event.match);
+        }
+        continue;
+      }
+
+      if (event.type === "rule:finished" && activeRule) {
+        if (
+          event.plugin === activeRule.plugin &&
+          event.rule === activeRule.rule
+        ) {
+          appendRule(activeRule);
+          activeRule = undefined;
+        }
+      }
     }
 
     return {

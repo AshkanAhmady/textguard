@@ -1,9 +1,12 @@
-import { PerformanceBuilder } from "../builders";
+import { PerformanceBuilder, SignalEventsBuilder } from "../builders";
 import type { DebugEvent } from "../events";
 import type { Match } from "../../domain/match";
 import type { DebugStatistics } from "./DebugStatistics";
 import type { PerformanceReport } from "./PerformanceReport";
-import { TimelineBuilder } from "../builders/TimelineBuilder";
+import {
+  TimelineBuilder,
+  type TimelineBuildOptions,
+} from "../builders/TimelineBuilder";
 import { DebugReportBuilder } from "../builders/DebugReportBuilder";
 
 import type { Timeline } from "./Timeline";
@@ -54,6 +57,10 @@ export class DebugSession {
 
   public getEvents(): readonly DebugEvent[] {
     return this.events;
+  }
+
+  public getSignalEvents(): readonly DebugEvent[] {
+    return new SignalEventsBuilder().build(this);
   }
 
   public statistics(): DebugStatistics {
@@ -107,8 +114,8 @@ export class DebugSession {
     return new PerformanceBuilder().build(this);
   }
 
-  public timeline(): Timeline {
-    return new TimelineBuilder().build(this);
+  public timeline(options: TimelineBuildOptions = {}): Timeline {
+    return new TimelineBuilder().build(this, options);
   }
 
   public report(): DebugReport {

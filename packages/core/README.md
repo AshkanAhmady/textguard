@@ -72,14 +72,16 @@ const session = filter.debug("some input");
 session.getInput();
 session.getNormalizedInput();
 session.getMatches();
-session.getEvents();
+session.getEvents(); // complete raw execution trace
+session.getSignalEvents(); // concise activity projection
 session.statistics();
-session.timeline();
+session.timeline(); // complete rule timeline
+session.timeline({ includeEmptyRules: false }); // matched rules only
 session.performance();
 session.report();
 ```
 
-Debug events include rule execution and explicit match lifecycle events (`match:found`, `match:accepted`, and `match:rejected`).
+Debug events include rule execution and explicit match lifecycle events (`match:found`, `match:accepted`, and `match:rejected`). The raw trace remains the canonical diagnostic record. `getSignalEvents()` is an opt-in projection for normal developer-facing views: it keeps pipeline boundaries and all match lifecycle events, plus lifecycle context only for plugins and rules that produced match activity.
 
 ## Editor diagnostics adapter
 

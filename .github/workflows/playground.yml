@@ -4,15 +4,14 @@ on:
   pull_request:
     paths:
       - "integrations/playground/**"
+      - "packages/core/**"
+      - "packages/all/**"
       - ".github/workflows/playground.yml"
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: integrations/playground
 
     steps:
       - name: Checkout
@@ -23,11 +22,27 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build workspace packages
+        run: pnpm build
+
+      - name: Install Playground dependencies
+        working-directory: integrations/playground
         run: npm install
 
+      - name: Overlay current TextGuard packages
+        working-directory: integrations/playground
+        run: npm install --no-save ../../packages/core ../../packages/all
+
       - name: Type check
+        working-directory: integrations/playground
         run: npm run check-types
 
       - name: Build
+        working-directory: integrations/playground
         run: npm run build
