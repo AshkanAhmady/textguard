@@ -14,6 +14,7 @@
     "release": "pnpm release:check && pnpm build && changeset publish",
     "test": "vitest",
     "coverage": "vitest run --coverage",
+    "benchmark:quality": "pnpm build && node scripts/benchmark-quality.mjs",
     "format:check": "prettier --check \"**/*.{ts,tsx,md}\"",
     "prepare": "husky",
     "pre-commit": "lint-staged"
