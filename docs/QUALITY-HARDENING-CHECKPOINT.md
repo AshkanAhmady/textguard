@@ -11,6 +11,7 @@ This checkpoint records the evidence-backed Quality Hardening work triggered by 
 - **Common English leetspeak bypasses — fixed for reproduced cases.** `strictPreset` and `enterprisePreset` now use the existing English leetspeak mapping. The English `shit` dictionary typo discovered by CI was also corrected.
 - **Latin substring false positives — fixed for reproduced cases.** Latin string dictionary rules use script-aware outer boundaries, closing cases such as `Scunthorpe` and `class assignment` while preserving internal punctuation/spacing/repetition obfuscation and existing Persian derivational behavior.
 - **Sentence/context robustness — fixed for reproduced Persian and English cases.** Public Playground torture tests showed that isolated profanity could be detected while realistic surrounding sentence context produced sparse or misleading matches. Generated string dictionary rules now use bounded separator grammar instead of unbounded gaps: ordinary separators are capped per gap while Kashida keeps a separate larger budget and repeated expected letters remain supported. English Email/URL language-pack patterns were also corrected from regex source strings to explicit `RegExp` entries so pattern syntax is never processed as an obfuscated dictionary word.
+- **Aggregate Playground vocabulary coverage — fixed for reproduced cases.** The public `strictPreset` is now regression-tested end to end against the exact mixed English/Persian sentence shapes that exposed missing matches. English adds standalone `ass` while preserving Latin boundary protection against benign substrings such as `class assignment`; Persian adds explicit colloquial forms observed in the Playground instead of broadening Persian morphology globally. The Pages workflow overlays both current `@textguard/en` and `@textguard/fa` and runs an aggregate smoke assertion before deployment.
 - **Explain detector provenance — fixed.** Official structured-data detector rules use explicit precedence ahead of generic dictionary privacy patterns, so equal-span Email/URL/Phone/IP/UUID/Credit Card/IBAN matches retain specialist provenance.
 - **Debug Execution Timeline noise — fixed at the developer-facing projection layer.** Raw events remain available for backward-compatible deep diagnostics. `getSignalEvents()` provides concise activity, and Playground displays signal events while still exposing the raw event count.
 - **Timeline projection duplication/noise — fixed.** Timeline construction is now single-pass and associates matches with the actual sequential rule execution segment, avoiding collisions between many rules sharing the display name `Dictionary Rule`. Playground uses `timeline({ includeEmptyRules: false })` and renders a compact plugin/rule/match-count/range projection.
@@ -37,6 +38,7 @@ The pending Changesets on `main` cover these public packages:
 - `@textguard/core` — patch
 - `@textguard/all` — patch
 - `@textguard/en` — patch
+- `@textguard/fa` — patch
 - `@textguard/plugin-email` — patch
 - `@textguard/plugin-url` — patch
 - `@textguard/plugin-phone` — patch
@@ -45,9 +47,9 @@ The pending Changesets on `main` cover these public packages:
 - `@textguard/plugin-credit-card` — patch
 - `@textguard/plugin-iban` — patch
 
-The sentence/context hardening adds release impact to `@textguard/core` and `@textguard/en`, which were already part of the checkpoint candidate set; it does not expand the package list.
+The latest aggregate Playground coverage fix expands the candidate set by `@textguard/fa` because the Persian language package itself gains explicit observed variants. `@textguard/en` was already part of the checkpoint candidate set.
 
-Current published versions before this checkpoint are `@textguard/core@1.1.0`, `@textguard/all@1.1.2`, `@textguard/en@1.0.2`, and the seven listed detector packages at `1.0.2`. Subject to `pnpm release:plan` being identical, expected next versions remain `@textguard/core@1.1.1`, `@textguard/all@1.1.3`, `@textguard/en@1.0.3`, and detector packages at `1.0.3`.
+Current published versions before this checkpoint are `@textguard/core@1.1.0`, `@textguard/all@1.1.2`, `@textguard/en@1.0.2`, `@textguard/fa@1.0.2`, and the seven listed detector packages at `1.0.2`. Subject to `pnpm release:plan` being identical, expected next versions are therefore `@textguard/core@1.1.1`, `@textguard/all@1.1.3`, `@textguard/en@1.0.3`, `@textguard/fa@1.0.3`, and detector packages at `1.0.3`.
 
 Do not publish any package that is not surfaced by the repository release plan.
 
