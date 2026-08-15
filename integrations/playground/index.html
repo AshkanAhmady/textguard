@@ -28,15 +28,18 @@
           <button id="load-example" type="button">Load example</button>
         </div>
 
-        <div class="toolbar">
-          <label>
-            Preset
-            <select id="preset">
-              <option value="strict">Strict</option>
-              <option value="enterprise">Enterprise</option>
-              <option value="socialMedia">Social Media</option>
-            </select>
-          </label>
+        <div class="toolbar preset-toolbar">
+          <div class="preset-control">
+            <label>
+              Preset
+              <select id="preset" aria-describedby="preset-help">
+                <option value="strict">Default moderation (recommended)</option>
+                <option value="enterprise">Enterprise data protection</option>
+                <option value="socialMedia">Social & multilingual moderation</option>
+              </select>
+            </label>
+            <p id="preset-help" class="preset-help">Balanced default for profanity and multilingual moderation using TextGuard's strictPreset API.</p>
+          </div>
           <div class="toolbar-actions">
             <button id="share" type="button">Copy share link</button>
             <button id="scan" type="button">Scan text</button>
