@@ -9,6 +9,16 @@ on:
       - "package.json"
       - "docs/QUALITY-BENCHMARK.md"
       - ".github/workflows/quality-benchmark.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/core/**"
+      - "packages/all/**"
+      - "scripts/benchmark-quality.mjs"
+      - "package.json"
+      - "docs/QUALITY-BENCHMARK.md"
+      - ".github/workflows/quality-benchmark.yml"
   workflow_dispatch:
 
 jobs:
@@ -30,6 +40,9 @@ jobs:
 
       - name: Install
         run: pnpm install --frozen-lockfile
+
+      - name: Build benchmark packages
+        run: pnpm build
 
       - name: Run quality benchmark
         run: pnpm benchmark:quality | tee quality-benchmark.json
