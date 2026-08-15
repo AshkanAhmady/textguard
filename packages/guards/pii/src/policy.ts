@@ -4,6 +4,7 @@ export interface PiiSuppression {
   path: string;
   type?: PiiType;
   matchedText?: string;
+  matchedTextPattern?: string;
 }
 
 export interface PiiPolicyConfig {
@@ -63,6 +64,12 @@ export function isFindingAllowed(
     if (
       suppression.matchedText &&
       suppression.matchedText !== finding.matchedText
+    ) {
+      return false;
+    }
+    if (
+      suppression.matchedTextPattern &&
+      !new RegExp(suppression.matchedTextPattern).test(finding.matchedText)
     ) {
       return false;
     }

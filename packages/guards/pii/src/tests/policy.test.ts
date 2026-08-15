@@ -53,6 +53,36 @@ describe("PII policy", () => {
     ).toEqual({ clean: true, findings: [] });
   });
 
+  it("supports pattern-scoped suppressions without broad path ignores", () => {
+    const changesetHash = ["329", "5454"].join("");
+    const phoneDetected: ScanResult = {
+      clean: false,
+      findings: [
+        {
+          type: "phone",
+          matchedText: changesetHash,
+          start: 2,
+          end: 9,
+        },
+      ],
+    };
+    const config = {
+      suppressions: [
+        {
+          path: "**/CHANGELOG.md",
+          type: "phone" as const,
+          matchedTextPattern: "^\\d{7}$",
+        },
+      ],
+    };
+
+    expect(applyPolicy("packages/core/CHANGELOG.md", phoneDetected, config)).toEqual({
+      clean: true,
+      findings: [],
+    });
+    expect(applyPolicy("src/contact.txt", phoneDetected, config)).toEqual(phoneDetected);
+  });
+
   it("supports single and recursive wildcard path matching", () => {
     expect(pathMatches("src/*.ts", "src/index.ts")).toBe(true);
     expect(pathMatches("src/*.ts", "src/nested/index.ts")).toBe(false);
