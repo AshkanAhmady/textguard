@@ -2,4 +2,4 @@
 "@textguard/core": patch
 ---
 
-Use Unicode-aware outer boundaries for string dictionary matching so benign larger words are not flagged while internal spacing, punctuation, join controls, and repeated-character obfuscations remain detectable.
+Use script-aware outer boundaries for Latin string dictionary matching so benign larger words are not flagged while internal obfuscation remains detectable and existing Persian/Arabic morphology stays backward compatible.
