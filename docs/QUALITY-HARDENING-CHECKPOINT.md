@@ -10,6 +10,7 @@ This checkpoint records the evidence-backed Quality Hardening work triggered by 
 - **Invisible Unicode / full-width bypasses — fixed for reproduced cases.** Built-in Unicode normalization uses NFKC and removes U+200B ZERO WIDTH SPACE, U+2060 WORD JOINER, and U+FEFF BOM/ZWNBSP while preserving original ranges. ZWNJ/ZWJ are not globally stripped because they are meaningful in Persian/Arabic; dictionary matching handles tested internal join-control obfuscation without destructive normalization.
 - **Common English leetspeak bypasses — fixed for reproduced cases.** `strictPreset` and `enterprisePreset` now use the existing English leetspeak mapping. The English `shit` dictionary typo discovered by CI was also corrected.
 - **Latin substring false positives — fixed for reproduced cases.** Latin string dictionary rules use script-aware outer boundaries, closing cases such as `Scunthorpe` and `class assignment` while preserving internal punctuation/spacing/repetition obfuscation and existing Persian derivational behavior.
+- **Sentence/context robustness — fixed for reproduced Persian and English cases.** Public Playground torture tests showed that isolated profanity could be detected while realistic surrounding sentence context produced sparse or misleading matches. Generated string dictionary rules now use bounded per-gap separators plus a total match-density guard, preventing short words from stretching across unrelated context and suppressing legitimate nearby matches. English Email/URL language-pack patterns were also corrected from regex source strings to explicit `RegExp` entries so pattern syntax is never processed as an obfuscated dictionary word.
 - **Explain detector provenance — fixed.** Official structured-data detector rules use explicit precedence ahead of generic dictionary privacy patterns, so equal-span Email/URL/Phone/IP/UUID/Credit Card/IBAN matches retain specialist provenance.
 - **Debug Execution Timeline noise — fixed at the developer-facing projection layer.** Raw events remain available for backward-compatible deep diagnostics. `getSignalEvents()` provides concise activity, and Playground displays signal events while still exposing the raw event count.
 - **Timeline projection duplication/noise — fixed.** Timeline construction is now single-pass and associates matches with the actual sequential rule execution segment, avoiding collisions between many rules sharing the display name `Dictionary Rule`. Playground uses `timeline({ includeEmptyRules: false })` and renders a compact plugin/rule/match-count/range projection.
@@ -31,7 +32,7 @@ Interpretation: the reproduced Debug problem was primarily a developer-facing si
 
 ## Pending Changesets / expected release scope
 
-The pending Changesets on `main` cover exactly these public packages:
+The pending Changesets on `main` cover these public packages:
 
 - `@textguard/core` — patch
 - `@textguard/all` — patch
@@ -44,7 +45,9 @@ The pending Changesets on `main` cover exactly these public packages:
 - `@textguard/plugin-credit-card` — patch
 - `@textguard/plugin-iban` — patch
 
-Current published versions before this checkpoint are `@textguard/core@1.1.0`, `@textguard/all@1.1.2`, `@textguard/en@1.0.2`, and the seven listed detector packages at `1.0.2`. Subject to `pnpm release:plan` being identical, expected next versions are therefore `@textguard/core@1.1.1`, `@textguard/all@1.1.3`, `@textguard/en@1.0.3`, and detector packages at `1.0.3`.
+The sentence/context hardening adds release impact to `@textguard/core` and `@textguard/en`, which were already part of the checkpoint candidate set; it does not expand the package list.
+
+Current published versions before this checkpoint are `@textguard/core@1.1.0`, `@textguard/all@1.1.2`, `@textguard/en@1.0.2`, and the seven listed detector packages at `1.0.2`. Subject to `pnpm release:plan` being identical, expected next versions remain `@textguard/core@1.1.1`, `@textguard/all@1.1.3`, `@textguard/en@1.0.3`, and detector packages at `1.0.3`.
 
 Do not publish any package that is not surfaced by the repository release plan.
 
@@ -55,8 +58,8 @@ Do not publish any package that is not surfaced by the repository release plan.
 3. Open and merge the release-generated PR.
 4. Publish only the npm candidates surfaced by the release guard.
 5. Update `textguard-consumer-validation/main` to the newly published versions.
-6. Run the full original integration matrix plus the adversarial Quality Hardening matrix and published-artifact benchmark.
-7. Redeploy/smoke-test the public Playground and manually repeat the original torture cases.
+6. Run the full original integration matrix plus the adversarial Quality Hardening matrix, sentence/context matrix, and published-artifact benchmark.
+7. Redeploy/smoke-test the public Playground and manually repeat the original torture cases in isolated and sentence context.
 8. Only after all gates are green, update `textguard-roadmap.md` and `TEXTGUARD-PROJECT.md` from "Quality Hardening active" to "Quality checkpoint accepted" and resume Launch Surface.
 
 ## Remaining acknowledged limitations
