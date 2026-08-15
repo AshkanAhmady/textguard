@@ -5,6 +5,14 @@ import { Rule } from "../domain/rule";
 import { isOverlapped, isWhitelisted } from "../engine/helpers";
 import { buildWordRegex } from "../engine/buildWordRegex";
 
+function exceedsGeneratedMatchSpan(word: string, matchedText: string): boolean {
+  const wordLength = Array.from(word).length;
+  const matchedLength = Array.from(matchedText).length;
+  const maxMatchedLength = wordLength * 2 + 2;
+
+  return matchedLength > maxMatchedLength;
+}
+
 export class DictionaryRule implements Rule {
   readonly id = "dictionary";
   readonly name = "Dictionary Rule";
@@ -68,6 +76,10 @@ export class DictionaryRule implements Rule {
       const matchedText = match[0];
       const start = match.index;
       const end = start + matchedText.length;
+
+      if (exceedsGeneratedMatchSpan(this.entry.word, matchedText)) {
+        continue;
+      }
 
       if (isWhitelisted(state.whitelist, matchedText, text, start, end)) {
         continue;
