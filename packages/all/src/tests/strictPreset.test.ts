@@ -58,4 +58,33 @@ describe("strictPreset", () => {
 
     expect(matchedText).toEqual(expect.arrayContaining(["کیر", "دیوث", "احمق"]));
   });
+
+  it("covers the English Playground sentence end to end through strictPreset", () => {
+    const filter = createFilter(strictPreset);
+    const input = "son of the betch mother fucker i want to put my deck to your ass and pussy asshole";
+    const matchedText = filter
+      .findBadWords(input)
+      .map((match) => match.matchedText.toLowerCase());
+
+    expect(matchedText).toEqual(
+      expect.arrayContaining([
+        "betch",
+        "mother fucker",
+        "deck",
+        "ass",
+        "pussy",
+        "asshole",
+      ]),
+    );
+  });
+
+  it("covers common Persian Playground variants through strictPreset", () => {
+    const filter = createFilter(strictPreset);
+    const input = "خارمادرتو گاییم کسکش خارکسده کیرم تو ناموست";
+    const matchedText = filter.findBadWords(input).map((match) => match.matchedText);
+
+    expect(matchedText).toEqual(
+      expect.arrayContaining(["خارمادر", "گاییم", "کسکش", "خارکسده", "کیر"]),
+    );
+  });
 });

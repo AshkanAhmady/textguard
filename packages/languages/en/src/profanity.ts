@@ -11,6 +11,7 @@ export const enProfanity: Dictionary = {
     { word: "shit", severity: "high", category: "profanity" },
     { word: "bitch", severity: "high", category: "profanity" },
     { word: "betch", severity: "high", category: "profanity" },
+    { word: "ass", severity: "high", category: "profanity" },
     { word: "asshole", severity: "high", category: "profanity" },
     { word: "cunt", severity: "high", category: "profanity" },
     { word: "pussy", severity: "high", category: "profanity" },

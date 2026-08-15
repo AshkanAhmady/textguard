@@ -9,6 +9,7 @@ on:
       - "packages/core/**"
       - "packages/all/**"
       - "packages/languages/en/**"
+      - "packages/languages/fa/**"
       - "packages/detection/email/**"
       - "packages/detection/url/**"
       - "packages/detection/phone/**"
@@ -61,6 +62,7 @@ jobs:
           npm install --no-save
           ../../packages/core
           ../../packages/languages/en
+          ../../packages/languages/fa
           ../../packages/detection/email
           ../../packages/detection/url
           ../../packages/detection/phone
@@ -69,6 +71,30 @@ jobs:
           ../../packages/detection/credit-card
           ../../packages/detection/iban
           ../../packages/all
+
+      - name: Smoke current aggregate preset
+        working-directory: integrations/playground
+        run: |
+          node --input-type=module <<'NODE'
+          import { createFilter, strictPreset } from "@textguard/all";
+
+          const filter = createFilter(strictPreset);
+          const english = "son of the betch mother fucker i want to put my deck to your ass and pussy asshole";
+          const englishMatches = filter.findBadWords(english).map((match) => match.matchedText.toLowerCase());
+          for (const expected of ["betch", "mother fucker", "deck", "ass", "pussy", "asshole"]) {
+            if (!englishMatches.includes(expected)) {
+              throw new Error(`Playground source overlay missed English match: ${expected}; got ${JSON.stringify(englishMatches)}`);
+            }
+          }
+
+          const persian = "خارمادرتو گاییم کسکش خارکسده کیرم تو ناموست";
+          const persianMatches = filter.findBadWords(persian).map((match) => match.matchedText);
+          for (const expected of ["خارمادر", "گاییم", "کسکش", "خارکسده", "کیر"]) {
+            if (!persianMatches.includes(expected)) {
+              throw new Error(`Playground source overlay missed Persian match: ${expected}; got ${JSON.stringify(persianMatches)}`);
+            }
+          }
+          NODE
 
       - name: Type check
         working-directory: integrations/playground
