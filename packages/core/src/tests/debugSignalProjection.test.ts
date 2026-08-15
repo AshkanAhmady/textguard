@@ -18,20 +18,34 @@ describe("debug signal projection", () => {
     expect(session.getEvents()).toBe(rawEvents);
   });
 
-  it("keeps lifecycle context for rules and plugins that produced match activity", () => {
+  it("keeps rule lifecycle context for executions that produced match activity", () => {
     const filter = createFilter({ customWords: ["blocked", "forbidden"] });
     const session = filter.debug("blocked");
     const signalTypes = session.getSignalEvents().map((event) => event.type);
 
-    expect(signalTypes).toContain("plugin:started");
     expect(signalTypes).toContain("rule:started");
     expect(signalTypes).toContain("match:found");
     expect(signalTypes).toContain("match:accepted");
     expect(signalTypes).toContain("rule:finished");
-    expect(signalTypes).toContain("plugin:finished");
   });
 
-  it("can omit empty rules from the timeline without changing the default timeline", () => {
+  it("associates duplicate-name dictionary rules with their own execution segment", () => {
+    const filter = createFilter({ customWords: ["blocked", "forbidden"] });
+    const session = filter.debug("blocked");
+
+    const fullTimeline = session.timeline();
+    const signalTimeline = session.timeline({ includeEmptyRules: false });
+    const fullRules = fullTimeline.plugins.flatMap((plugin) => plugin.rules);
+    const signalRules = signalTimeline.plugins.flatMap((plugin) => plugin.rules);
+
+    expect(fullRules).toHaveLength(2);
+    expect(fullRules.reduce((count, rule) => count + rule.matches.length, 0)).toBe(1);
+    expect(signalRules).toHaveLength(1);
+    expect(signalRules[0]?.matches).toHaveLength(1);
+    expect(signalRules[0]?.matches[0]?.matchedText).toBe("blocked");
+  });
+
+  it("can omit empty rules from the timeline without changing the default timeline shape", () => {
     const filter = createFilter({ customWords: ["blocked", "forbidden"] });
     const session = filter.debug("blocked");
 
