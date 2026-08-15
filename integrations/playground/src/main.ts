@@ -141,6 +141,14 @@ function render(): void {
   const rawEvents = debugSession.getEvents();
   const events = debugSession.getSignalEvents();
   const timeline = debugSession.timeline({ includeEmptyRules: false });
+  const timelineProjection = timeline.plugins.map((plugin) => ({
+    plugin: plugin.name,
+    matchedRules: plugin.rules.map((rule) => ({
+      rule: rule.name,
+      matchCount: rule.matches.length,
+      ranges: rule.matches.map((match) => [match.start, match.end]),
+    })),
+  }));
 
   matchCount.textContent = String(result.matches.length);
   status.textContent = result.matches.length > 0 ? "Matches found" : "Clean";
@@ -150,7 +158,7 @@ function render(): void {
   debugEvents.replaceChildren();
   explainCount.textContent = `${explanation.summary.matchCount} explanation${explanation.summary.matchCount === 1 ? "" : "s"}`;
   debugCount.textContent = `${events.length} signal event${events.length === 1 ? "" : "s"} · ${rawEvents.length} raw`;
-  debugTimeline.textContent = JSON.stringify(timeline, null, 2);
+  debugTimeline.textContent = JSON.stringify(timelineProjection, null, 2);
 
   if (result.matches.length === 0) renderEmpty(matches, "No matches found.");
   else for (const match of result.matches) {
