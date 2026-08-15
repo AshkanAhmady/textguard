@@ -3,6 +3,7 @@ import { describe, it, expect } from "vitest";
 import { enProfanity } from "../profanity";
 import { enInsults } from "../insults";
 import { enLeetspeakMapping } from "../leetspeak";
+import { enDictionary, enPatterns } from "../index";
 
 describe("TextGuard Engine - English & Leetspeak Detection", () => {
   const filterEngine = createFilter({
@@ -23,6 +24,31 @@ describe("TextGuard Engine - English & Leetspeak Detection", () => {
   it("detects the canonical English profanity entry and its leetspeak form", () => {
     expect(filterEngine.hasBadWord("shit")).toBe(true);
     expect(filterEngine.hasBadWord("sh1t")).toBe(true);
+  });
+
+  it("keeps profanity visible inside ordinary sentence context", () => {
+    const matches = filterEngine.findBadWords(
+      "This sentence contains fuck and asshole among otherwise ordinary words.",
+    );
+    const matchedText = matches.map((match) => match.matchedText);
+
+    expect(matchedText).toEqual(expect.arrayContaining(["fuck", "asshole"]));
+  });
+
+  it("keeps English structured patterns as explicit RegExp entries", () => {
+    expect(enPatterns.words.every((entry) => entry.word instanceof RegExp)).toBe(true);
+  });
+
+  it("does not synthesize broad matches from pattern source text in clean English", () => {
+    const guard = createFilter({
+      dictionaries: [enDictionary],
+      leetspeakMapping: enLeetspeakMapping,
+    });
+    const matches = guard.findBadWords(
+      "You are very kind because you seem nice and this ordinary sentence has no profanity.",
+    );
+
+    expect(matches).toHaveLength(0);
   });
 
   it("should ignore overlapped matches", () => {

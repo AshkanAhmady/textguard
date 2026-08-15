@@ -18,6 +18,7 @@ describe("dictionary boundary hardening", () => {
     "f u c k",
     "f-u-c-k",
     "f_u_c_k",
+    "f-u=c--k",
     "f\u200cu\u200cc\u200ck",
     "f\u200du\u200dc\u200dk",
     "fuuuck",
@@ -50,5 +51,54 @@ describe("dictionary boundary hardening", () => {
     const filter = createFilter({ customWords: ["احمق"] });
 
     expect(filter.hasBadWord("این یک متن احمقانه است")).toBe(true);
+  });
+
+  it.each([
+    ["fuck", "This sentence keeps fuck detectable inside ordinary context."],
+    ["کیر", "این یک جمله آزمایشی است که کلمه کیر را در میانه متن دارد."],
+    ["دیوث", "در این جمله آزمایشی واژه دیوث بین کلمات عادی قرار گرفته است."],
+  ] as const)("keeps %s detectable inside sentence context", (word, input) => {
+    const filter = createFilter({ customWords: [word] });
+    const matches = filter.filter(input).matches;
+
+    expect(matches.some((match) => match.matchedText === word)).toBe(true);
+  });
+
+  it("rejects a single-token match that steals its final character from the next word", () => {
+    const filter = createFilter({ customWords: ["کیر", "کیرر"] });
+    const matchedText = filter
+      .findBadWords("این کلمه کیر را در جمله نگه می‌دارد")
+      .map((match) => match.matchedText);
+
+    expect(matchedText).toContain("کیر");
+    expect(matchedText).not.toContain("کیر ر");
+  });
+
+  it("does not synthesize a short Persian profanity across a long separator run", () => {
+    const filter = createFilter({ customWords: ["کس"] });
+
+    expect(filter.hasBadWord("ک @|--++ س")).toBe(false);
+  });
+
+  it("keeps several Persian matches independently visible inside one sentence", () => {
+    const filter = createFilter({ customWords: ["کیر", "دیوث", "احمق"] });
+    const input = "این متن آزمایشی چند واژه کیر و دیوث و احمق را میان کلمات معمولی قرار می‌دهد.";
+    const matchedText = filter.filter(input).matches.map((match) => match.matchedText);
+
+    expect(matchedText).toEqual(expect.arrayContaining(["کیر", "دیوث", "احمق"]));
+  });
+
+  it("treats whitespace inside dictionary phrases as phrase structure, not an obfuscation slot", () => {
+    const filter = createFilter({ customWords: ["خرید فالوور"] });
+
+    expect(filter.hasBadWord("برای خرید فالوور پیام بده")).toBe(true);
+    expect(filter.hasBadWord("خرید   فالوور")).toBe(true);
+    expect(filter.hasBadWord("خریدددد ففففالوور")).toBe(true);
+  });
+
+  it("does not let a phrase dictionary entry bridge unrelated sentence tokens", () => {
+    const filter = createFilter({ customWords: ["کار در منزل با حقوق بالا"] });
+
+    expect(filter.hasBadWord("کار امروز تمام شد و در منزل استراحت کردم اما حقوق من بالا نرفت")).toBe(false);
   });
 });
