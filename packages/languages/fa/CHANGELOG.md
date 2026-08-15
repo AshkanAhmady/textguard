@@ -1,5 +1,11 @@
 # @textguard/fa
 
+## 1.0.3
+
+### Patch Changes
+
+- 732be08: Expand English and Persian sentence-level profanity coverage from public Playground findings, including standalone `ass` and common observed Persian colloquial variants.
+
 ## 1.0.2
 
 ### Patch Changes

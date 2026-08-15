@@ -1,5 +1,11 @@
 # @textguard/all
 
+## 1.1.3
+
+### Patch Changes
+
+- 13d852b: Enable the English leetspeak mapping in the strict and enterprise presets so common symbol and digit obfuscations are detected by default on those surfaces, and correct the canonical English profanity dictionary entry used by both plain and leetspeak matching.
+
 ## 1.1.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@textguard/plugin-url",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Official URL Detection Plugin for TextGuard",
   "type": "module",
   "main": "./dist/index.cjs",

@@ -40,24 +40,32 @@ function packWorkspacePackage(packageDir, tempRoot, packageName) {
   return tarball;
 }
 
-const corePackageDir = resolve(import.meta.dirname, "../../packages/core");
-const piiPackageDir = resolve(import.meta.dirname, "../../packages/guards/pii");
+const workspacePackages = [
+  ["Core", "../../packages/core"],
+  ["Email", "../../packages/detection/email"],
+  ["Phone", "../../packages/detection/phone"],
+  ["Credit Card", "../../packages/detection/credit-card"],
+  ["IBAN", "../../packages/detection/iban"],
+  ["PII", "../../packages/guards/pii"],
+];
+
 const tempRoot = mkdtempSync(join(tmpdir(), "textguard-pii-e2e-"));
 const consumerDir = join(tempRoot, "consumer");
 mkdirSync(consumerDir, { recursive: true });
 
 try {
-  // Pack Core alongside PII so release PRs can validate an external consumer
-  // before the new Core version exists on npm.
-  const coreTarball = packWorkspacePackage(corePackageDir, tempRoot, "Core");
-  const piiTarball = packWorkspacePackage(piiPackageDir, tempRoot, "PII");
+  // Pack every internal runtime dependency alongside PII so release PRs can
+  // validate an external consumer before any candidate version exists on npm.
+  const tarballs = workspacePackages.map(([packageName, relativePath]) =>
+    packWorkspacePackage(resolve(import.meta.dirname, relativePath), tempRoot, packageName),
+  );
 
   run("git", ["init"], consumerDir);
   run("git", ["config", "user.name", "TextGuard E2E"], consumerDir);
   run("git", ["config", "user.email", "textguard-e2e@example.invalid"], consumerDir);
   run("npm", ["init", "-y"], consumerDir);
   writeFileSync(join(consumerDir, ".gitignore"), "node_modules/\n");
-  run("npm", ["install", "-D", coreTarball, piiTarball, "husky@9"], consumerDir);
+  run("npm", ["install", "-D", ...tarballs, "husky@9"], consumerDir);
   run("npx", ["husky", "init"], consumerDir);
   run("npx", ["textguard-pii", "init"], consumerDir);
 
