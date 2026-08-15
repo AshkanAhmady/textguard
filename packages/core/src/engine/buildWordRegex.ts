@@ -6,7 +6,7 @@ export interface BuildWordRegexOptions {
 }
 
 const latinLetter = /\p{Script=Latin}/u;
-const MAX_INTERNAL_SEPARATOR_LENGTH = 4;
+const MAX_INTERNAL_SEPARATOR_LENGTH = 2;
 
 export function buildWordRegex(
   word: string,
