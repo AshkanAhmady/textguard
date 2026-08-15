@@ -42,4 +42,20 @@ describe("strictPreset", () => {
     expect(matches.some((match) => match.word === word)).toBe(true);
     expect(matches.some((match) => match.matchedText === sample)).toBe(true);
   });
+
+  it("keeps a known Persian profanity visible inside realistic sentence context", () => {
+    const filter = createFilter(strictPreset);
+    const input = "این یک جمله آزمایشی است که کلمه کیر را در میانه متن دارد.";
+    const matches = filter.findBadWords(input);
+
+    expect(matches.some((match) => match.matchedText === "کیر")).toBe(true);
+  });
+
+  it("keeps multiple known Persian matches independently visible in one sentence", () => {
+    const filter = createFilter(strictPreset);
+    const input = "این متن آزمایشی چند واژه کیر و دیوث و احمق را میان کلمات معمولی قرار می‌دهد.";
+    const matchedText = filter.findBadWords(input).map((match) => match.matchedText);
+
+    expect(matchedText).toEqual(expect.arrayContaining(["کیر", "دیوث", "احمق"]));
+  });
 });
