@@ -77,4 +77,18 @@ describe("dictionary boundary hardening", () => {
 
     expect(matchedText).toEqual(expect.arrayContaining(["کیر", "دیوث", "احمق"]));
   });
+
+  it("treats whitespace inside dictionary phrases as phrase structure, not an obfuscation slot", () => {
+    const filter = createFilter({ customWords: ["خرید فالوور"] });
+
+    expect(filter.hasBadWord("برای خرید فالوور پیام بده")).toBe(true);
+    expect(filter.hasBadWord("خرید   فالوور")).toBe(true);
+    expect(filter.hasBadWord("خریدددد ففففالوور")).toBe(true);
+  });
+
+  it("does not let a phrase dictionary entry bridge unrelated sentence tokens", () => {
+    const filter = createFilter({ customWords: ["کار در منزل با حقوق بالا"] });
+
+    expect(filter.hasBadWord("کار امروز تمام شد و در منزل استراحت کردم اما حقوق من بالا نرفت")).toBe(false);
+  });
 });
