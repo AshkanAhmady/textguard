@@ -33,12 +33,12 @@
             <label>
               Preset
               <select id="preset" aria-describedby="preset-help">
-                <option value="strict">Default moderation (recommended)</option>
+                <option value="default">Default moderation (recommended)</option>
                 <option value="enterprise">Enterprise data protection</option>
                 <option value="socialMedia">Social & multilingual moderation</option>
               </select>
             </label>
-            <p id="preset-help" class="preset-help">Balanced default for profanity and multilingual moderation using TextGuard's strictPreset API.</p>
+            <p id="preset-help" class="preset-help">Balanced default for profanity, multilingual moderation, and official structured-data detectors using TextGuard's defaultPreset API.</p>
           </div>
           <div class="toolbar-actions">
             <button id="share" type="button">Copy share link</button>
@@ -69,44 +69,18 @@
         </div>
 
         <div class="results-grid">
-          <section>
-            <h2>Filtered output</h2>
-            <pre id="filtered">hello world</pre>
-          </section>
-          <section>
-            <h2>Matches</h2>
-            <ol id="matches" class="matches-list"><li class="empty">No matches found.</li></ol>
-          </section>
+          <section><h2>Filtered output</h2><pre id="filtered">hello world</pre></section>
+          <section><h2>Matches</h2><ol id="matches" class="matches-list"><li class="empty">No matches found.</li></ol></section>
         </div>
 
         <section class="explain-panel" aria-labelledby="explain-heading">
-          <div class="section-heading">
-            <div>
-              <p class="section-kicker">Explain API</p>
-              <h2 id="explain-heading">Why did TextGuard match?</h2>
-            </div>
-            <span class="explain-count" id="explain-count">0 explanations</span>
-          </div>
-          <ol id="explanations" class="explanations-list">
-            <li class="empty">No explanations available for clean text.</li>
-          </ol>
+          <div class="section-heading"><div><p class="section-kicker">Explain API</p><h2 id="explain-heading">Why did TextGuard match?</h2></div><span class="explain-count" id="explain-count">0 explanations</span></div>
+          <ol id="explanations" class="explanations-list"><li class="empty">No explanations available for clean text.</li></ol>
         </section>
 
         <section class="debug-panel" aria-labelledby="debug-heading">
-          <div class="section-heading">
-            <div>
-              <p class="section-kicker">Debug Engine</p>
-              <h2 id="debug-heading">Execution timeline</h2>
-            </div>
-            <span class="explain-count" id="debug-count">0 events</span>
-          </div>
-          <div class="debug-grid">
-            <ol id="debug-events" class="debug-events"><li class="empty">No debug events yet.</li></ol>
-            <div>
-              <h3>Timeline projection</h3>
-              <pre id="debug-timeline" class="debug-json">{}</pre>
-            </div>
-          </div>
+          <div class="section-heading"><div><p class="section-kicker">Debug Engine</p><h2 id="debug-heading">Execution timeline</h2></div><span class="explain-count" id="debug-count">0 events</span></div>
+          <div class="debug-grid"><ol id="debug-events" class="debug-events"><li class="empty">No debug events yet.</li></ol><div><h3>Timeline projection</h3><pre id="debug-timeline" class="debug-json">{}</pre></div></div>
         </section>
       </section>
     </main>
