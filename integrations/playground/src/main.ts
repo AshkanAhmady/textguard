@@ -41,6 +41,7 @@ const detectorElements = document.querySelectorAll<HTMLInputElement>("[data-dete
 const scanElement = document.querySelector<HTMLButtonElement>("#scan");
 const shareElement = document.querySelector<HTMLButtonElement>("#share");
 const shareStatusElement = document.querySelector<HTMLElement>("#share-status");
+const resultSummaryElement = document.querySelector<HTMLElement>(".result-summary");
 const matchCountElement = document.querySelector<HTMLElement>("#match-count");
 const statusElement = document.querySelector<HTMLElement>("#status");
 const filteredElement = document.querySelector<HTMLElement>("#filtered");
@@ -51,7 +52,7 @@ const debugCountElement = document.querySelector<HTMLElement>("#debug-count");
 const debugEventsElement = document.querySelector<HTMLOListElement>("#debug-events");
 const debugTimelineElement = document.querySelector<HTMLElement>("#debug-timeline");
 
-if (!inputElement || !presetElement || !presetHelpElement || !exampleElement || !loadExampleElement || !detectorControlsElement || !scanElement || !shareElement || !shareStatusElement || !matchCountElement || !statusElement || !filteredElement || !matchesElement || !explainCountElement || !explanationsElement || !debugCountElement || !debugEventsElement || !debugTimelineElement) {
+if (!inputElement || !presetElement || !presetHelpElement || !exampleElement || !loadExampleElement || !detectorControlsElement || !scanElement || !shareElement || !shareStatusElement || !resultSummaryElement || !matchCountElement || !statusElement || !filteredElement || !matchesElement || !explainCountElement || !explanationsElement || !debugCountElement || !debugEventsElement || !debugTimelineElement) {
   throw new Error("TextGuard playground failed to initialize.");
 }
 
@@ -64,6 +65,7 @@ const detectorControls = detectorControlsElement;
 const scan = scanElement;
 const share = shareElement;
 const shareStatus = shareStatusElement;
+const resultSummary = resultSummaryElement;
 const matchCount = matchCountElement;
 const status = statusElement;
 const filtered = filteredElement;
@@ -94,12 +96,17 @@ function hydrateFromUrl(): void {
   if (sharedPreset) preset.value = sharedPreset;
 }
 function updatePresetHelp(name: PresetName): void { presetHelp.textContent = presetDescriptions[name]; }
-function updateShareUrl(): void {
+async function copyShareUrl(): Promise<void> {
   const url = new URL(window.location.href);
   url.searchParams.set("preset", preset.value);
   url.searchParams.set("text", input.value);
   window.history.replaceState(null, "", url);
-  shareStatus.textContent = "Share URL updated. Copy it from the address bar.";
+  try {
+    await navigator.clipboard.writeText(url.toString());
+    shareStatus.textContent = "Share link copied.";
+  } catch {
+    shareStatus.textContent = "Share URL updated. Copy it from the address bar.";
+  }
 }
 function loadSelectedExample(): void {
   if (!isExampleName(example.value)) return;
@@ -155,7 +162,8 @@ function render(): void {
     })),
   }));
   matchCount.textContent = String(result.matches.length);
-  status.textContent = result.matches.length > 0 ? "Matches found" : "Clean";
+  status.textContent = result.matches.length > 0 ? "Review matches" : "Clean";
+  resultSummary.dataset.state = result.matches.length > 0 ? "matched" : "clean";
   filtered.textContent = result.filteredText;
   matches.replaceChildren();
   explanations.replaceChildren();
@@ -207,7 +215,7 @@ function render(): void {
 hydrateFromUrl();
 loadExample.addEventListener("click", loadSelectedExample);
 scan.addEventListener("click", render);
-share.addEventListener("click", updateShareUrl);
+share.addEventListener("click", () => { void copyShareUrl(); });
 preset.addEventListener("change", render);
 detectorElements.forEach((detector) => detector.addEventListener("change", render));
 render();
