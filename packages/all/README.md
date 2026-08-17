@@ -13,16 +13,18 @@ npm install @textguard/all
 ## Quick start
 
 ```ts
-import { createFilter, strictPreset } from "@textguard/all";
+import { createFilter, defaultPreset } from "@textguard/all";
 
-const filter = createFilter(strictPreset);
+const filter = createFilter(defaultPreset);
 const result = filter.filter("some text");
 
 console.log(result.filteredText);
 console.log(result.matches);
 ```
 
-`strictPreset` combines the Persian, English, and Arabic dictionaries with the official Email, URL, Phone, IP, UUID, Credit Card, and IBAN detection plugins.
+`defaultPreset` combines the Persian, English, and Arabic dictionaries with the official Email, URL, Phone, IP, UUID, Credit Card, and IBAN detection plugins.
+
+`strictPreset` remains exported as a backward-compatible deprecated alias for `defaultPreset` so existing integrations do not break.
 
 ## Explain and debug
 
@@ -57,17 +59,21 @@ The bundle also re-exports the public API from `@textguard/core`.
 
 ## Presets
 
-### `strictPreset`
+### `defaultPreset`
 
 The recommended ready-made preset for broad detection. It includes Persian, English, and Arabic moderation dictionaries plus the current structured-data detection plugins.
 
+### `strictPreset` — deprecated alias
+
+Kept for backward compatibility and currently references the exact same configuration object as `defaultPreset`. New integrations should use `defaultPreset`.
+
 ### `enterprisePreset`
 
-Currently has the same practical detector/dictionary composition as `strictPreset`, including Arabic moderation. Its future role remains tracked as technical debt.
+Currently has the same practical detector/dictionary composition as `defaultPreset`, including Arabic moderation. Its future role remains tracked as technical debt.
 
 ### `socialMediaPreset`
 
-Currently a placeholder. Prefer `strictPreset` or explicit options until it is implemented.
+Currently a placeholder. Prefer `defaultPreset` or explicit options until it is implemented.
 
 ## Build your own configuration
 
