@@ -5,13 +5,15 @@ Browser playground for trying TextGuard without writing integration code.
 ## Capabilities
 
 - paste or type text and scan it in the browser;
-- switch between `strict`, `enterprise`, and `socialMedia` presets;
+- switch between `default`, `enterprise`, and `socialMedia` presets;
 - load built-in example scenarios;
 - share the current text and preset through the page URL;
 - toggle individual Enterprise detectors for email, URL, phone, IP, UUID, credit card, and IBAN;
 - inspect filtered output and exact match ranges;
 - inspect structured Explain metadata for each match;
 - inspect Debug Engine event order and timeline output.
+
+`default` is the canonical newcomer-facing preset name. Legacy shared URLs containing `preset=strict` remain accepted and hydrate as `default` for backward compatibility.
 
 The Playground uses the same public TextGuard APIs and official detector packages used by application integrations. Detection, Explain, and Debug behavior is not reimplemented in the UI.
 
