@@ -6,7 +6,7 @@ Legend: ✅ Done · 🟡 Current / in progress · ⏸️ Evidence-gated
 
 ## Current position
 
-TextGuard has completed its current quality-hardening checkpoint and published the corrected npm release set. External consumer validation now exercises the published packages on Node 20/22, CLI, PII workflows, browser/Vite, benchmark workloads, and the real VS Code extension host. The public Playground remains deployed at `https://ashkanahmady.github.io/textguard/`.
+TextGuard has completed its current quality-hardening checkpoint and published the corrected npm release set. `@textguard/all@1.1.4` makes `defaultPreset` the canonical recommended preset while preserving `strictPreset` as a deprecated backward-compatible alias. External consumer validation exercises the published packages on Node 20/22, CLI, PII workflows, browser/Vite, benchmark workloads, and the real VS Code extension host. The public Playground remains deployed at `https://ashkanahmady.github.io/textguard/`.
 
 The major Playground findings that triggered hardening—normalization/range correctness, structured Explain provenance, Debug signal projection, multilingual sentence-context detection, bounded leetspeak/compatibility behavior, boundary false positives, and preset-label DX—have been addressed with regression coverage and a published checkpoint.
 
@@ -15,10 +15,10 @@ The active product phase is now **Launch Surface → Developer Distribution → 
 ## Near-term execution order
 
 1. **Release and architecture foundation — ✅ complete.** Changesets/release safety, package taxonomy, Core/plugin boundaries, CLI, VS Code, Playground, PII guard, Explain and Debug are shipped for the current milestone.
-2. **External consumer validation — ✅ complete for the published quality checkpoint.** Published npm artifacts are exercised outside workspace assumptions across the supported developer surfaces.
+2. **External consumer validation — ✅ complete for the published launch checkpoint.** Published npm artifacts are exercised outside workspace assumptions across Node 20/22 and the supported developer surfaces.
 3. **Quality Hardening / adversarial validation — ✅ checkpoint accepted.** Reproduced high-impact Playground defects received regression tests and compatible fixes. The adversarial matrix remains a standing regression gate rather than a finished one-time test suite.
 4. **Benchmark baseline — ✅ active engineering gate.** `filter()`, `explain()`, and `debug().report()` are benchmarked at representative sizes. Shared CI timing remains directional rather than a public SLA.
-5. **Preset naming / newcomer DX — 🟡 current release polish.** `defaultPreset` becomes the canonical recommended API. `strictPreset` remains a deprecated backward-compatible alias so existing consumers do not break. Playground/UI/share URLs use `default` terminology while accepting legacy `strict` links.
+5. **Preset naming / newcomer DX — ✅ published.** `defaultPreset` is the canonical recommended API in `@textguard/all@1.1.4`. `strictPreset` remains a deprecated backward-compatible alias. Playground/UI/share URLs use `default` terminology while accepting legacy `strict` links.
 6. **Launch surface — 🟡 current.** Keep README/npm/Playground/VS Code/feedback entry points concise, consistent, and easy to try. No SaaS/dashboard/auth work.
 7. **Developer distribution — 🟡 next.** Start organic technical distribution through GitHub/npm, technical articles, relevant Reddit communities, Show HN, DEV, Product Hunt secondarily, and demo-driven LinkedIn/X posts.
 8. **Adoption validation — 🟡 active.** Issue #65 remains the canonical signal log. Review npm trends, Marketplace signals, GitHub feedback, Playground examples, and direct developer conversations together.
@@ -84,4 +84,4 @@ Do not add invasive runtime telemetry to Core. Monetization follows validated te
 
 ## Current focus
 
-**Finish `defaultPreset` launch naming → keep published-artifact validation green → polish launch surfaces → distribute to real developers → collect adoption evidence → identify repeated pain → build only the smallest justified next improvement.**
+**Polish the launch surface → distribute to real developers → collect adoption evidence → identify repeated pain → build only the smallest justified next improvement.**
