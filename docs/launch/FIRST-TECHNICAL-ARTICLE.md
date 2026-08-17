@@ -1,6 +1,6 @@
 # How We Hardened a Multilingual TypeScript Text Filter Against Real Bypasses and False Positives
 
-> Draft for the first TextGuard technical launch article. Publication target can be DEV, a personal blog, or another developer-first surface. Community launch posts should link back to the published article and/or the live Playground.
+> Publication-ready launch article. Recommended primary surface: DEV or another developer-first publication. Use the three approved Playground screenshots at the marked proof points before publishing.
 
 Text filtering looks deceptively simple when the first version works on isolated examples.
 
@@ -15,6 +15,12 @@ The useful lesson was not that one regex needed to be improved. It was that text
 This article walks through the engineering changes that followed: sentence-context detection, bounded obfuscation handling, original-range preservation through normalization, truthful detector provenance, lower-noise debugging, adversarial regression tests, and validation against the actual packages published to npm.
 
 TextGuard is not presented here as a perfect moderation system. The point is the opposite: the project became more credible only after we stopped treating passing happy-path tests as proof of robustness.
+
+<!-- SCREENSHOT 1: textguard-overview.png
+Place the approved Playground overview here.
+Caption: TextGuard scanning one realistic English, Persian, and Arabic input through the default preset, with accepted detections and filtered output visible in the same run.
+Alt text: TextGuard Playground showing multilingual input, five profanity detections, and masked output.
+-->
 
 ## The starting point: a filter that looked stronger than it was
 
@@ -116,6 +122,12 @@ That gives Explain a stronger contract:
 
 For developer tooling, provenance is part of correctness.
 
+<!-- SCREENSHOT 2: textguard-explain.png
+Place the approved Explain-focused Playground screenshot here.
+Caption: Explain keeps accepted matches inspectable instead of reducing the result to a boolean. The same multilingual scan can be traced back to the rule that produced each match.
+Alt text: TextGuard Playground with the Explain panel open beneath multilingual detections.
+-->
+
 ## Lesson 5: raw debugging and useful debugging are different products
 
 A full execution trace is valuable when diagnosing the engine itself. It is painful when a developer only wants to know what mattered.
@@ -130,6 +142,12 @@ This gives two valid views of the same run:
 - **signal projection** for understanding the path that mattered to the result.
 
 That pattern generalizes beyond text filtering: observability becomes more useful when high-fidelity data and human-oriented projection are separate concepts.
+
+<!-- SCREENSHOT 3: textguard-debug.png
+Place the approved Debug-focused Playground screenshot here.
+Caption: Debug exposes signal events and the projected execution timeline without forcing the normal result view to carry the entire raw trace.
+Alt text: TextGuard Playground with Debug open, showing signal events and timeline projection.
+-->
 
 ## Lesson 6: benchmark after correctness, not instead of it
 
@@ -209,13 +227,13 @@ If you try it, the most useful feedback is not a star. It is a real failure or w
 
 That is the evidence we want to use for the next engineering decision.
 
-## Screenshot plan before publication
+## Publication checklist
 
-Add screenshots only where they prove a point rather than decorate the article:
+Before pressing Publish:
 
-1. Playground default preset with a realistic multilingual sentence and accepted matches.
-2. Explain panel showing specialist provenance for a structured detector.
-3. Debug signal projection versus the raw execution timeline.
-4. Optional terminal/CI screenshot showing published consumer validation green.
-
-Do not include private data, npm tokens, local paths, or screenshots containing unrelated desktop information.
+- upload the three approved Playground screenshots using the placements, captions, and alt text above;
+- verify the Playground and GitHub links from the publication preview;
+- keep the code samples formatted as TypeScript/Bash;
+- do not add benchmark latency claims from shared CI runners;
+- do not include private data, npm tokens, local paths, or unrelated desktop content;
+- use the published article URL as the canonical technical story in the first community launch wave.
