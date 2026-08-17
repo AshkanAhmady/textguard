@@ -1,6 +1,6 @@
 # TextGuard Roadmap — Verified Status
 
-> Source-of-truth delivery status. Read with `TEXTGUARD-PROJECT.md`, `PRODUCT-GROWTH-PLAN.md`, and `ADOPTION-VALIDATION.md`.
+> Source-of-truth delivery status. Read with `TEXTGUARD-PROJECT.md`, `PRODUCT-GROWTH-PLAN.md`, `DEVELOPER-DISTRIBUTION-PLAYBOOK.md`, and `ADOPTION-VALIDATION.md`.
 
 Legend: ✅ Done · 🟡 Current / in progress · ⏸️ Evidence-gated
 
@@ -10,7 +10,7 @@ TextGuard has completed its current quality-hardening checkpoint and published t
 
 The major Playground findings that triggered hardening—normalization/range correctness, structured Explain provenance, Debug signal projection, multilingual sentence-context detection, bounded leetspeak/compatibility behavior, boundary false positives, and preset-label DX—have been addressed with regression coverage and a published checkpoint.
 
-The active product phase is now **Launch Surface → Developer Distribution → Adoption Validation**. The operating rule is unchanged: **make the existing product easy to understand and try → promote it to relevant developers → collect real usage and feedback → build only the next repeated/high-impact pain**.
+The active product phase is now **Developer Distribution → Adoption Validation**. The launch surface is ready for the current milestone. The operating rule is unchanged: **promote the existing product to relevant developers → collect real usage and feedback → build only the next repeated/high-impact pain**.
 
 ## Near-term execution order
 
@@ -19,8 +19,8 @@ The active product phase is now **Launch Surface → Developer Distribution → 
 3. **Quality Hardening / adversarial validation — ✅ checkpoint accepted.** Reproduced high-impact Playground defects received regression tests and compatible fixes. The adversarial matrix remains a standing regression gate rather than a finished one-time test suite.
 4. **Benchmark baseline — ✅ active engineering gate.** `filter()`, `explain()`, and `debug().report()` are benchmarked at representative sizes. Shared CI timing remains directional rather than a public SLA.
 5. **Preset naming / newcomer DX — ✅ published.** `defaultPreset` is the canonical recommended API in `@textguard/all@1.1.4`. `strictPreset` remains a deprecated backward-compatible alias. Playground/UI/share URLs use `default` terminology while accepting legacy `strict` links.
-6. **Launch surface — 🟡 current.** Keep README/npm/Playground/VS Code/feedback entry points concise, consistent, and easy to try. No SaaS/dashboard/auth work.
-7. **Developer distribution — 🟡 next.** Start organic technical distribution through GitHub/npm, technical articles, relevant Reddit communities, Show HN, DEV, Product Hunt secondarily, and demo-driven LinkedIn/X posts.
+6. **Launch surface — ✅ ready for current milestone.** README, live Playground, npm/package guidance, VS Code, CLI, and feedback entry points are aligned for external developers. No SaaS/dashboard/auth work is needed for launch.
+7. **Developer distribution — 🟡 current.** Execute `docs/DEVELOPER-DISTRIBUTION-PLAYBOOK.md`: technical article first, then selective Reddit/Show HN/DEV/LinkedIn/X distribution, with Product Hunt secondary.
 8. **Adoption validation — 🟡 active.** Issue #65 remains the canonical signal log. Review npm trends, Marketplace signals, GitHub feedback, Playground examples, and direct developer conversations together.
 9. **Evidence-driven roadmap reassessment — ⏸️ evidence-gated.** New detectors, languages, framework adapters, Chrome, AI/provider integrations, richer CI surfaces, or other integrations require repeated/high-impact evidence.
 10. **Monetization / team capability — ⏸️ evidence-gated.** Billing, SaaS, shared policies, centralized reports, organization administration, and paid capabilities wait for repeated commercial/team pain.
@@ -55,15 +55,14 @@ Backward compatibility is mandatory:
 
 ## Launch / distribution plan
 
-Distribution now resumes in this order:
+The executable first-wave plan lives in `docs/DEVELOPER-DISTRIBUTION-PLAYBOOK.md`. Distribution order is:
 
-1. GitHub repository and npm package pages: clear positioning, quick start, Playground and feedback entry points.
-2. Technical articles around concrete developer pain: PII in commits, multilingual moderation, Explain/Debug, structured-data detection, and lessons from adversarial hardening.
-3. Relevant Reddit communities with technical/value-first posts rather than promotion-only posts.
-4. Hacker News / Show HN once the launch surface is polished and easy to try.
-5. DEV Community and similar developer publishing channels.
+1. technical article built around a real developer problem and the hardening story;
+2. relevant Reddit communities with technical/value-first framing and community-specific wording;
+3. Hacker News / Show HN with a concise technical launch;
+4. DEV Community and similar developer publishing channels;
+5. demo-driven LinkedIn/X posts;
 6. Product Hunt as a secondary discovery channel.
-7. LinkedIn/X with short demos, benchmark stories, real bug/hardening stories, and developer workflows.
 
 Paid advertising remains low priority until organic positioning and repeat use cases are understood.
 
@@ -84,4 +83,4 @@ Do not add invasive runtime telemetry to Core. Monetization follows validated te
 
 ## Current focus
 
-**Polish the launch surface → distribute to real developers → collect adoption evidence → identify repeated pain → build only the smallest justified next improvement.**
+**Publish the first technical launch story → distribute selectively to real developers → record adoption evidence in issue #65 → identify repeated pain → build only the smallest justified next improvement.**
