@@ -4,9 +4,9 @@ TextGuard is a modular TypeScript toolkit for text filtering, profanity detectio
 
 Use the complete bundle for the simplest setup, or install only the core and packages you need.
 
-## Try and give feedback
+## Try TextGuard
 
-- [`integrations/playground`](integrations/playground) — interactive browser Playground
+- [Open the live Playground](https://ashkanahmady.github.io/textguard/) — test multilingual moderation, structured detectors, Explain, and Debug without installing anything
 - [`integrations/vscode`](integrations/vscode) — VS Code integration
 - [`packages/cli`](packages/cli) — command-line integration
 - [Open a structured feedback issue](https://github.com/AshkanAhmady/textguard/issues/new/choose) — bugs, detection quality, DX friction, or feature requests
