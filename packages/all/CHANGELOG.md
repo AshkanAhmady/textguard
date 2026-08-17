@@ -1,5 +1,11 @@
 # @textguard/all
 
+## 1.1.4
+
+### Patch Changes
+
+- f2b8316: Add `defaultPreset` as the canonical recommended preset while preserving `strictPreset` as a deprecated backward-compatible alias.
+
 ## 1.1.3
 
 ### Patch Changes
