@@ -20,14 +20,16 @@ npm install @textguard/all
 ```
 
 ```ts
-import { createFilter, strictPreset } from "@textguard/all";
+import { createFilter, defaultPreset } from "@textguard/all";
 
-const filter = createFilter(strictPreset);
+const filter = createFilter(defaultPreset);
 const result = filter.filter("some input text");
 
 console.log(result.filteredText);
 console.log(result.matches);
 ```
+
+`defaultPreset` is the recommended ready-made preset. The older `strictPreset` export remains available as a backward-compatible deprecated alias.
 
 ## Core API
 
