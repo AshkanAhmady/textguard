@@ -33,6 +33,7 @@ const presetDescriptions: Record<PresetName, string> = {
 
 const inputElement = document.querySelector<HTMLTextAreaElement>("#input");
 const presetElement = document.querySelector<HTMLSelectElement>("#preset");
+const presetTabElements = document.querySelectorAll<HTMLInputElement>('input[name="preset-tab"]');
 const presetHelpElement = document.querySelector<HTMLElement>("#preset-help");
 const exampleElement = document.querySelector<HTMLSelectElement>("#example");
 const loadExampleElement = document.querySelector<HTMLButtonElement>("#load-example");
@@ -52,9 +53,7 @@ const debugCountElement = document.querySelector<HTMLElement>("#debug-count");
 const debugEventsElement = document.querySelector<HTMLOListElement>("#debug-events");
 const debugTimelineElement = document.querySelector<HTMLElement>("#debug-timeline");
 
-if (!inputElement || !presetElement || !presetHelpElement || !exampleElement || !loadExampleElement || !detectorControlsElement || !scanElement || !shareElement || !shareStatusElement || !resultSummaryElement || !matchCountElement || !statusElement || !filteredElement || !matchesElement || !explainCountElement || !explanationsElement || !debugCountElement || !debugEventsElement || !debugTimelineElement) {
-  throw new Error("TextGuard playground failed to initialize.");
-}
+if (!inputElement || !presetElement || !presetHelpElement || !exampleElement || !loadExampleElement || !detectorControlsElement || !scanElement || !shareElement || !shareStatusElement || !resultSummaryElement || !matchCountElement || !statusElement || !filteredElement || !matchesElement || !explainCountElement || !explanationsElement || !debugCountElement || !debugEventsElement || !debugTimelineElement) throw new Error("TextGuard playground failed to initialize.");
 
 const input = inputElement;
 const preset = presetElement;
@@ -76,140 +75,33 @@ const debugCount = debugCountElement;
 const debugEvents = debugEventsElement;
 const debugTimeline = debugTimelineElement;
 
-function isPresetName(value: string | null): value is PresetName {
-  return value === "default" || value === "enterprise" || value === "socialMedia";
-}
-function normalizeSharedPreset(value: string | null): PresetName | null {
-  if (value === "strict") return "default";
-  return isPresetName(value) ? value : null;
-}
+function isPresetName(value: string | null): value is PresetName { return value === "default" || value === "enterprise" || value === "socialMedia"; }
+function normalizeSharedPreset(value: string | null): PresetName | null { if (value === "strict") return "default"; return isPresetName(value) ? value : null; }
 function isExampleName(value: string): value is ExampleName { return value in examples; }
-function isDetectorName(value: string | undefined): value is DetectorName {
-  return value === "email" || value === "url" || value === "phone" || value === "ip" || value === "uuid" || value === "credit-card" || value === "iban";
-}
-
-function hydrateFromUrl(): void {
-  const params = new URLSearchParams(window.location.search);
-  const text = params.get("text");
-  const sharedPreset = normalizeSharedPreset(params.get("preset"));
-  if (text !== null) input.value = text;
-  if (sharedPreset) preset.value = sharedPreset;
-}
+function isDetectorName(value: string | undefined): value is DetectorName { return value === "email" || value === "url" || value === "phone" || value === "ip" || value === "uuid" || value === "credit-card" || value === "iban"; }
+function syncPresetTabs(): void { presetTabElements.forEach((tab) => { tab.checked = tab.value === preset.value; }); }
+function setPreset(name: PresetName): void { preset.value = name; syncPresetTabs(); }
+function hydrateFromUrl(): void { const params = new URLSearchParams(window.location.search); const text = params.get("text"); const sharedPreset = normalizeSharedPreset(params.get("preset")); if (text !== null) input.value = text; if (sharedPreset) setPreset(sharedPreset); }
 function updatePresetHelp(name: PresetName): void { presetHelp.textContent = presetDescriptions[name]; }
-async function copyShareUrl(): Promise<void> {
-  const url = new URL(window.location.href);
-  url.searchParams.set("preset", preset.value);
-  url.searchParams.set("text", input.value);
-  window.history.replaceState(null, "", url);
-  try {
-    await navigator.clipboard.writeText(url.toString());
-    shareStatus.textContent = "Share link copied.";
-  } catch {
-    shareStatus.textContent = "Share URL updated. Copy it from the address bar.";
-  }
-}
-function loadSelectedExample(): void {
-  if (!isExampleName(example.value)) return;
-  const scenario = examples[example.value];
-  preset.value = scenario.preset;
-  input.value = scenario.text;
-  shareStatus.textContent = "";
-  render();
-}
-function createDetector(name: DetectorName) {
-  if (name === "email") return emailPlugin();
-  if (name === "url") return urlPlugin();
-  if (name === "phone") return phonePlugin();
-  if (name === "ip") return ipPlugin();
-  if (name === "uuid") return uuidPlugin();
-  if (name === "credit-card") return creditCardPlugin();
-  return ibanPlugin();
-}
-function getSelectedEnterprisePlugins() {
-  return Array.from(detectorElements)
-    .filter((element) => element.checked && isDetectorName(element.dataset.detector))
-    .map((element) => createDetector(element.dataset.detector as DetectorName));
-}
-function getFilterOptions(name: PresetName) {
-  detectorControls.disabled = name !== "enterprise";
-  if (name === "enterprise") return { ...enterprisePreset, plugins: getSelectedEnterprisePlugins() };
-  if (name === "socialMedia") return socialMediaPreset;
-  return defaultPreset;
-}
-function renderEmpty(list: HTMLOListElement, message: string): void {
-  const empty = document.createElement("li");
-  empty.className = "empty";
-  empty.textContent = message;
-  list.append(empty);
-}
+async function copyShareUrl(): Promise<void> { const url = new URL(window.location.href); url.searchParams.set("preset", preset.value); url.searchParams.set("text", input.value); window.history.replaceState(null, "", url); try { await navigator.clipboard.writeText(url.toString()); shareStatus.textContent = "Link copied."; } catch { shareStatus.textContent = "URL updated — copy it from the address bar."; } }
+function loadSelectedExample(): void { if (!isExampleName(example.value)) return; const scenario = examples[example.value]; setPreset(scenario.preset); input.value = scenario.text; shareStatus.textContent = ""; render(); }
+function createDetector(name: DetectorName) { if (name === "email") return emailPlugin(); if (name === "url") return urlPlugin(); if (name === "phone") return phonePlugin(); if (name === "ip") return ipPlugin(); if (name === "uuid") return uuidPlugin(); if (name === "credit-card") return creditCardPlugin(); return ibanPlugin(); }
+function getSelectedEnterprisePlugins() { return Array.from(detectorElements).filter((element) => element.checked && isDetectorName(element.dataset.detector)).map((element) => createDetector(element.dataset.detector as DetectorName)); }
+function getFilterOptions(name: PresetName) { detectorControls.disabled = name !== "enterprise"; if (name === "enterprise") return { ...enterprisePreset, plugins: getSelectedEnterprisePlugins() }; if (name === "socialMedia") return socialMediaPreset; return defaultPreset; }
+function renderEmpty(list: HTMLOListElement, message: string): void { const empty = document.createElement("li"); empty.className = "empty"; empty.textContent = message; list.append(empty); }
 function render(): void {
   const text = input.value;
   const selectedPreset = preset.value as PresetName;
-  updatePresetHelp(selectedPreset);
+  syncPresetTabs(); updatePresetHelp(selectedPreset);
   const filter = createFilter(getFilterOptions(selectedPreset));
-  const result = filter.filter(text);
-  const explanation = filter.explain(text);
-  const debugSession = filter.debug(text);
-  const rawEvents = debugSession.getEvents();
-  const events = debugSession.getSignalEvents();
-  const timeline = debugSession.timeline({ includeEmptyRules: false });
-  const timelineProjection = timeline.plugins.map((plugin) => ({
-    plugin: plugin.name,
-    matchedRules: plugin.rules.map((rule) => ({
-      rule: rule.name,
-      matchCount: rule.matches.length,
-      ranges: rule.matches.map((match) => [match.start, match.end]),
-    })),
-  }));
-  matchCount.textContent = String(result.matches.length);
-  status.textContent = result.matches.length > 0 ? "Review matches" : "Clean";
-  resultSummary.dataset.state = result.matches.length > 0 ? "matched" : "clean";
-  filtered.textContent = result.filteredText;
-  matches.replaceChildren();
-  explanations.replaceChildren();
-  debugEvents.replaceChildren();
-  explainCount.textContent = `${explanation.summary.matchCount} explanation${explanation.summary.matchCount === 1 ? "" : "s"}`;
-  debugCount.textContent = `${events.length} signal event${events.length === 1 ? "" : "s"} · ${rawEvents.length} raw`;
-  debugTimeline.textContent = JSON.stringify(timelineProjection, null, 2);
-  if (result.matches.length === 0) renderEmpty(matches, "No matches found.");
-  else for (const match of result.matches) {
-    const item = document.createElement("li");
-    const word = document.createElement("strong");
-    const range = document.createElement("span");
-    word.textContent = match.matchedText;
-    range.textContent = `[${match.start}-${match.end}]`;
-    item.append(word, range);
-    matches.append(item);
-  }
-  if (explanation.matches.length === 0) renderEmpty(explanations, "No explanations available for clean text.");
-  else for (const explained of explanation.matches) {
-    const item = document.createElement("li");
-    item.className = "explanation-card";
-    const top = document.createElement("div");
-    top.className = "explanation-top";
-    const word = document.createElement("strong");
-    word.textContent = explained.match.matchedText;
-    const source = document.createElement("code");
-    source.textContent = `${explained.source.plugin} · ${explained.source.rule.id}`;
-    const reason = document.createElement("p");
-    reason.textContent = explained.reason.message;
-    const meta = document.createElement("span");
-    meta.className = "explanation-meta";
-    meta.textContent = `range ${explained.match.start}-${explained.match.end}`;
-    top.append(word, source);
-    item.append(top, reason, meta);
-    explanations.append(item);
-  }
+  const result = filter.filter(text); const explanation = filter.explain(text); const debugSession = filter.debug(text); const rawEvents = debugSession.getEvents(); const events = debugSession.getSignalEvents(); const timeline = debugSession.timeline({ includeEmptyRules: false });
+  const timelineProjection = timeline.plugins.map((plugin) => ({ plugin: plugin.name, matchedRules: plugin.rules.map((rule) => ({ rule: rule.name, matchCount: rule.matches.length, ranges: rule.matches.map((match) => [match.start, match.end]) })) }));
+  matchCount.textContent = String(result.matches.length); status.textContent = result.matches.length > 0 ? "Review matches" : "Clean"; resultSummary.dataset.state = result.matches.length > 0 ? "matched" : "clean"; filtered.textContent = result.filteredText;
+  matches.replaceChildren(); explanations.replaceChildren(); debugEvents.replaceChildren(); explainCount.textContent = `${explanation.summary.matchCount} explanation${explanation.summary.matchCount === 1 ? "" : "s"}`; debugCount.textContent = `${events.length} signal event${events.length === 1 ? "" : "s"} · ${rawEvents.length} raw`; debugTimeline.textContent = JSON.stringify(timelineProjection, null, 2);
+  if (result.matches.length === 0) renderEmpty(matches, "Nothing suspicious here."); else for (const match of result.matches) { const item = document.createElement("li"); const word = document.createElement("strong"); const range = document.createElement("span"); word.textContent = match.matchedText; range.textContent = `[${match.start}-${match.end}]`; item.append(word, range); matches.append(item); }
+  if (explanation.matches.length === 0) renderEmpty(explanations, "No explanations available for clean text."); else for (const explained of explanation.matches) { const item = document.createElement("li"); item.className = "explanation-card"; const top = document.createElement("div"); top.className = "explanation-top"; const word = document.createElement("strong"); word.textContent = explained.match.matchedText; const source = document.createElement("code"); source.textContent = `${explained.source.plugin} · ${explained.source.rule.id}`; const reason = document.createElement("p"); reason.textContent = explained.reason.message; const meta = document.createElement("span"); meta.className = "explanation-meta"; meta.textContent = `range ${explained.match.start}-${explained.match.end}`; top.append(word, source); item.append(top, reason, meta); explanations.append(item); }
   if (events.length === 0) { renderEmpty(debugEvents, "No debug events recorded."); return; }
-  for (const [index, event] of events.entries()) {
-    const item = document.createElement("li");
-    const position = document.createElement("span");
-    const type = document.createElement("code");
-    position.textContent = String(index + 1).padStart(2, "0");
-    type.textContent = event.type;
-    item.append(position, type);
-    debugEvents.append(item);
-  }
+  for (const [index, event] of events.entries()) { const item = document.createElement("li"); const position = document.createElement("span"); const type = document.createElement("code"); position.textContent = String(index + 1).padStart(2, "0"); type.textContent = event.type; item.append(position, type); debugEvents.append(item); }
 }
 
 hydrateFromUrl();
@@ -217,5 +109,7 @@ loadExample.addEventListener("click", loadSelectedExample);
 scan.addEventListener("click", render);
 share.addEventListener("click", () => { void copyShareUrl(); });
 preset.addEventListener("change", render);
+presetTabElements.forEach((tab) => tab.addEventListener("change", () => { if (isPresetName(tab.value)) { setPreset(tab.value); render(); } }));
 detectorElements.forEach((detector) => detector.addEventListener("change", render));
+input.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key === "Enter") { event.preventDefault(); render(); } });
 render();
