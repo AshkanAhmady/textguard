@@ -10,126 +10,92 @@
     <main class="page-shell">
       <header class="topbar">
         <a class="brand" href="https://github.com/AshkanAhmady/textguard" aria-label="TextGuard on GitHub">
-          <span class="brand-mark" aria-hidden="true">TG</span>
+          <span class="brand-mark" aria-hidden="true">T</span>
           <span>TextGuard</span>
         </a>
         <nav class="topbar-links" aria-label="Playground links">
           <a href="https://github.com/AshkanAhmady/textguard" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="https://www.npmjs.com/package/@textguard/all" target="_blank" rel="noreferrer">npm</a>
+          <a class="nav-pill" href="https://www.npmjs.com/package/@textguard/all" target="_blank" rel="noreferrer">npm ↗</a>
         </nav>
       </header>
 
       <section class="hero">
-        <p class="eyebrow">Browser playground</p>
-        <h1>Inspect text safety without leaving the browser.</h1>
-        <p class="hero-copy">Moderation, structured-data detection, Explain, and Debug — using the same public TextGuard APIs available to TypeScript consumers.</p>
+        <div class="hero-badge"><span></span> Runs locally in your browser</div>
+        <h1>See what your text<br /><em>is really saying.</em></h1>
+        <p>Multilingual moderation and sensitive-data detection for TypeScript. Paste text, scan it, inspect the evidence.</p>
       </section>
 
       <section class="workspace" aria-label="TextGuard playground">
-        <div class="control-bar">
-          <div class="control-group control-group-wide">
-            <label for="preset">Preset</label>
-            <select id="preset" aria-describedby="preset-help">
-              <option value="default">Default · recommended</option>
-              <option value="enterprise">Enterprise data protection</option>
-              <option value="socialMedia">Social & multilingual</option>
-            </select>
-            <p id="preset-help" class="preset-help">Balanced default for profanity, multilingual moderation, and official structured-data detectors using TextGuard's defaultPreset API.</p>
+        <div class="workspace-toolbar">
+          <div class="mode-tabs" aria-label="Preset">
+            <label><input type="radio" name="preset-tab" value="default" checked /><span>Default</span></label>
+            <label><input type="radio" name="preset-tab" value="enterprise" /><span>Enterprise</span></label>
+            <label><input type="radio" name="preset-tab" value="socialMedia" /><span>Social</span></label>
           </div>
-
-          <div class="control-group">
-            <label for="example">Example</label>
-            <div class="inline-control">
-              <select id="example">
-                <option value="contact">Contact data</option>
-                <option value="identifiers">Technical identifiers</option>
-                <option value="multilingual">Multilingual text</option>
-                <option value="clean">Clean baseline</option>
-              </select>
-              <button id="load-example" class="button-secondary" type="button">Load</button>
-            </div>
+          <select id="preset" class="native-preset" aria-describedby="preset-help">
+            <option value="default">Default</option><option value="enterprise">Enterprise</option><option value="socialMedia">Social</option>
+          </select>
+          <div class="toolbar-actions">
+            <select id="example" aria-label="Example scenario">
+              <option value="contact">Contact data</option>
+              <option value="identifiers">Technical identifiers</option>
+              <option value="multilingual">Multilingual text</option>
+              <option value="clean">Clean baseline</option>
+            </select>
+            <button id="load-example" class="text-button" type="button">Load example</button>
           </div>
         </div>
+        <p id="preset-help" class="preset-help">Balanced default for profanity, multilingual moderation, and official structured-data detectors using TextGuard's defaultPreset API.</p>
 
         <fieldset id="detector-controls" class="detector-controls">
-          <legend>Enterprise detectors</legend>
+          <legend>Detectors</legend>
           <div class="detector-grid">
-            <label><input type="checkbox" data-detector="email" checked /> Email</label>
-            <label><input type="checkbox" data-detector="url" checked /> URL</label>
-            <label><input type="checkbox" data-detector="phone" checked /> Phone</label>
-            <label><input type="checkbox" data-detector="ip" checked /> IP</label>
-            <label><input type="checkbox" data-detector="uuid" checked /> UUID</label>
-            <label><input type="checkbox" data-detector="credit-card" checked /> Card</label>
-            <label><input type="checkbox" data-detector="iban" checked /> IBAN</label>
+            <label><input type="checkbox" data-detector="email" checked /><span>Email</span></label>
+            <label><input type="checkbox" data-detector="url" checked /><span>URL</span></label>
+            <label><input type="checkbox" data-detector="phone" checked /><span>Phone</span></label>
+            <label><input type="checkbox" data-detector="ip" checked /><span>IP</span></label>
+            <label><input type="checkbox" data-detector="uuid" checked /><span>UUID</span></label>
+            <label><input type="checkbox" data-detector="credit-card" checked /><span>Card</span></label>
+            <label><input type="checkbox" data-detector="iban" checked /><span>IBAN</span></label>
           </div>
         </fieldset>
 
         <div class="editor-shell">
-          <div class="editor-heading">
-            <div>
-              <label class="input-label" for="input">Text to scan</label>
-              <p>Paste real input or load a scenario.</p>
-            </div>
+          <div class="editor-meta"><span>INPUT</span><span>⌘ Enter to scan</span></div>
+          <textarea id="input" rows="10" aria-label="Text to scan" placeholder="Paste something worth inspecting…">hello world</textarea>
+          <div class="editor-footer">
+            <p id="share-status" class="share-status" aria-live="polite"></p>
             <div class="editor-actions">
               <button id="share" class="button-ghost" type="button">Copy link</button>
-              <button id="scan" type="button">Scan text</button>
+              <button id="scan" class="scan-button" type="button"><span>Scan text</span><span aria-hidden="true">→</span></button>
             </div>
           </div>
-          <textarea id="input" rows="9" placeholder="Type or paste text here…">hello world</textarea>
-          <p id="share-status" class="share-status" aria-live="polite"></p>
         </div>
 
         <section class="result-summary" aria-live="polite" aria-label="Scan summary">
-          <div class="status-copy">
-            <span class="status-dot" aria-hidden="true"></span>
-            <div><span>Scan status</span><strong id="status">Clean</strong></div>
-          </div>
-          <div class="match-summary"><span>Matches</span><strong id="match-count">0</strong></div>
+          <div class="status-copy"><span class="status-orb" aria-hidden="true"></span><div><small>STATUS</small><strong id="status">Clean</strong></div></div>
+          <div class="match-summary"><small>MATCHES</small><strong id="match-count">0</strong></div>
         </section>
 
         <div class="results-grid">
-          <section class="result-card">
-            <div class="result-card-heading"><span>Output</span><h2>Filtered text</h2></div>
-            <pre id="filtered">hello world</pre>
-          </section>
-          <section class="result-card">
-            <div class="result-card-heading"><span>Detection</span><h2>Matches</h2></div>
-            <ol id="matches" class="matches-list"><li class="empty">No matches found.</li></ol>
-          </section>
+          <section class="result-card output-card"><div class="section-label">FILTERED OUTPUT</div><pre id="filtered">hello world</pre></section>
+          <section class="result-card"><div class="section-label">DETECTIONS</div><ol id="matches" class="matches-list"><li class="empty">Nothing suspicious here.</li></ol></section>
         </div>
 
-        <details class="inspector-panel" open>
-          <summary>
-            <span><small>Explain API</small><strong>Why did TextGuard match?</strong></span>
-            <span class="count-badge" id="explain-count">0 explanations</span>
-          </summary>
-          <div class="inspector-content">
-            <ol id="explanations" class="explanations-list"><li class="empty">No explanations available for clean text.</li></ol>
-          </div>
-        </details>
-
-        <details class="inspector-panel debug-panel">
-          <summary>
-            <span><small>Debug Engine</small><strong>Execution details</strong></span>
-            <span class="count-badge" id="debug-count">0 events</span>
-          </summary>
-          <div class="inspector-content debug-grid">
-            <div>
-              <h3>Signal events</h3>
-              <ol id="debug-events" class="debug-events"><li class="empty">No debug events yet.</li></ol>
-            </div>
-            <div>
-              <h3>Timeline projection</h3>
-              <pre id="debug-timeline" class="debug-json">{}</pre>
-            </div>
-          </div>
-        </details>
+        <div class="deep-dive">
+          <p class="deep-dive-label">Need the details?</p>
+          <details class="inspector-panel">
+            <summary><span><small>Explain</small><strong>Why did it match?</strong></span><span class="count-badge" id="explain-count">0 explanations</span></summary>
+            <div class="inspector-content"><ol id="explanations" class="explanations-list"><li class="empty">No explanations available for clean text.</li></ol></div>
+          </details>
+          <details class="inspector-panel debug-panel">
+            <summary><span><small>Debug</small><strong>Inspect execution</strong></span><span class="count-badge" id="debug-count">0 events</span></summary>
+            <div class="inspector-content debug-grid"><div><h3>Signal events</h3><ol id="debug-events" class="debug-events"><li class="empty">No debug events yet.</li></ol></div><div><h3>Timeline projection</h3><pre id="debug-timeline" class="debug-json">{}</pre></div></div>
+          </details>
+        </div>
       </section>
 
-      <footer class="page-footer">
-        <span>Open source · TypeScript · local execution</span>
-        <a href="https://github.com/AshkanAhmady/textguard/issues/new/choose" target="_blank" rel="noreferrer">Share feedback</a>
-      </footer>
+      <footer class="page-footer"><span>Open source · TypeScript · zero server round-trips</span><a href="https://github.com/AshkanAhmady/textguard/issues/new/choose" target="_blank" rel="noreferrer">Feedback ↗</a></footer>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
