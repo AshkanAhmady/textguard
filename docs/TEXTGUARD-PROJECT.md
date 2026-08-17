@@ -6,7 +6,7 @@
 
 TextGuard is an extensible TypeScript text-processing and detection toolkit for profanity/language moderation, structured-data detection, filtering/masking, Debug diagnostics, Explain provenance, CLI/editor/browser integrations, and PII protection for commits and pull requests.
 
-The current quality-hardening checkpoint has been implemented and published. The active product phase is now **Launch Surface → Developer Distribution → Adoption Validation** rather than speculative feature expansion.
+The current quality-hardening checkpoint has been implemented, published, and externally revalidated. The active product phase is now **Launch Surface → Developer Distribution → Adoption Validation** rather than speculative feature expansion.
 
 ## 2. Architecture
 
@@ -68,17 +68,17 @@ Quality hardening established these standing invariants:
 
 ## 7. Current published checkpoint
 
-The published quality checkpoint includes:
+The published launch checkpoint includes:
 
 - `@textguard/core@1.1.1`;
-- `@textguard/all@1.1.3`;
+- `@textguard/all@1.1.4` with canonical `defaultPreset` and deprecated-compatible `strictPreset`;
 - `@textguard/cli@0.2.2`;
 - `@textguard/plugin-pii@0.3.1`;
 - `@textguard/en@1.0.3` and `@textguard/fa@1.0.3`;
 - `@textguard/ar@1.2.0` (unchanged in the checkpoint);
 - direct structured detector packages at `1.0.3`.
 
-`textguard-consumer-validation` pins and tests published npm artifacts directly rather than substituting workspace source.
+`textguard-consumer-validation` pins and tests published npm artifacts directly rather than substituting workspace source. The `@textguard/all@1.1.4` checkpoint passed Node 20/22, CLI, PII, browser/Vite, benchmark, and real VS Code extension-host validation against published artifacts.
 
 ## 8. Validation and benchmark discipline
 
@@ -114,4 +114,4 @@ Issue #65 is the canonical adoption signal log. Do not add invasive runtime tele
 
 ## 11. Near-term sequence
 
-**finish `defaultPreset` naming polish → keep published-artifact validation green → polish README/npm/Playground/feedback surfaces → distribute organically to relevant developers → record adoption evidence → select the next feature only from repeated/high-impact pain → consider monetization only after repeated team/commercial demand.**
+**polish README/npm/Playground/feedback surfaces → distribute organically to relevant developers → record adoption evidence → select the next feature only from repeated/high-impact pain → consider monetization only after repeated team/commercial demand.**
