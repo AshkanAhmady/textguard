@@ -15,22 +15,15 @@ body {
     linear-gradient(145deg, #080b14 0%, #090c15 44%, #070910 100%);
 }
 
-.brand-mark {
-  background: linear-gradient(135deg, var(--tg-blue) 0%, var(--tg-indigo) 48%, var(--tg-purple) 100%);
-  box-shadow:
-    0 10px 28px rgba(87, 91, 255, 0.42),
-    0 0 34px rgba(168, 85, 247, 0.22);
-}
-
-.brand-mark::before {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  z-index: -1;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(79,124,255,.35), rgba(168,85,247,.28));
-  filter: blur(10px);
-  opacity: .7;
+.brand-logo {
+  display: block;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  background: transparent;
+  filter:
+    drop-shadow(0 8px 18px rgba(79, 124, 255, 0.34))
+    drop-shadow(0 0 12px rgba(168, 85, 247, 0.18));
 }
 
 h1 em {
