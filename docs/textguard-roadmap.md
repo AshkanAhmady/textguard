@@ -20,7 +20,7 @@ The active product phase is now **Developer Distribution → Adoption Validation
 4. **Benchmark baseline — ✅ active engineering gate.** `filter()`, `explain()`, and `debug().report()` are benchmarked at representative sizes. Shared CI timing remains directional rather than a public SLA.
 5. **Preset naming / newcomer DX — ✅ published.** `defaultPreset` is the canonical recommended API in `@textguard/all@1.1.4`. `strictPreset` remains a deprecated backward-compatible alias. Playground/UI/share URLs use `default` terminology while accepting legacy `strict` links.
 6. **Launch surface — ✅ ready for current milestone.** README, live Playground, npm/package guidance, VS Code, CLI, and feedback entry points are aligned for external developers. No SaaS/dashboard/auth work is needed for launch.
-7. **Developer distribution — 🟡 current.** Execute `docs/DEVELOPER-DISTRIBUTION-PLAYBOOK.md`: technical article first, then selective Reddit/Show HN/DEV/LinkedIn/X distribution, with Product Hunt secondary.
+7. **Developer distribution — 🟡 current.** The first substantial technical article and community-specific launch drafts are prepared under `docs/launch/`. Review them, add proof screenshots, publish the canonical article, then execute selective Reddit/Show HN/DEV/LinkedIn/X distribution. Product Hunt remains secondary.
 8. **Adoption validation — 🟡 active.** Issue #65 remains the canonical signal log. Review npm trends, Marketplace signals, GitHub feedback, Playground examples, and direct developer conversations together.
 9. **Evidence-driven roadmap reassessment — ⏸️ evidence-gated.** New detectors, languages, framework adapters, Chrome, AI/provider integrations, richer CI surfaces, or other integrations require repeated/high-impact evidence.
 10. **Monetization / team capability — ⏸️ evidence-gated.** Billing, SaaS, shared policies, centralized reports, organization administration, and paid capabilities wait for repeated commercial/team pain.
@@ -83,4 +83,4 @@ Do not add invasive runtime telemetry to Core. Monetization follows validated te
 
 ## Current focus
 
-**Publish the first technical launch story → distribute selectively to real developers → record adoption evidence in issue #65 → identify repeated pain → build only the smallest justified next improvement.**
+**Review the first technical story → add proof screenshots → publish the canonical article → distribute selectively to real developers → record adoption evidence in issue #65 → identify repeated pain → build only the smallest justified next improvement.**
